@@ -38,7 +38,7 @@ public class DepthGauge extends LinearLayout {
 
         // Color
         TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnSurface, typedValue, true);
+        context.getTheme().resolveAttribute(com.google.android.material.R.attr.colorPrimary, typedValue, true);
         @ColorRes int color = typedValue.resourceId;
 
         // Create Paint

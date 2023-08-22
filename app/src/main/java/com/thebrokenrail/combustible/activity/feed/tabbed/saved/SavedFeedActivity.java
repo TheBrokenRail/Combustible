@@ -23,7 +23,7 @@ public class SavedFeedActivity extends TabbedFeedActivity {
 
     @Override
     protected void createTabs() {
-        addTab(R.string.posts, new SavedPostFeedAdapter(viewPager, connection, new ViewModelProvider(this), "posts"));
-        addTab(R.string.comments, new SavedCommentFeedAdapter(viewPager, connection, new ViewModelProvider(this), "comments"));
+        addTab(R.string.posts, new SavedPostFeedAdapter(viewPager, connection, new ViewModelProvider(this)));
+        addTab(R.string.comments, new SavedCommentFeedAdapter(viewPager, connection, new ViewModelProvider(this)));
     }
 }

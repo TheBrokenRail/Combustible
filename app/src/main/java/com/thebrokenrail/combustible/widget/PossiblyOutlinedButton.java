@@ -61,4 +61,11 @@ public class PossiblyOutlinedButton extends FrameLayout {
         outlined.setOnClickListener(l);
         filled.setOnClickListener(l);
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        outlined.setEnabled(enabled);
+        filled.setEnabled(enabled);
+    }
 }

@@ -23,19 +23,56 @@
             android:icon="@drawable/baseline_logout_24"
             android:title="@string/feed_menu_logout" />
 
+    </group>
+
+    <group android:id="@+id/feed_menu_group_saved">
+
         <item
-            android:id="@+id/feed_menu_saved"
-            android:icon="@drawable/baseline_bookmark_24"
-            android:title="@string/feed_menu_saved" />
+                android:id="@+id/feed_menu_saved"
+                android:icon="@drawable/baseline_bookmark_24"
+                android:title="@string/feed_menu_saved" />
+
+        <item
+            android:id="@+id/feed_menu_blocked"
+            android:icon="@drawable/baseline_block_24"
+            android:title="@string/feed_menu_blocked" />
+
+    </group>
+
+    <group android:id="@+id/feed_menu_group_block">
+
+        <item
+            android:id="@+id/feed_menu_block_community"
+            android:icon="@drawable/baseline_block_24"
+            android:title="@string/feed_menu_block_community" />
+
+    </group>
+
+    <group android:id="@+id/feed_menu_group_information">
+
+        <item
+            android:id="@+id/feed_menu_community_info"
+            android:icon="@drawable/outline_info_24"
+            android:title="@string/feed_menu_community_info" />
+
+        <item
+            android:id="@+id/feed_menu_legal_info"
+            android:icon="@drawable/outline_info_24"
+            android:title="@string/feed_menu_legal_info" />
 
     </group>
 
     <group android:id="@+id/feed_menu_group_settings">
 
         <item
-            android:id="@+id/feed_menu_settings"
+            android:id="@+id/feed_menu_app_settings"
             android:icon="@drawable/baseline_settings_24"
-            android:title="@string/feed_menu_settings" />
+            android:title="@string/feed_menu_app_settings" />
+
+        <item
+            android:id="@+id/feed_menu_user_settings"
+            android:icon="@drawable/baseline_settings_24"
+            android:title="@string/feed_menu_user_settings" />
 
     </group>
 

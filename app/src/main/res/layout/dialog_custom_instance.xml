@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:overScrollMode="ifContentScrolls">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/dialog_custom_instance_field"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/recommended_instance"
-        android:layout_margin="?dialogPreferredPadding">
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dialog_custom_instance_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textUri" />
+            android:hint="@string/recommended_instance"
+            android:layout_margin="?dialogPreferredPadding">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dialog_custom_instance_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textUri"
+                android:maxLines="1" />
 
-</LinearLayout>
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+</ScrollView>

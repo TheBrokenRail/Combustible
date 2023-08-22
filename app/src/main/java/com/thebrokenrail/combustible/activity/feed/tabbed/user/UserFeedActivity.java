@@ -2,16 +2,22 @@ package com.thebrokenrail.combustible.activity.feed.tabbed.user;
 
 import android.content.Intent;
 import android.view.Menu;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.thebrokenrail.combustible.R;
-import com.thebrokenrail.combustible.activity.feed.prerequisite.FeedPrerequisite;
-import com.thebrokenrail.combustible.activity.feed.prerequisite.FeedPrerequisites;
 import com.thebrokenrail.combustible.activity.feed.tabbed.TabbedFeedActivity;
+import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
+import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
+import com.thebrokenrail.combustible.api.method.BlockPerson;
 import com.thebrokenrail.combustible.api.method.GetPersonDetailsResponse;
+import com.thebrokenrail.combustible.api.method.GetSiteResponse;
+import com.thebrokenrail.combustible.api.method.PersonBlockView;
 import com.thebrokenrail.combustible.api.method.PersonView;
+import com.thebrokenrail.combustible.util.Names;
 import com.thebrokenrail.combustible.util.Sharing;
 import com.thebrokenrail.combustible.util.Util;
 
@@ -19,6 +25,8 @@ import java.util.Objects;
 
 public class UserFeedActivity extends TabbedFeedActivity {
     public static final String USER_ID_EXTRA = "com.thebrokenrail.combustible.USER_ID_EXTRA";
+
+    private Boolean isBlocked = null;
 
     private int getUser() {
         Intent intent = getIntent();
@@ -31,8 +39,9 @@ public class UserFeedActivity extends TabbedFeedActivity {
     @Override
     protected void createTabs() {
         int user = getUser();
-        addTab(R.string.posts, new UserPostFeedAdapter(viewPager, connection, new ViewModelProvider(this), "posts", user));
-        addTab(R.string.comments, new UserCommentFeedAdapter(viewPager, connection, new ViewModelProvider(this), "comments", user));
+        addTab(R.string.posts, new UserPostFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
+        addTab(R.string.comments, new UserCommentFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
+        addHiddenTab(R.string.communities, new UserCommunityFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
     }
 
     @Override
@@ -48,17 +57,47 @@ public class UserFeedActivity extends TabbedFeedActivity {
                 GetPersonDetailsResponse getPersonDetailsResponse = ((FeedPrerequisite.User) prerequisite).get();
 
                 // Title
-                String title = Util.getPersonTitle(getPersonDetailsResponse.person_view.person);
+                String title = Names.getPersonTitle(getPersonDetailsResponse.person_view.person);
                 actionBar.setTitle(title);
                 if (getPersonDetailsResponse.person_view.person.display_name != null) {
                     // Subtitle
-                    title = '@' + Util.getPersonName(getPersonDetailsResponse.person_view.person);
+                    title = '@' + Names.getPersonName(getPersonDetailsResponse.person_view.person);
                     actionBar.setSubtitle(title);
                 }
 
                 // Enable Share Button
                 infoPerson = getPersonDetailsResponse.person_view;
                 invalidateOptionsMenu();
+            } else if (prerequisite instanceof FeedPrerequisite.Site) {
+                GetSiteResponse getSiteResponse = ((FeedPrerequisite.Site) prerequisite).get();
+
+                // Communities Tab
+                if (getSiteResponse.my_user != null) {
+                    if (getSiteResponse.my_user.local_user_view.person.id == user) {
+                        showTab(R.string.communities);
+                    } else {
+                        // Admins Can't Be Blocked
+                        boolean isAdmin = false;
+                        for (PersonView admin : getSiteResponse.admins) {
+                            if (admin.person.id.equals(user)) {
+                                isAdmin = true;
+                                break;
+                            }
+                        }
+
+                        // Block User
+                        if (!isAdmin) {
+                            isBlocked = false;
+                            for (PersonBlockView personBlockView : getSiteResponse.my_user.person_blocks) {
+                                if (personBlockView.target.id.equals(user)) {
+                                    isBlocked = true;
+                                    break;
+                                }
+                            }
+                            invalidateOptionsMenu();
+                        }
+                    }
+                }
             }
         });
     }
@@ -66,10 +105,33 @@ public class UserFeedActivity extends TabbedFeedActivity {
     private PersonView infoPerson = null;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean ret = super.onCreateOptionsMenu(menu);
+        menu.findItem(R.id.feed_block_user).setVisible(connection.hasToken());
+        return ret;
+    }
+
+    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         boolean ret = super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.feed_share).setEnabled(infoPerson != null);
+        MenuItem blockUser = menu.findItem(R.id.feed_block_user);
+        blockUser.setEnabled(isBlocked != null);
+        blockUser.setTitle((isBlocked != null && isBlocked) ? R.string.post_unblock_creator : R.string.post_block_creator);
         return ret;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.feed_block_user) {
+            BlockPerson method = new BlockPerson();
+            method.person_id = getUser();
+            method.block = !isBlocked;
+            connection.send(method, blockPersonResponse -> fullRecreate(), () -> Util.unknownError(UserFeedActivity.this));
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

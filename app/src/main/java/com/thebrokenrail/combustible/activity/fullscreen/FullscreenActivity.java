@@ -11,8 +11,9 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.thebrokenrail.combustible.R;
+import com.thebrokenrail.combustible.activity.LemmyActivity;
 
-class FullscreenActivity extends AppCompatActivity {
+public class FullscreenActivity extends LemmyActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +29,7 @@ class FullscreenActivity extends AppCompatActivity {
         // Edge-To-Edge
         ScrollView scrollView = findViewById(R.id.fullscreen_scroll_view);
         ViewCompat.setOnApplyWindowInsetsListener(scrollView, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures());
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
             scrollView.setPadding(insets.left, insets.top, insets.right, insets.bottom);
             return WindowInsetsCompat.CONSUMED;
         });

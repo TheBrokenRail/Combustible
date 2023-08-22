@@ -19,27 +19,19 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <com.thebrokenrail.combustible.widget.Sorter
+        android:id="@+id/feed_sorter"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        style="?materialButtonOutlinedStyle"
+        android:id="@+id/comments_view_all"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/feed_item_margin"
-        android:layout_marginEnd="@dimen/feed_item_margin"
-        android:layout_marginTop="@dimen/feed_item_margin"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/posts_sort_by"
-            android:labelFor="@id/comments_sort_by_spinner" />
-
-        <Spinner
-            android:id="@+id/comments_sort_by_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
-    </LinearLayout>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/post_padding"
+        android:visibility="gone"
+        android:text="@string/comment_view_all" />
 
 </LinearLayout>

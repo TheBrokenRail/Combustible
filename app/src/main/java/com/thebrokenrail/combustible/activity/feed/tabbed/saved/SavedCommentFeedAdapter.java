@@ -4,7 +4,9 @@ import android.view.View;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import com.thebrokenrail.combustible.activity.feed.comment.FlatCommentFeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.comment.BaseCommentFeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.util.dataset.FeedDataset;
+import com.thebrokenrail.combustible.activity.feed.util.dataset.SimpleFeedDataset;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CommentSortType;
 import com.thebrokenrail.combustible.api.method.CommentView;
@@ -15,10 +17,20 @@ import com.thebrokenrail.combustible.util.Util;
 import java.util.List;
 import java.util.function.Consumer;
 
-class SavedCommentFeedAdapter extends FlatCommentFeedAdapter {
-    SavedCommentFeedAdapter(View recyclerView, Connection connection, ViewModelProvider viewModelProvider, String viewModelKey) {
-        super(recyclerView, connection, viewModelProvider, viewModelKey, null, -1);
-        sortBy = CommentSortType.New;
+class SavedCommentFeedAdapter extends BaseCommentFeedAdapter {
+    SavedCommentFeedAdapter(View recyclerView, Connection connection, ViewModelProvider viewModelProvider) {
+        super(recyclerView, connection, viewModelProvider);
+        sorting.set(CommentSortType.New);
+    }
+
+    @Override
+    protected boolean showCreator() {
+        return true;
+    }
+
+    @Override
+    protected boolean isSortingTypeVisible(Class<? extends Enum<?>> type) {
+        return type == CommentSortType.class;
     }
 
     @Override
@@ -26,15 +38,20 @@ class SavedCommentFeedAdapter extends FlatCommentFeedAdapter {
         GetComments method = new GetComments();
         method.page = page;
         method.limit = Util.ELEMENTS_PER_PAGE;
-        method.sort = (CommentSortType) sortBy;
+        method.sort = sorting.get(CommentSortType.class);
         method.saved_only = true;
         method.type_ = ListingType.All;
         connection.send(method, getCommentsResponse -> successCallback.accept(getCommentsResponse.comments), errorCallback);
     }
 
     @Override
-    protected boolean isBlocked(CommentView element) {
-        return !element.saved;
+    protected FeedDataset<CommentView> createDataset() {
+        return new SimpleFeedDataset<CommentView>() {
+            @Override
+            protected boolean isBlocked(CommentView element) {
+                return !element.saved || super.isBlocked(element);
+            }
+        };
     }
 
     @Override

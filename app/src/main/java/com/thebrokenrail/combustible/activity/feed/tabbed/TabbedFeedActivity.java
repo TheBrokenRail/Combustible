@@ -8,7 +8,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -20,9 +24,10 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.LemmyActivity;
 import com.thebrokenrail.combustible.activity.feed.FeedAdapter;
-import com.thebrokenrail.combustible.activity.feed.prerequisite.FeedPrerequisite;
-import com.thebrokenrail.combustible.activity.feed.prerequisite.FeedPrerequisites;
+import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
+import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
+import com.thebrokenrail.combustible.util.Util;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -35,6 +40,8 @@ import java.util.Objects;
  */
 public abstract class TabbedFeedActivity extends LemmyActivity {
     private final List<Map.Entry<Integer, FeedAdapter<?>>> tabs = new ArrayList<>();
+    private final List<Map.Entry<Integer, FeedAdapter<?>>> visibleTabs = new ArrayList<>();
+
     protected ViewPager2 viewPager = null;
     private FeedPrerequisites prerequisites;
 
@@ -52,9 +59,11 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
 
         // Prepare View Pager
         viewPager = findViewById(R.id.tabbed_feed_view_pager);
-        //WindowInsetsApplier.install(viewPager);
+        // TODO WindowInsetsApplier.install(viewPager);
 
         // Create Tabs
+        visibleTabs.clear();
+        tabs.clear();
         createTabs();
 
         // Load Site
@@ -67,17 +76,24 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
         prerequisites.start(connection);
 
         // Setup View Pager
-        viewPager.setAdapter(new TabbedFeedAdapter(prerequisites, tabs));
+        viewPager.setAdapter(new TabbedFeedAdapter(new ViewModelProvider(this), prerequisites, visibleTabs));
         AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
         ViewPager2.OnPageChangeCallback onPageChangeCallback = new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                viewPager.post(() -> {
-                    RecyclerView recyclerView = viewPager.findViewWithTag("tab-" + position);
-                    assert recyclerView != null;
-                    appBarLayout.setLiftOnScrollTargetView(recyclerView);
-                    appBarLayout.setLifted(recyclerView.canScrollVertically(-1) || recyclerView.getScrollY() > 0);
+
+                viewPager.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        RecyclerView recyclerView = viewPager.findViewWithTag("tab-" + position);
+                        if (recyclerView != null) {
+                            Util.updateAppBarLift(appBarLayout, recyclerView);
+                        } else if (!isDestroyed()) {
+                            // Not Loaded Yet
+                            viewPager.post(this);
+                        }
+                    }
                 });
             }
         };
@@ -87,6 +103,14 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
         // Setup Tab Layout
         TabLayout tabLayout = findViewById(R.id.tabbed_feed_tabs);
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> tab.setText(tabs.get(position).getKey())).attach();
+
+        // Edge-To-Edge
+        CoordinatorLayout root = findViewById(R.id.tabbed_feed_root);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            root.setPadding(insets.left, 0, insets.right, 0);
+            return windowInsets;
+        });
     }
 
     @Override
@@ -121,7 +145,34 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
      * @param adapter The tab's adapter
      */
     protected void addTab(@StringRes int name, FeedAdapter<?> adapter) {
+        addHiddenTab(name, adapter);
+        showTab(name);
+    }
+
+    /**
+     * Add hidden tab adapter to activity.
+     * @param name The tab's name
+     * @param adapter The tab's adapter
+     */
+    protected void addHiddenTab(@StringRes int name, FeedAdapter<?> adapter) {
         tabs.add(new AbstractMap.SimpleImmutableEntry<>(name, adapter));
+    }
+
+    /**
+     * Show tab.
+     * @param name The tab's name
+     */
+    protected void showTab(@StringRes int name) {
+        for (Map.Entry<Integer, FeedAdapter<?>> tab : tabs) {
+            if (tab.getKey().equals(name)) {
+                visibleTabs.add(tab);
+                break;
+            }
+        }
+        RecyclerView.Adapter<?> adapter = viewPager.getAdapter();
+        if (adapter != null) {
+            adapter.notifyItemInserted(visibleTabs.size() - 1);
+        }
     }
 
     /**

@@ -52,6 +52,7 @@ public class Links {
     }
 
     private static <T> void sendMethod(Context context, Connection.Method<T> method, Consumer<T> callback) {
+        assert context.getApplicationContext() == context;
         Config config = new Config(context);
         Connection connection = new Connection(config.getInstance());
         connection.setToken(config.getToken());
@@ -122,9 +123,11 @@ public class Links {
         if (url == null) {
             return;
         }
-        if (openLemmy(context, url)) {
+        if (openLemmy(context.getApplicationContext(), url)) {
             return;
         }
+
+        // Chrome Custom Tab
         @ColorInt int colorPrimaryLight = ContextCompat.getColor(context, R.color.md_theme_light_primary);
         @ColorInt int colorPrimaryDark = ContextCompat.getColor(context, R.color.md_theme_dark_primary);
         CustomTabsIntent intent = new CustomTabsIntent.Builder()
@@ -137,6 +140,8 @@ public class Links {
                 .setShowTitle(true)
                 .setShareState(CustomTabsIntent.SHARE_STATE_ON)
                 .build();
+
+        // Launch
         try {
             intent.launchUrl(context, Uri.parse(url));
         } catch (ActivityNotFoundException e) {

@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-import com.thebrokenrail.combustible.activity.feed.comment.CommentFeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.comment.CommentTreeDataset;
 import com.thebrokenrail.combustible.api.method.CommentView;
 import com.thebrokenrail.combustible.api.method.GetCommentsResponse;
 import com.thebrokenrail.combustible.util.Util;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class CommentFeedAdapterTest {
+public class CommentTreeDatasetTest {
     private void listResources(String dir, Consumer<Path> callback) {
         try {
             URL url = getClass().getResource(dir);
@@ -82,45 +82,25 @@ public class CommentFeedAdapterTest {
         });
     }
 
-    private static class TestCommentFeedAdapter extends CommentFeedAdapter {
-        private TestCommentFeedAdapter() {
-            super(null, null, ParentType.POST, -1);
-        }
-
-        private List<CommentView> getDataset() {
-            return dataset;
-        }
-
-        private int getQueuedCommentsSize() {
-            return queuedComments.size();
-        }
-
-        private void addElements(List<CommentView> elements) {
-            addElements(elements, false);
-        }
-    }
-
     @Test
     public void testPagination() {
         forEveryTestPost(getCommentsResponses -> {
-            TestCommentFeedAdapter allAtOnce = new TestCommentFeedAdapter();
+            CommentTreeDataset allAtOnce = new CommentTreeDataset();
             List<CommentView> allComments = new ArrayList<>();
             for (GetCommentsResponse getCommentsResponse : getCommentsResponses) {
                 allComments.addAll(getCommentsResponse.comments);
             }
-            allAtOnce.addElements(allComments);
+            allAtOnce.add(null, allComments, false);
 
-            TestCommentFeedAdapter paginated = new TestCommentFeedAdapter();
+            CommentTreeDataset paginated = new CommentTreeDataset();
             for (GetCommentsResponse getCommentsResponse : getCommentsResponses) {
-                paginated.addElements(getCommentsResponse.comments);
+                paginated.add(null, getCommentsResponse.comments, false);
             }
 
             assertEquals(allAtOnce.getQueuedCommentsSize(), paginated.getQueuedCommentsSize());
-            List<CommentView> paginatedDataset = paginated.getDataset();
-            List<CommentView> allAtOnceDataset = allAtOnce.getDataset();
-            assertEquals(allAtOnceDataset.size(), paginatedDataset.size());
-            for (int i = 0; i < allAtOnceDataset.size(); i++) {
-                assertEquals(allAtOnceDataset.get(i).comment.id, paginatedDataset.get(i).comment.id);
+            assertEquals(allAtOnce.size(), paginated.size());
+            for (int i = 0; i < allAtOnce.size(); i++) {
+                assertEquals(allAtOnce.get(i).comment.id, paginated.get(i).comment.id);
             }
         });
     }
@@ -134,15 +114,14 @@ public class CommentFeedAdapterTest {
     @Test
     public void testSort() {
         forEveryTestPost(getCommentsResponses -> {
-            TestCommentFeedAdapter adapter = new TestCommentFeedAdapter();
+            CommentTreeDataset adapter = new CommentTreeDataset();
             for (GetCommentsResponse getCommentsResponse : getCommentsResponses) {
-                adapter.addElements(getCommentsResponse.comments);
+                adapter.add(null, getCommentsResponse.comments, false);
             }
 
-            List<CommentView> dataset = adapter.getDataset();
-            for (int i = 1; i < dataset.size(); i++) {
-                CommentView previous = dataset.get(i - 1);
-                CommentView current = dataset.get(i);
+            for (int i = 1; i < adapter.size(); i++) {
+                CommentView previous = adapter.get(i - 1);
+                CommentView current = adapter.get(i);
                 String parentPath = stripPath(current.comment.path);
                 assertTrue(previous.comment.path.startsWith(parentPath));
             }

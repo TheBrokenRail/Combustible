@@ -27,15 +27,19 @@
         </activity>
 
         <activity
-            android:name=".activity.fullscreen.WelcomeActivity"
+            android:name=".activity.fullscreen.welcome.WelcomeActivity"
             android:exported="false" />
 
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name=".activity.settings.app.AppSettingsActivity"
             android:exported="false" />
 
         <activity
-            android:name=".activity.fullscreen.LoginActivity"
+            android:name=".activity.settings.user.UserSettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.fullscreen.login.LoginActivity"
             android:exported="false" />
 
         <activity
@@ -51,9 +55,36 @@
             android:exported="false" />
 
         <activity
+            android:name=".activity.feed.tabbed.blocked.BlockedFeedActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".activity.ViewImageActivity"
             android:exported="false"
             android:theme="@style/Theme.Combustible.ViewImage" />
+
+        <activity
+            android:name=".activity.feed.tabbed.search.SearchFeedActivity"
+            android:exported="false">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+        </activity>
+
+        <meta-data
+            android:name="android.app.default_searchable"
+            android:value="com.thebrokenrail.combustible.activity.feed.tabbed.search.SearchFeedActivity" />
+
+        <provider
+            android:name=".util.SearchSuggestionProvider"
+            android:authorities="com.thebrokenrail.combustible.util.SearchSuggestionProvider"
+            android:exported="false" />
 
     </application>
 

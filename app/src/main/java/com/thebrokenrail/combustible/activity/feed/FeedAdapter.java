@@ -1,24 +1,25 @@
 package com.thebrokenrail.combustible.activity.feed;
 
-import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.thebrokenrail.combustible.R;
-import com.thebrokenrail.combustible.activity.feed.prerequisite.FeedPrerequisite;
-import com.thebrokenrail.combustible.activity.feed.prerequisite.FeedPrerequisites;
+import com.thebrokenrail.combustible.activity.feed.util.dataset.FeedDataset;
+import com.thebrokenrail.combustible.activity.feed.util.dataset.SimpleFeedDataset;
+import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
+import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
+import com.thebrokenrail.combustible.util.ExtendableViewModel;
 import com.thebrokenrail.combustible.util.Util;
 import com.thebrokenrail.combustible.widget.NextPageLoader;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -27,10 +28,7 @@ import java.util.function.Consumer;
  * @param <T> Type of element in list
  */
 public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    /**
-     * Represents the possible values of {@link RecyclerView.ViewHolder#getItemViewType()} in this adapter.
-     */
-    protected enum ViewType {
+    private enum ViewType {
         HEADER,
         ELEMENT,
         NEXT_PAGE
@@ -38,44 +36,64 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
 
     private enum LoadingStatus {
         // Pending user interaction or prerequisites
-        PENDING(true),
+        PENDING(NextPageLoader.DisplayMode.PROGRESS),
         // Currently loading data
-        LOADING(true),
+        LOADING(NextPageLoader.DisplayMode.PROGRESS),
         // Failure loading data
-        ERROR(false),
+        ERROR(NextPageLoader.DisplayMode.ERROR),
         // No more data to load
-        DONE(false);
+        DONE(NextPageLoader.DisplayMode.NONE);
 
-        private final boolean isProgress;
-        LoadingStatus(boolean isProgress) {
-            this.isProgress = isProgress;
+        private final NextPageLoader.DisplayMode displayMode;
+        LoadingStatus(NextPageLoader.DisplayMode displayMode) {
+            this.displayMode = displayMode;
         }
     }
 
     /**
      * Class containing feed data that should be persisted after a configuration change.
      */
-    protected static class FeedViewModel<T> extends ViewModel {
-        public FeedViewModel() {}
+    protected static class ViewModel<T> {
+        public ViewModel() {}
 
         /**
          * Elements in adapter.
          */
-        public final List<T> dataset = new ArrayList<>();
+        public FeedDataset<T> dataset = null;
 
         private static final int FIRST_PAGE = 1; // This Is 1-Indexed
         private int nextPage = FIRST_PAGE;
 
         private LoadingStatus loadingStatus = LoadingStatus.PENDING;
+
+        private void prepare() {
+            // Requests are cancelled on configuration changes.
+            if (loadingStatus == LoadingStatus.LOADING) {
+                loadingStatus = LoadingStatus.PENDING;
+            }
+        }
+
+        private void clear(FeedAdapter<T> adapter) {
+            // Disable Previous Callbacks
+            adapter.feedVersion++;
+            // Clear Dataset
+            dataset.clear(adapter.notifier);
+            // Reset Next Page
+            nextPage = ViewModel.FIRST_PAGE;
+            // Reset Loading Status
+            adapter.updateLoadingStatus(LoadingStatus.PENDING);
+        }
     }
+
+    /**
+     * The view model.
+     */
+    protected final ExtendableViewModel rootViewModel;
 
     /**
      * Feed data that should be persisted after a configuration change.
      */
-    protected final FeedViewModel<T> viewModel;
-
-    private int refreshVersion = 0;
-    private final View parent;
+    protected final ViewModel<T> viewModel;
 
     /**
      * The connection to Lemmy.
@@ -87,10 +105,98 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
      */
     protected GetSiteResponse site = null;
 
+    /**
+     * The bridge between {@link FeedDataset} and {@link RecyclerView.Adapter}.
+     */
+    protected final FeedDataset.Notifier notifier = new FeedDataset.Notifier() {
+        @Override
+        public void insert(int position, int amount) {
+            notifyItemRangeInserted(getFirstElementPosition() + position, amount);
+            if (!hasHeader() && position == 0) {
+                assert getFirstElementPosition() == 0;
+                notifyItemChanged(0);
+            }
+        }
+
+        @Override
+        public void remove(int position, int amount) {
+            notifyItemRangeRemoved(getFirstElementPosition() + position, amount);
+        }
+
+        @Override
+        public void change(int position) {
+            notifyItemChanged(getFirstElementPosition() + position);
+        }
+    };
+
+    private int feedVersion = 0;
     private FeedPrerequisites prerequisites = null;
 
+    // https://github.com/airbnb/epoxy/issues/224#issuecomment-305991898
+    private static class ScrollingBugWorkaround extends RecyclerView.AdapterDataObserver {
+        private final List<RecyclerView> recyclerViews = new ArrayList<>();
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            super.onItemRangeInserted(positionStart, itemCount);
+            if (positionStart == 0) {
+                for (RecyclerView recyclerView : recyclerViews) {
+                    RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                    assert layoutManager != null;
+                    if (positionStart == ((LinearLayoutManager) layoutManager).findFirstCompletelyVisibleItemPosition()) {
+                        layoutManager.scrollToPosition(0);
+                    }
+                }
+            }
+        }
+    }
+    private final ScrollingBugWorkaround scrollingBugWorkaround = new ScrollingBugWorkaround();
+
+    private final View parent;
+
     /**
-     * Handle prerequisites.
+     * Create a FeedAdapter.
+     * @param parent A parent {@link View} of this adapter
+     * @param connection The connection to Lemmy
+     * @param viewModelProvider View model provider
+     */
+    public FeedAdapter(View parent, Connection connection, ViewModelProvider viewModelProvider) {
+        this.connection = connection;
+
+        // View Model
+        rootViewModel = viewModelProvider.get(getClass().toString(), ExtendableViewModel.class);
+        //noinspection unchecked
+        viewModel = rootViewModel.get(ViewModel.class);
+        viewModel.prepare();
+        // Dataset
+        if (viewModel.dataset == null) {
+            viewModel.dataset = createDataset();
+        }
+
+        // Workaround Scrolling Bug When Header Is Disabled
+        if (!hasHeader()) {
+            registerAdapterDataObserver(scrollingBugWorkaround);
+        }
+
+        // Check
+        this.parent = parent;
+        parent.post(() -> {
+            if (prerequisites == null) {
+                throw new RuntimeException();
+            }
+        });
+    }
+
+    /**
+     * Construct the dataset object. Override this to use a custom {@link FeedDataset} implementation.
+     * @return The new dataset object
+     */
+    protected FeedDataset<T> createDataset() {
+        return new SimpleFeedDataset<>();
+    }
+
+    /**
+     * Handle prerequisites. Override this to attach prerequisite listeners.
      * @param prerequisites The new prerequisites
      */
     protected void handlePrerequisites(FeedPrerequisites prerequisites) {
@@ -116,14 +222,22 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
             throw new RuntimeException();
         }
         if (prerequisites.isError()) {
-            viewModel.loadingStatus = LoadingStatus.ERROR;
+            updateLoadingStatus(LoadingStatus.ERROR);
         }
 
         // Check If Everything Is Loaded
         prerequisites.listen(prerequisite -> {
             if (prerequisite == null) {
-                updateLoadingStatus(LoadingStatus.ERROR);
+                // Error
+                if (prerequisites.areLoaded()) {
+                    // Don't Change State For Refresh Errors
+                    Util.unknownError(parent.getContext());
+                } else {
+                    // Update Feed
+                    updateLoadingStatus(LoadingStatus.ERROR);
+                }
             } else if (prerequisite == FeedPrerequisites.COMPLETED) {
+                // All Prerequisites Loaded
                 if (viewModel.loadingStatus == LoadingStatus.PENDING && viewModel.dataset.size() == 0) {
                     load();
                 }
@@ -137,36 +251,6 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
      */
     protected boolean arePrerequisitesLoaded() {
         return prerequisites != null && prerequisites.areLoaded();
-    }
-
-    /**
-     * Creates a FeedAdapter
-     * @param parent A parent {@link View} of this adapter
-     * @param connection The connection to Lemmy
-     * @param viewModelProvider View model provider
-     * @param viewModelKey Key for view model (this must be unique in an activity)
-     */
-    public FeedAdapter(View parent, Connection connection, ViewModelProvider viewModelProvider, String viewModelKey) {
-        this.parent = parent;
-        this.connection = connection;
-        // View Model
-        if (viewModelProvider != null) {
-            //noinspection unchecked
-            viewModel = viewModelProvider.get(viewModelKey, FeedViewModel.class);
-        } else {
-            viewModel = new FeedViewModel<>();
-        }
-        if (viewModel.loadingStatus == LoadingStatus.LOADING) {
-            viewModel.loadingStatus = LoadingStatus.PENDING;
-        }
-        // Check
-        if (parent != null) {
-            parent.post(() -> {
-                if (prerequisites == null) {
-                    throw new RuntimeException();
-                }
-            });
-        }
     }
 
     /**
@@ -199,8 +283,6 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         } else {
             NextPageLoader loader = new NextPageLoader(parent.getContext(), null);
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-            int margin = parent.getContext().getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
-            layoutParams.setMargins(margin, margin, margin, 0);
             loader.setLayoutParams(layoutParams);
             return new RecyclerView.ViewHolder(loader) {};
         }
@@ -230,11 +312,7 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
             bindElement(holder, position);
         } else if (holder.getItemViewType() == ViewType.NEXT_PAGE.ordinal()) {
             NextPageLoader nextPageLoader = (NextPageLoader) holder.itemView;
-            if (viewModel.loadingStatus == LoadingStatus.ERROR) {
-                nextPageLoader.setupError(this::load);
-            } else {
-                nextPageLoader.setupProgress();
-            }
+            nextPageLoader.setup(viewModel.loadingStatus.displayMode, this::load);
         } else if (holder.getItemViewType() == ViewType.HEADER.ordinal()) {
             bindHeader(holder.itemView);
         }
@@ -242,12 +320,10 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        // Items In List
+        // Items In Dataset
         int count = viewModel.dataset.size();
         // Next Page Loader
-        if (viewModel.loadingStatus != LoadingStatus.DONE) {
-            count++;
-        }
+        count++;
         // Header
         if (hasHeader()) {
             count++;
@@ -282,20 +358,9 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         viewModel.loadingStatus = loadingStatus;
 
         // Check If Status Has Changed
-        if (loadingStatus != oldLoadingStatus) {
+        if (loadingStatus.displayMode != oldLoadingStatus.displayMode) {
             int position = getNextPageLoaderPosition();
-            if (loadingStatus == LoadingStatus.DONE) {
-                // Remove Element
-                notifyItemRemoved(position);
-            } else if (oldLoadingStatus == LoadingStatus.DONE) {
-                // Create Element
-                notifyItemInserted(position);
-            } else {
-                // Update Element
-                if (oldLoadingStatus.isProgress != loadingStatus.isProgress) {
-                    notifyItemChanged(position);
-                }
-            }
+            notifyItemChanged(position);
         }
     }
 
@@ -320,37 +385,27 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     }
 
     /**
-     * Add the provided elements to this adapter.
-     * @param elements The new elements
-     * @param manualNotifications True if this method is responsible for notifying the {@link RecyclerView}, false otherwise
+     * Check if this feed is split into virtual "pages."
+     * @return False if it is paginated, true otherwise
      */
-    protected void addElements(List<T> elements, boolean manualNotifications) {
-        // Remove Blocked Elements
-        elements = new ArrayList<>(elements);
-        elements.removeIf(this::isBlocked);
-
-        // Insert
-        int insertPosition = getFirstElementPosition() + viewModel.dataset.size();
-        viewModel.dataset.addAll(elements);
-
-        // Notify
-        if (manualNotifications) {
-            notifyItemRangeInserted(insertPosition, elements.size());
-        }
+    protected boolean isSinglePage() {
+        return false;
     }
 
-    private LoadingStatus addPage(List<T> elements, boolean manualNotifications) {
+    private void addPage(List<T> elements) {
         viewModel.nextPage++;
         int size = elements.size();
         assert size <= Util.ELEMENTS_PER_PAGE;
-        addElements(elements, manualNotifications);
-        if (size < Util.ELEMENTS_PER_PAGE) {
+        viewModel.dataset.add(notifier, elements, false);
+        LoadingStatus newStatus;
+        if (isSinglePage() || size < Util.ELEMENTS_PER_PAGE) {
             // No More Elements To Load
-            return LoadingStatus.DONE;
+            newStatus = LoadingStatus.DONE;
         } else {
             // More Elements Available
-            return LoadingStatus.PENDING;
+            newStatus = LoadingStatus.PENDING;
         }
+        updateLoadingStatus(newStatus);
     }
 
     private boolean checkPrerequisites() {
@@ -380,21 +435,22 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         if (viewModel.loadingStatus != LoadingStatus.PENDING && viewModel.loadingStatus != LoadingStatus.ERROR) {
             return;
         }
+        if (isSinglePage() && viewModel.nextPage != ViewModel.FIRST_PAGE) {
+            throw new RuntimeException();
+        }
         updateLoadingStatus(LoadingStatus.LOADING);
 
         // Disable Previous Callbacks
-        refreshVersion++;
+        feedVersion++;
 
         // Load Page
-        int oldRefreshVersion = refreshVersion;
-        if (viewModel.nextPage == 2) throw new RuntimeException();
+        int oldVersion = feedVersion;
         loadPage(viewModel.nextPage, data -> {
-            if (refreshVersion == oldRefreshVersion) {
-                LoadingStatus newLoadingStatus = addPage(data, true);
-                updateLoadingStatus(newLoadingStatus);
+            if (feedVersion == oldVersion) {
+                addPage(data);
             }
         }, () -> {
-            if (refreshVersion == oldRefreshVersion) {
+            if (feedVersion == oldVersion) {
                 updateLoadingStatus(LoadingStatus.ERROR);
             }
         });
@@ -412,10 +468,11 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     }
 
     /**
-     * Remove all elements from adapter.
+     * Retrieve which prerequisites need to be refreshed.
+     * @return The prerequisites to refresh
      */
-    protected void clear() {
-        viewModel.dataset.clear();
+    protected List<Class<? extends FeedPrerequisite<?>>> getPrerequisitesToRefresh() {
+        return Collections.emptyList();
     }
 
     /**
@@ -423,7 +480,6 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
      * @param hard True if currently loaded content should disappear during the refresh, false otherwise
      * @param callback Callback that is executed on completion
      */
-    @SuppressLint("NotifyDataSetChanged")
     public void refresh(boolean hard, Runnable callback) {
         // Check If Prerequisites Are Loaded
         if (checkPrerequisites()) {
@@ -431,81 +487,45 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
             return;
         }
 
-        // Disable Previous Callbacks
-        refreshVersion++;
+        // Refresh Prerequisites
+        for (Class<? extends FeedPrerequisite<?>> prerequisite : getPrerequisitesToRefresh()) {
+            prerequisites.refresh(connection, prerequisite);
+        }
 
         // Different Refresh Types
         if (hard) {
             // Hard Refresh
-            viewModel.nextPage = FeedViewModel.FIRST_PAGE;
-            clear();
-            viewModel.loadingStatus = LoadingStatus.PENDING;
-            notifyDataSetChanged();
+            viewModel.clear(this);
             callback.run();
         } else {
             // Soft Refresh
+            loadPage(ViewModel.FIRST_PAGE, data -> {
+                // Add First Page
+                viewModel.clear(this);
+                addPage(data);
 
-            // Disable Next Page Loader
-            updateLoadingStatus(LoadingStatus.DONE);
+                // Callback
+                callback.run();
+            }, () -> {
+                // Show Error
+                viewModel.clear(this);
+                updateLoadingStatus(LoadingStatus.ERROR);
 
-            // Refresh
-            int oldRefreshVersion = refreshVersion;
-            parent.post(() -> {
-                viewModel.nextPage = FeedViewModel.FIRST_PAGE;
-                loadPage(viewModel.nextPage, data -> {
-                    if (oldRefreshVersion == refreshVersion) {
-                        clear();
-                        viewModel.loadingStatus = addPage(data, false);
-                        notifyDataSetChanged();
-                    }
-                    callback.run();
-                }, () -> {
-                    if (oldRefreshVersion == refreshVersion) {
-                        clear();
-                        viewModel.loadingStatus = LoadingStatus.ERROR;
-                        notifyDataSetChanged();
-                    }
-                    callback.run();
-                });
+                // Callback
+                callback.run();
             });
         }
     }
 
-    /**
-     * Replace the specified element with a new one.
-     * @param oldElement The old element to be replaced
-     * @param newElement The new element
-     */
-    protected void replace(T oldElement, T newElement) {
-        if (isBlocked(newElement)) {
-            remove(oldElement);
-            return;
-        }
-        int index = viewModel.dataset.indexOf(oldElement);
-        if (index != -1) {
-            viewModel.dataset.set(index, newElement);
-            notifyItemChanged(getFirstElementPosition() + index);
-        }
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        scrollingBugWorkaround.recyclerViews.add(recyclerView);
     }
 
-    /**
-     * Remove the specified element.
-     * @param element The element to remove
-     */
-    protected void remove(T element) {
-        int index = viewModel.dataset.indexOf(element);
-        if (index != -1) {
-            viewModel.dataset.remove(element);
-            notifyItemRemoved(getFirstElementPosition() + index);
-        }
-    }
-
-    /**
-     * Check if an element is blocked.
-     * @param element The element to check
-     * @return True if the element is blocked, false otherwise
-     */
-    protected boolean isBlocked(T element) {
-        return false;
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        scrollingBugWorkaround.recyclerViews.remove(recyclerView);
     }
 }

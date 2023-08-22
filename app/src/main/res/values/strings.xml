@@ -32,14 +32,19 @@
     <!-- Feed -->
     <string name="feed_loading">Loading…</string>
     <string name="feed_open_menu">Open Menu</string>
-    <string name="feed_show_info">Show Info</string>
     <string name="feed_refresh">Refresh</string>
     <string name="feed_menu_login">Login</string>
     <string name="feed_menu_view_profile">View Profile</string>
     <string name="feed_menu_logout">Logout</string>
-    <string name="feed_menu_settings">Settings</string>
+    <string name="feed_menu_app_settings">App Settings</string>
+    <string name="feed_menu_user_settings">User Settings</string>
     <string name="feed_menu_register">Register</string>
     <string name="feed_menu_saved">Saved</string>
+    <string name="feed_menu_community_info">Community Information</string>
+    <string name="feed_menu_legal_info">Legal Information</string>
+    <string name="feed_menu_block_community">Block Community</string>
+    <string name="feed_menu_unblock_community">Unblock Community</string>
+    <string name="feed_menu_blocked">Blocked</string>
     <string name="feed_error">Unable to load data!</string>
     <string name="feed_retry">Retry</string>
 
@@ -50,11 +55,40 @@
     <string name="posts_listing_type">Show:</string>
     <string name="post_creator_community_spacer">on</string>
     <string name="post_community_time_spacer">•</string>
+    <string name="post_block_creator">Block User</string>
+    <string name="post_unblock_creator">Unblock User</string>
 
     <!-- Settings -->
     <string name="settings_general">General</string>
-    <string name="settings_dark_mode">Dark Mode</string>
-    <string name="settings_change_instance">Change Lemmy Instance</string>
+    <string name="settings_advanced">Advanced</string>
+    <string name="settings_security">Security</string>
+
+    <!-- App Settings -->
+    <string name="app_settings_dark_mode">Dark Mode</string>
+    <string name="app_settings_disable_large_thumbnail">Disable Large Thumbnails</string>
+    <string name="app_settings_change_instance">Change Lemmy Instance</string>
+    <string name="app_settings_clear_search_history">Clear Search History</string>
+
+    <!-- User Settings -->
+    <string name="user_settings_display_name">Display Name</string>
+    <string name="user_settings_bio">Biography</string>
+    <string name="user_settings_matrix_user_id">Matrix User</string>
+    <string name="user_settings_default_listing_type">Default Listing Type</string>
+    <string name="user_settings_default_sort_type">Default Sort Type</string>
+    <string name="user_settings_show_nsfw">Show NSFW Content</string>
+    <string name="user_settings_blur_nsfw">Blur NSFW Content</string>
+    <string name="user_settings_show_scores">Show Scores</string>
+    <string name="user_settings_show_avatars">Show Avatars</string>
+    <string name="user_settings_bot_account">Bot Account</string>
+    <string name="user_settings_show_bot_accounts">Show Bot Accounts</string>
+    <string name="user_settings_show_read_posts">Show Read Posts</string>
+    <string name="user_settings_show_new_post_notifs">Show Notifications For New Posts</string>
+    <string name="user_settings_send_notifications_to_email">Email Notifications</string>
+    <string name="user_settings_verification_email_sent">A verification email has been sent.</string>
+    <string name="user_settings_change_password">Change Password</string>
+    <string name="user_settings_totp_enable">Enable 2FA</string>
+    <string name="user_settings_totp_disable">Disable 2FA</string>
+    <string name="user_settings_totp_url">Open 2FA Setup URL</string>
 
     <!-- Login -->
     <string name="login_username">Email Or Username</string>
@@ -65,6 +99,8 @@
     <string name="login_password_recovery_hint">Email</string>
     <string name="login_password_recovery_success">An email has been sent with password reset instructions.</string>
     <string name="login_password_recovery_failure">Unable to send password reset email!</string>
+    <string name="login_totp_token">2FA Required</string>
+    <string name="login_totp_token_hint">2FA Code</string>
 
     <!-- Icons -->
     <string name="icon_pinned">Pinned</string>
@@ -81,4 +117,17 @@
 
     <!-- Image Viewer -->
     <string name="view_image_download">Download</string>
+
+    <!-- Search -->
+    <string name="search">Search</string>
+    <string name="search_hint">Search Lemmy</string>
+    <string name="communities">Communities</string>
+    <string name="users">Users</string>
+
+    <!-- Change Password -->
+    <string name="change_password_old">Old Password</string>
+    <string name="change_password_new">New Password</string>
+    <string name="change_password_new_verify">Verify Password</string>
+    <string name="change_password_match_error">Does Not Match</string>
+    <string name="change_password_error">Unable to change password!</string>
 </resources>

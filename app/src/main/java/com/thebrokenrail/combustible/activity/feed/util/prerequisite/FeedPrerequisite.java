@@ -1,6 +1,8 @@
-package com.thebrokenrail.combustible.activity.feed.prerequisite;
+package com.thebrokenrail.combustible.activity.feed.util.prerequisite;
 
 import com.thebrokenrail.combustible.api.Connection;
+import com.thebrokenrail.combustible.api.method.CommentResponse;
+import com.thebrokenrail.combustible.api.method.GetComment;
 import com.thebrokenrail.combustible.api.method.GetCommunity;
 import com.thebrokenrail.combustible.api.method.GetCommunityResponse;
 import com.thebrokenrail.combustible.api.method.GetPersonDetails;
@@ -61,6 +63,25 @@ public abstract class FeedPrerequisite<T> {
         @Override
         protected Connection.Method<GetPostResponse> prepare() {
             GetPost method = new GetPost();
+            method.id = id;
+            return method;
+        }
+    }
+
+    /**
+     * Retrieve post information.
+     */
+    public final static class Comment extends FeedPrerequisite<CommentResponse> {
+        private final int id;
+
+        public Comment(int id) {
+            super();
+            this.id = id;
+        }
+
+        @Override
+        protected Connection.Method<CommentResponse> prepare() {
+            GetComment method = new GetComment();
             method.id = id;
             return method;
         }

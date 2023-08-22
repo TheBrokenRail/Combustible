@@ -30,7 +30,7 @@ public class Sharing {
     }
 
     public static void shareCommunity(Context context, CommunityView community) {
-        String name = Util.getCommunityName(community.community);
+        String name = Names.getCommunityName(community.community);
         share(context, COMMUNITY_PREFIX + "/" + name);
     }
 
@@ -39,7 +39,7 @@ public class Sharing {
     }
 
     public static void sharePerson(Context context, PersonView person) {
-        String name = Util.getPersonName(person.person);
+        String name = Names.getPersonName(person.person);
         share(context, USER_PREFIX + "/" + name);
     }
 }

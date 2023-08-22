@@ -6,9 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.fullscreen.WelcomeActivity"
+    tools:context=".activity.fullscreen.welcome.WelcomeActivity"
     android:baselineAligned="false"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:overScrollMode="ifContentScrolls">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +24,8 @@
             android:layout_height="match_parent"
             android:layout_weight="0.75"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            tools:ignore="UselessParent">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -32,6 +34,7 @@
                 android:textSize="@dimen/welcome_title_font_size"
                 android:textStyle="bold"
                 android:textAlignment="center"
+                android:layout_marginTop="@dimen/login_padding"
                 android:layout_marginBottom="@dimen/login_padding" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -42,9 +45,12 @@
                 android:layout_marginBottom="@dimen/login_padding">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/login_username_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:autofillHints="username" />
+                    android:autofillHints="username"
+                    android:inputType="text"
+                    android:maxLines="1" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,10 +63,12 @@
                 app:endIconMode="password_toggle">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/login_password_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:autofillHints="password" />
+                    android:autofillHints="password"
+                    android:maxLines="1" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,6 +83,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/login_padding"
                 android:orientation="horizontal"
                 android:gravity="center_horizontal">
 

@@ -6,16 +6,33 @@
 
         <ListPreference
             app:key="dark_mode"
-            app:title="@string/settings_dark_mode"
+            app:title="@string/app_settings_dark_mode"
             app:entries="@array/settings_dark_mode_entries"
             app:entryValues="@array/settings_dark_mode_values"
             app:defaultValue="@string/settings_dark_mode_default"
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false" />
 
+        <CheckBoxPreference
+            app:key="disable_large_thumbnail"
+            app:title="@string/app_settings_disable_large_thumbnail"
+            app:iconSpaceReserved="false"
+            app:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/settings_advanced">
+
         <Preference
             app:key="change_instance"
-            app:title="@string/settings_change_instance"
+            app:title="@string/app_settings_change_instance"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="clear_search_history"
+            app:title="@string/app_settings_clear_search_history"
             app:iconSpaceReserved="false" />
 
     </PreferenceCategory>

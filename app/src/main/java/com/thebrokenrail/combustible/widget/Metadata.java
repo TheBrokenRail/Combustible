@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -16,7 +16,7 @@ import com.thebrokenrail.combustible.activity.feed.post.PostFeedActivity;
 import com.thebrokenrail.combustible.activity.feed.tabbed.user.UserFeedActivity;
 import com.thebrokenrail.combustible.api.method.Community;
 import com.thebrokenrail.combustible.api.method.Person;
-import com.thebrokenrail.combustible.util.Util;
+import com.thebrokenrail.combustible.util.Names;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -24,9 +24,8 @@ import java.time.Instant;
 /**
  * Widget that displays the creator and/or community of a post/comment, along with its published/edited time.
  */
-public class Metadata extends FrameLayout {
+public class Metadata extends TableLayout {
     private final LinkWithIcon creator;
-    private final AppCompatTextView spacer;
     private final LinkWithIcon community;
     private final AppCompatTextView time;
 
@@ -34,25 +33,23 @@ public class Metadata extends FrameLayout {
         super(context, attrs);
 
         // Inner Layout
-        LinearLayout inner = new LinearLayout(context);
+        TableRow inner = new TableRow(context);
         inner.setGravity(Gravity.CENTER_VERTICAL);
-        inner.setOrientation(LinearLayout.HORIZONTAL);
-        inner.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        inner.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         addView(inner);
 
         // Creator
         creator = new LinkWithIcon(context, null);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.weight = 1;
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
         creator.setLayoutParams(layoutParams);
         inner.addView(creator);
 
         // Spacer
-        spacer = new AppCompatTextView(context);
+        AppCompatTextView spacer = new AppCompatTextView(context);
         spacer.setText(R.string.post_creator_community_spacer);
         spacer.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.link_with_icon_font_size));
         spacer.setMaxLines(1);
-        layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
         int margin = context.getResources().getDimensionPixelSize(R.dimen.post_padding);
         layoutParams.setMarginEnd(margin);
         layoutParams.setMarginStart(margin);
@@ -61,8 +58,7 @@ public class Metadata extends FrameLayout {
 
         // Community
         community = new LinkWithIcon(context, null);
-        layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.weight = 1;
+        layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
         community.setLayoutParams(layoutParams);
         inner.addView(community);
 
@@ -71,7 +67,7 @@ public class Metadata extends FrameLayout {
         spacer2.setText(R.string.post_community_time_spacer);
         spacer2.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.link_with_icon_font_size));
         spacer2.setMaxLines(1);
-        layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
         layoutParams.setMarginEnd(margin);
         layoutParams.setMarginStart(margin);
         spacer2.setLayoutParams(layoutParams);
@@ -81,9 +77,13 @@ public class Metadata extends FrameLayout {
         time = new AppCompatTextView(context);
         time.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.link_with_icon_font_size));
         time.setMaxLines(1);
-        layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
         time.setLayoutParams(layoutParams);
         inner.addView(time);
+
+        // Shrink Columns
+        setColumnShrinkable(0, true);
+        setColumnShrinkable(2, true);
     }
 
     /**
@@ -93,36 +93,39 @@ public class Metadata extends FrameLayout {
      * @param timeView The time to be displayed
      * @param isEdited If the time should be marked as edited
      * @param blurNsfw If NSFW content should be blurred
+     * @param showAvatars Show avatars
      */
-    public void setup(Person creatorView, Community communityView, String timeView, boolean isEdited, boolean blurNsfw) {
+    public void setup(Person creatorView, Community communityView, String timeView, boolean isEdited, boolean blurNsfw, boolean showAvatars) {
         // Creator
-        if (creatorView != null) {
-            creator.setVisibility(VISIBLE);
-            creator.setup(creatorView.avatar, false, Util.getPersonTitle(creatorView), () -> {
+        boolean creatorVisible = creatorView != null;
+        setColumnCollapsed(0, !creatorVisible);
+        if (creatorVisible) {
+            creator.setup(showAvatars ? creatorView.avatar : null, false, Names.getPersonTitle(creatorView), () -> {
                 Context context = getContext();
                 Intent intent = new Intent(context, UserFeedActivity.class);
                 intent.putExtra(UserFeedActivity.USER_ID_EXTRA, creatorView.id);
                 context.startActivity(intent);
             });
         } else {
-            creator.setVisibility(GONE);
+            creator.setup(null, false, "", null);
         }
 
-        // Spacer
-        spacer.setVisibility((creatorView != null && communityView != null) ? VISIBLE : GONE);
-
         // Community
-        if (communityView != null) {
-            community.setVisibility(VISIBLE);
-            community.setup(communityView.icon, blurNsfw && communityView.nsfw, Util.getCommunityTitle(communityView), () -> {
+        boolean communityVisible = communityView != null;
+        setColumnCollapsed(2, !communityVisible);
+        if (communityVisible) {
+            community.setup(showAvatars ? communityView.icon : null, blurNsfw && communityView.nsfw, Names.getCommunityTitle(communityView), () -> {
                 Context context = getContext();
                 Intent intent = new Intent(context, PostFeedActivity.class);
                 intent.putExtra(PostFeedActivity.COMMUNITY_ID_EXTRA, communityView.id);
                 context.startActivity(intent);
             });
         } else {
-            community.setVisibility(GONE);
+            community.setup(null, false, "", null);
         }
+
+        // Spacer
+        setColumnCollapsed(1, !creatorVisible || !communityVisible);
 
         // Time
         String timeText;

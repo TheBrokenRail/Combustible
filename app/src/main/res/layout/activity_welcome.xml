@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.fullscreen.WelcomeActivity"
+    tools:context=".activity.fullscreen.welcome.WelcomeActivity"
     android:baselineAligned="false"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:overScrollMode="ifContentScrolls">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,11 +23,14 @@
             android:layout_height="match_parent"
             android:layout_weight="0.75"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            tools:ignore="UselessParent">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/login_padding"
+                android:layout_marginBottom="@dimen/login_padding"
                 android:text="@string/welcome_title"
                 android:textSize="@dimen/welcome_title_font_size"
                 android:textStyle="bold"
@@ -36,12 +40,14 @@
                 android:id="@+id/welcome_explanation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/login_padding"
                 android:text="@string/welcome_explanation"
                 android:textAlignment="center" />
 
             <RadioGroup
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/login_padding"
                 android:checkedButton="@id/welcome_instance_recommended"
                 android:gravity="center_horizontal">
 
@@ -52,6 +58,7 @@
                     android:text="@string/welcome_instance_recommended" />
 
                 <RadioButton
+                    android:id="@+id/welcome_instance_custom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/welcome_instance_custom" />
@@ -62,6 +69,7 @@
                 android:id="@+id/welcome_go"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/login_padding"
                 android:text="@string/welcome_go" />
 
         </LinearLayout>

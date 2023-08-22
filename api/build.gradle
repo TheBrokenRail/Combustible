@@ -12,7 +12,7 @@ dependencies {
     api 'com.squareup.okhttp3:okhttp:4.10.0'
 }
 
-task generateMethods(type: Exec) {
+tasks.register('generateMethods', Exec) {
     workingDir projectDir
     commandLine 'node', 'generate-methods.js'
 }

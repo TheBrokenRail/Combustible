@@ -44,12 +44,32 @@
             android:textSize="@dimen/post_title_font_size"
             android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/post_thumbnail"
-            android:layout_width="@dimen/post_thumbnail_width"
-            android:layout_height="@dimen/post_thumbnail_height"
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/post_padding"
-            android:importantForAccessibility="no" />
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:id="@+id/post_thumbnail"
+                android:layout_width="@dimen/post_thumbnail_width"
+                android:layout_height="@dimen/post_thumbnail_height"
+                android:importantForAccessibility="no" />
+
+            <TextView
+                android:id="@+id/post_thumbnail_hint"
+                android:layout_width="@dimen/post_thumbnail_width"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center_horizontal"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="@dimen/link_with_icon_font_size"
+                android:textStyle="bold"
+                android:textColor="@color/md_theme_dark_onSurface" />
+
+        </FrameLayout>
 
     </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.thebrokenrail.combustible.activity.feed;
+package com.thebrokenrail.combustible.activity.feed.util;
 
 import android.content.Context;
 import android.util.TypedValue;
@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.thebrokenrail.combustible.R;
-import com.thebrokenrail.combustible.activity.feed.comment.FlatCommentFeedAdapter;
-import com.thebrokenrail.combustible.activity.feed.prerequisite.FeedPrerequisites;
+import com.thebrokenrail.combustible.activity.feed.FeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.comment.BaseCommentFeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
 
 public class FeedUtil {
     public static void setupSwipeToRefresh(SwipeRefreshLayout swipeRefreshLayout, FeedAdapter<?> adapter) {
@@ -52,6 +54,7 @@ public class FeedUtil {
         recyclerView.setLayoutManager(layoutManager);
 
         // Track Scrolling
+        RequestManager requestManager = Glide.with(recyclerView.getContext());
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -65,12 +68,12 @@ public class FeedUtil {
 
                 // Pause Image Loading While Scrolling Comments
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    Glide.with(recyclerView.getContext()).resumeRequests();
+                    requestManager.resumeRequests();
                 }
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     RecyclerView.Adapter<?> adapter = recyclerView.getAdapter();
-                    if (adapter instanceof FlatCommentFeedAdapter) {
-                        Glide.with(recyclerView.getContext()).pauseRequests();
+                    if (adapter instanceof BaseCommentFeedAdapter) {
+                        requestManager.pauseRequests();
                     }
                 }
             }

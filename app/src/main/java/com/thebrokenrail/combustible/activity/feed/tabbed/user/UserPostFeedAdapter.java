@@ -4,7 +4,8 @@ import android.view.View;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import com.thebrokenrail.combustible.activity.feed.post.PostFeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.post.BasePostFeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.post.PostContext;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.GetPersonDetails;
 import com.thebrokenrail.combustible.api.method.PostView;
@@ -14,18 +15,13 @@ import com.thebrokenrail.combustible.util.Util;
 import java.util.List;
 import java.util.function.Consumer;
 
-class UserPostFeedAdapter extends PostFeedAdapter {
+class UserPostFeedAdapter extends BasePostFeedAdapter {
     private final int user;
 
-    UserPostFeedAdapter(View parent, Connection connection, ViewModelProvider viewModelProvider, String viewModelKey, int user) {
-        super(parent, connection, viewModelProvider, viewModelKey, false, -1);
+    UserPostFeedAdapter(View parent, Connection connection, ViewModelProvider viewModelProvider, int user) {
+        super(parent, connection, viewModelProvider);
         this.user = user;
-        sortBy = SortType.New;
-    }
-
-    @Override
-    protected boolean hasListingTypeSort() {
-        return false;
+        sorting.set(SortType.New);
     }
 
     @Override
@@ -33,7 +29,7 @@ class UserPostFeedAdapter extends PostFeedAdapter {
         GetPersonDetails method = new GetPersonDetails();
         method.page = page;
         method.limit = Util.ELEMENTS_PER_PAGE;
-        method.sort = sortBy;
+        method.sort = sorting.get(SortType.class);
         method.person_id = user;
         connection.send(method, getPostsResponse -> successCallback.accept(getPostsResponse.posts), errorCallback);
     }
@@ -44,8 +40,13 @@ class UserPostFeedAdapter extends PostFeedAdapter {
     }
 
     @Override
-    protected PinMode getPinMode() {
-        return PinMode.NONE;
+    protected boolean showCommunity() {
+        return true;
+    }
+
+    @Override
+    protected PostContext.PinMode getPinMode() {
+        return PostContext.PinMode.NONE;
     }
 
     @Override
@@ -54,7 +55,7 @@ class UserPostFeedAdapter extends PostFeedAdapter {
     }
 
     @Override
-    protected boolean useDefaultSort() {
-        return false;
+    protected boolean isSortingTypeVisible(Class<? extends Enum<?>> type) {
+        return type == SortType.class;
     }
 }

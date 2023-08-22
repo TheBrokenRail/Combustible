@@ -6,14 +6,12 @@
         android:id="@+id/view_image_download"
         android:icon="@drawable/baseline_download_24"
         android:title="@string/view_image_download"
-        android:contentDescription="@string/view_image_download"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/view_image_share"
         android:icon="@drawable/baseline_share_24"
         android:title="@string/share"
-        android:contentDescription="@string/share"
         app:showAsAction="ifRoom" />
 
 </menu>

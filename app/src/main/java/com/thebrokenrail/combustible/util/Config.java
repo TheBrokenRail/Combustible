@@ -104,4 +104,13 @@ public class Config {
     public long getVersion() {
         return preferences.getLong(VERSION_KEY, 0);
     }
+
+    /**
+     * Trigger refresh of all {@link com.thebrokenrail.combustible.activity.LemmyActivity}s.
+     */
+    public void triggerRefresh() {
+        SharedPreferences.Editor editor = preferences.edit();
+        updateVersion(editor);
+        editor.apply();
+    }
 }

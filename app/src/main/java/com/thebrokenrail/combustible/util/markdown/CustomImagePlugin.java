@@ -19,7 +19,7 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.ViewImageActivity;
-import com.thebrokenrail.combustible.util.Util;
+import com.thebrokenrail.combustible.util.Images;
 
 import org.commonmark.node.Image;
 
@@ -87,7 +87,7 @@ public class CustomImagePlugin extends AbstractMarkwonPlugin {
         private GlideAsyncDrawableLoader(@NonNull RequestManager requestManager, Context context) {
             this.requestManager = requestManager;
             this.context = context;
-            cornerRadius = Util.getCornerRadius(context);
+            cornerRadius = Images.getCornerRadius(context);
         }
 
         @Override

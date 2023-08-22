@@ -1,6 +1,7 @@
 package com.thebrokenrail.combustible.activity.feed.tabbed;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -8,16 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.feed.FeedAdapter;
-import com.thebrokenrail.combustible.activity.feed.FeedUtil;
-import com.thebrokenrail.combustible.activity.feed.prerequisite.FeedPrerequisites;
+import com.thebrokenrail.combustible.activity.feed.util.FeedUtil;
+import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 class TabbedFeedAdapter extends RecyclerView.Adapter<TabbedFeedAdapter.TabViewHolder> {
     static class TabViewHolder extends RecyclerView.ViewHolder {
@@ -29,10 +34,26 @@ class TabbedFeedAdapter extends RecyclerView.Adapter<TabbedFeedAdapter.TabViewHo
         }
     }
 
+    public static class ScrollState extends ViewModel {
+        private final Map<Integer, Parcelable> state = new HashMap<>();
+
+        private void save(int id, RecyclerView recyclerView) {
+            state.put(id, Objects.requireNonNull(recyclerView.getLayoutManager()).onSaveInstanceState());
+        }
+
+        private void load(int id, RecyclerView recyclerView) {
+            if (state.containsKey(id)) {
+                Objects.requireNonNull(recyclerView.getLayoutManager()).onRestoreInstanceState(state.get(id));
+            }
+        }
+    }
+
+    private final ScrollState scrollState;
     private final FeedPrerequisites prerequisites;
     private final List<Map.Entry<Integer, FeedAdapter<?>>> tabs;
 
-    TabbedFeedAdapter(FeedPrerequisites prerequisites, List<Map.Entry<Integer, FeedAdapter<?>>> tabs) {
+    TabbedFeedAdapter(ViewModelProvider viewModelProvider, FeedPrerequisites prerequisites, List<Map.Entry<Integer, FeedAdapter<?>>> tabs) {
+        scrollState = viewModelProvider.get(ScrollState.class);
         this.prerequisites = prerequisites;
         this.tabs = tabs;
     }
@@ -56,8 +77,8 @@ class TabbedFeedAdapter extends RecyclerView.Adapter<TabbedFeedAdapter.TabViewHo
 
         // Edge-To-Edge
         ViewCompat.setOnApplyWindowInsetsListener(recyclerView, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures());
-            recyclerView.setPadding(insets.left, 0, insets.right, insets.bottom + context.getResources().getDimensionPixelSize(R.dimen.feed_item_margin));
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            recyclerView.setPadding(0, 0, 0, insets.bottom + context.getResources().getDimensionPixelSize(R.dimen.feed_item_margin));
             return windowInsets;
         });
         recyclerView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
@@ -71,6 +92,30 @@ class TabbedFeedAdapter extends RecyclerView.Adapter<TabbedFeedAdapter.TabViewHo
             }
         });
 
+        // Scroll State
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                // Get ID
+                int id = -1;
+                RecyclerView.Adapter<?> adapter = recyclerView.getAdapter();
+                if (adapter != null) {
+                    for (int i = 0; i < tabs.size(); i++) {
+                        Map.Entry<Integer, FeedAdapter<?>> tab = tabs.get(i);
+                        if (tab.getValue() == adapter) {
+                            id = i;
+                            break;
+                        }
+                    }
+                }
+                // Store
+                if (id != -1) {
+                    scrollState.save(id, recyclerView);
+                }
+            }
+        });
+
         // Return
         return new TabViewHolder(swipeRefreshLayout, recyclerView);
     }
@@ -81,6 +126,9 @@ class TabbedFeedAdapter extends RecyclerView.Adapter<TabbedFeedAdapter.TabViewHo
         holder.recyclerView.setAdapter(adapter);
         FeedUtil.setupSwipeToRefresh((SwipeRefreshLayout) holder.itemView, adapter);
         holder.recyclerView.setTag("tab-" + position);
+
+        // Scroll State
+        scrollState.load(position, holder.recyclerView);
     }
 
     @Override

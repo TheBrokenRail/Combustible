@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/settings_general">
+
+        <EditTextPreference
+            app:key="display_name"
+            app:title="@string/user_settings_display_name"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:key="bio"
+            app:title="@string/user_settings_bio"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:key="email"
+            app:title="@string/login_password_recovery_hint"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+        <EditTextPreference
+            app:key="matrix_user_id"
+            app:title="@string/user_settings_matrix_user_id"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            app:key="default_listing_type"
+            app:title="@string/user_settings_default_listing_type"
+            app:entries="@array/listing_types"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            app:key="default_sort_type"
+            app:title="@string/user_settings_default_sort_type"
+            app:entries="@array/sort_types"
+            app:useSimpleSummaryProvider="true"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            app:key="show_nsfw"
+            app:title="@string/user_settings_show_nsfw"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            app:key="blur_nsfw"
+            app:title="@string/user_settings_blur_nsfw"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            app:key="show_scores"
+            app:title="@string/user_settings_show_scores"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            app:key="show_avatars"
+            app:title="@string/user_settings_show_avatars"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            app:key="bot_account"
+            app:title="@string/user_settings_bot_account"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            app:key="show_bot_accounts"
+            app:title="@string/user_settings_show_bot_accounts"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            app:key="show_read_posts"
+            app:title="@string/user_settings_show_read_posts"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            app:key="show_new_post_notifs"
+            app:title="@string/user_settings_show_new_post_notifs"
+            app:iconSpaceReserved="false" />
+
+        <CheckBoxPreference
+            app:key="send_notifications_to_email"
+            app:title="@string/user_settings_send_notifications_to_email"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/settings_security">
+
+        <Preference
+            app:key="change_password"
+            app:title="@string/user_settings_change_password"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="totp_url"
+            app:title="@string/user_settings_totp_url"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="totp_toggle"
+            app:title="@string/user_settings_totp_enable"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

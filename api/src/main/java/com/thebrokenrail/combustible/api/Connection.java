@@ -1,9 +1,9 @@
 package com.thebrokenrail.combustible.api;
 
 import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.JsonDataException;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
+import com.thebrokenrail.combustible.api.method.Login;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,6 +11,9 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Consumer;
 
 import okhttp3.Call;
@@ -70,6 +73,8 @@ public class Connection {
     public void setCallbackHelper(Consumer<Runnable> callbackHelper) {
         this.callbackHelper = callbackHelper;
     }
+
+    private final List<Call> currentCalls = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * Run API method.
@@ -152,44 +157,70 @@ public class Connection {
         Request request = requestBuilder.build();
 
         // Send Request
-        client.newCall(request).enqueue(new Callback() {
+        Call call = client.newCall(request);
+        currentCalls.add(call);
+        call.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+
                 // Run Error Callback
+                currentCalls.remove(call);
                 callbackHelper.accept(errorCallback);
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                try (ResponseBody responseBody = response.body()) {
-                    // Check Response
-                    if (!response.isSuccessful()) {
-                        // Run Error Callback
-                        if (responseBody != null) {
-                            System.err.println("API ERROR: " + responseBody.string());
-                        }
-                        callbackHelper.accept(errorCallback);
-                        return;
-                    }
+                currentCalls.remove(call);
+                try {
+                    try (ResponseBody responseBody = response.body()) {
+                        // Check Response
+                        if (!response.isSuccessful()) {
+                            // Run Error Callback
+                            if (responseBody != null) {
+                                // 2FA Token Needed
+                                String error = responseBody.string();
+                                if (method instanceof Login && (error.contains("MissingTotpToken") || error.contains("missing_totp_token"))) {
+                                    // A null Response To Login Signals That 2FA Should Be Used
+                                    callbackHelper.accept(() -> successCallback.accept(null));
+                                    return;
+                                }
 
-                    // Deserialize Body
-                    Moshi moshi = new Moshi.Builder().build();
-                    JsonAdapter<T> jsonAdapter = moshi.adapter(method.getResponseClass());
-                    assert responseBody != null;
-                    try {
+                                // Debugging
+                                System.err.println("API ERROR: " + error);
+                            }
+                            callbackHelper.accept(errorCallback);
+                            return;
+                        }
+
+                        // Deserialize Body
+                        Moshi moshi = new Moshi.Builder().build();
+                        JsonAdapter<T> jsonAdapter = moshi.adapter(method.getResponseClass());
+                        assert responseBody != null;
                         T obj = jsonAdapter.fromJson(responseBody.string());
 
                         // Run Callback
                         callbackHelper.accept(() -> successCallback.accept(obj));
-                    } catch (JsonDataException e) {
-                        e.printStackTrace();
-
-                        // Run Error Callback
-                        callbackHelper.accept(errorCallback);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                    // Run Error Callback
+                    callbackHelper.accept(errorCallback);
                 }
             }
         });
+    }
+
+    /**
+     * Cancel all current requests and callbacks.
+     */
+    public void close() {
+        for (Call call : currentCalls) {
+            call.cancel();
+        }
+        currentCalls.clear();
+        setCallbackHelper(runnable -> {});
     }
 
     /**

@@ -4,7 +4,10 @@ import android.view.View;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import com.thebrokenrail.combustible.activity.feed.post.PostFeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.post.BasePostFeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.post.PostContext;
+import com.thebrokenrail.combustible.activity.feed.util.dataset.FeedDataset;
+import com.thebrokenrail.combustible.activity.feed.util.dataset.SimpleFeedDataset;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.GetPosts;
 import com.thebrokenrail.combustible.api.method.ListingType;
@@ -15,15 +18,15 @@ import com.thebrokenrail.combustible.util.Util;
 import java.util.List;
 import java.util.function.Consumer;
 
-class SavedPostFeedAdapter extends PostFeedAdapter {
-    SavedPostFeedAdapter(View parent, Connection connection, ViewModelProvider viewModelProvider, String viewModelKey) {
-        super(parent, connection, viewModelProvider, viewModelKey, false, -1);
-        sortBy = SortType.New;
+class SavedPostFeedAdapter extends BasePostFeedAdapter {
+    SavedPostFeedAdapter(View parent, Connection connection, ViewModelProvider viewModelProvider) {
+        super(parent, connection, viewModelProvider);
+        sorting.set(SortType.New);
     }
 
     @Override
-    protected boolean hasListingTypeSort() {
-        return false;
+    protected boolean isSortingTypeVisible(Class<? extends Enum<?>> type) {
+        return type == SortType.class;
     }
 
     @Override
@@ -31,20 +34,25 @@ class SavedPostFeedAdapter extends PostFeedAdapter {
         GetPosts method = new GetPosts();
         method.page = page;
         method.limit = Util.ELEMENTS_PER_PAGE;
-        method.sort = sortBy;
+        method.sort = sorting.get(SortType.class);
         method.type_ = ListingType.All;
         method.saved_only = true;
         connection.send(method, getPostsResponse -> successCallback.accept(getPostsResponse.posts), errorCallback);
     }
 
     @Override
-    protected boolean isBlocked(PostView element) {
-        return !element.saved;
+    protected FeedDataset<PostView> createDataset() {
+        return new SimpleFeedDataset<PostView>() {
+            @Override
+            protected boolean isBlocked(PostView element) {
+                return !element.saved || super.isBlocked(element);
+            }
+        };
     }
 
     @Override
-    protected PinMode getPinMode() {
-        return PinMode.NONE;
+    protected PostContext.PinMode getPinMode() {
+        return PostContext.PinMode.NONE;
     }
 
     @Override
@@ -53,7 +61,12 @@ class SavedPostFeedAdapter extends PostFeedAdapter {
     }
 
     @Override
-    protected boolean useDefaultSort() {
-        return false;
+    protected boolean showCreator() {
+        return true;
+    }
+
+    @Override
+    protected boolean showCommunity() {
+        return true;
     }
 }

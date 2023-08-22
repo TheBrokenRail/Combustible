@@ -34,9 +34,9 @@
         <item>Top Nine Months</item>
     </string-array>
     <string-array name="listing_types">
-        <item>All Posts</item>
-        <item>Local Posts</item>
-        <item>Posts From Subscribed Communities</item>
+        <item>All Content</item>
+        <item>Local Content</item>
+        <item>Content From Subscribed Communities</item>
     </string-array>
     <string-array name="comment_sort_types">
         <item>Hot</item>

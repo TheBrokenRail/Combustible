@@ -1,0 +1,43 @@
+# Todo
+- [x] 2FA Support
+  - [x] `LoginActivity`
+  - [x] `UserSettingsActivity`
+- [ ] Making Posts
+  - [ ] Uploading Images
+  - [ ] Editing
+- [ ] Making Comments
+  - [ ] Editing
+- [ ] User Banners/Biographies
+  - [ ] `UserFeedActivity` (Consider ignoring?)
+  - [ ] `UserSettingsActivity` (Uploading)
+- [ ] Fix Weird Ellipsizing
+- [ ] Investigate Voting/Posting/Editing/Deleting In
+  - [ ] Locked Posts
+  - [ ] Moderator-Only Communities
+- [ ] Comment/Post Deleting
+  - [ ] Deleting (For Users)
+  - [ ] Removing (For Moderators/Admins)
+- [ ] Inbox (For Notifications)
+- [ ] Push Notifications
+- [ ] Better Handling For Invalid Tokens
+- [ ] Resolve All `// TODO`s
+- [ ] Clean Up JavaDoc Comments
+- [ ] Comment/Post Reporting
+- [ ] Load Avatar Into "View Profile" Menu Item
+- [x] Fix Lift On Scroll In `SettingsActivity` (For Screen Rotation)
+- [ ] Make Links Opened By Keyboard Use Chrome Custom Tabs
+- [ ] Better Overlay In `ViewImageActivity`
+- [ ] Fix Weird Ripples In `TabbedFeedActivity`
+- [ ] Way To Refresh Posts (Hard because it's loaded through `FeedPrerequistes`)
+- [ ] Delete Account Button In `UserSettingsActivity`
+- [x] Person/Community Blocking/Unblocking
+- [ ] Glide Caching Configuration
+- [ ] App Icon!
+- [ ] Reconsider use of `scrimBackground`
+- [x] Blocking
+  - [x] Community Blocking
+  - [x] Person Blocking
+  - [x] Block Screen
+- [x] Community/User Overflows/Metadata
+  - [x] NSFW Marker
+  - [x] Share

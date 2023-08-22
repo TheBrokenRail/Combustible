@@ -1,35 +1,34 @@
-package com.thebrokenrail.combustible.activity;
+package com.thebrokenrail.combustible.activity.settings;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.preference.EditTextPreference;
+import androidx.preference.EditTextPreferenceDialogFragmentCompat;
 import androidx.preference.ListPreference;
 import androidx.preference.ListPreferenceDialogFragmentCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.thebrokenrail.combustible.R;
-import com.thebrokenrail.combustible.activity.fullscreen.WelcomeActivity;
+import com.thebrokenrail.combustible.activity.LemmyActivity;
+import com.thebrokenrail.combustible.util.Config;
 
-import java.util.Objects;
-
-public class SettingsActivity extends AppCompatActivity implements PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
+public abstract class SettingsActivity extends LemmyActivity implements PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,11 +43,21 @@ public class SettingsActivity extends AppCompatActivity implements PreferenceFra
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        // Edge-To-Edge
+        CoordinatorLayout root = findViewById(R.id.settings_root);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            root.setPadding(insets.left, 0, insets.right, 0);
+            return windowInsets;
+        });
+
         // Load
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.settings, new SettingsFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.settings, createFragment()).commit();
         }
     }
+
+    protected abstract PreferenceFragmentCompat createFragment();
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -59,59 +68,16 @@ public class SettingsActivity extends AppCompatActivity implements PreferenceFra
         return super.onOptionsItemSelected(item);
     }
 
-    public static class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
-        @Override
-        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey);
-
-            Preference changeInstance = findPreference("change_instance");
-            assert changeInstance != null;
-            changeInstance.setOnPreferenceClickListener(preference -> {
-                Intent intent = new Intent(requireContext(), WelcomeActivity.class);
-                startActivity(intent);
-                return true;
-            });
-        }
-
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals("dark_mode")) {
-                SubApplication.setDarkMode(getContext());
-            }
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-            Objects.requireNonNull(getPreferenceManager().getSharedPreferences()).registerOnSharedPreferenceChangeListener(this);
-        }
-
-        @Override
-        public void onPause() {
-            Objects.requireNonNull(getPreferenceManager().getSharedPreferences()).unregisterOnSharedPreferenceChangeListener(this);
-            super.onPause();
-        }
-
-        @Override
-        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-
-            // Edge-To-Edge
-            RecyclerView list = getListView();
-            ViewCompat.setOnApplyWindowInsetsListener(list, (v, windowInsets) -> {
-                Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemGestures());
-                list.setPadding(insets.left, 0, insets.right, insets.bottom);
-                return windowInsets;
-            });
-        }
-    }
-
     // https://stackoverflow.com/a/74112704/16198887
     public static class MaterialListPreference extends ListPreferenceDialogFragmentCompat {
-        public MaterialListPreference(Preference preference) {
+        private MaterialListPreference(Preference preference) {
+            super();
             Bundle bundle = new Bundle(1);
             bundle.putString(ARG_KEY, preference.getKey());
             setArguments(bundle);
+        }
+
+        public MaterialListPreference() {
         }
 
         @NonNull
@@ -133,6 +99,40 @@ public class SettingsActivity extends AppCompatActivity implements PreferenceFra
         }
     }
 
+    public static class MaterialEditTextPreference extends EditTextPreferenceDialogFragmentCompat {
+        private MaterialEditTextPreference(Preference preference) {
+            super();
+            Bundle bundle = new Bundle(1);
+            bundle.putString(ARG_KEY, preference.getKey());
+            setArguments(bundle);
+        }
+
+        public MaterialEditTextPreference() {
+        }
+
+        @SuppressLint("InflateParams")
+        @Nullable
+        @Override
+        protected View onCreateDialogView(@NonNull Context context) {
+            return getLayoutInflater().inflate(R.layout.dialog_preference, null);
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireActivity())
+                    .setTitle(getPreference().getTitle())
+                    .setPositiveButton(getPreference().getPositiveButtonText(), this)
+                    .setNegativeButton(getPreference().getNegativeButtonText(), this);
+            View root = onCreateDialogView(requireActivity());
+            assert root != null;
+            onBindDialogView(root);
+            builder.setView(root);
+            onPrepareDialogBuilder(builder);
+            return builder.create();
+        }
+    }
+
     @Override
     public boolean onPreferenceDisplayDialog(@NonNull PreferenceFragmentCompat caller, @NonNull Preference pref) {
         if (pref instanceof ListPreference) {
@@ -141,8 +141,20 @@ public class SettingsActivity extends AppCompatActivity implements PreferenceFra
             dialogFragment.setTargetFragment(caller, 0);
             dialogFragment.show(getSupportFragmentManager(), dialogFragment.toString());
             return true;
+        } else if (pref instanceof EditTextPreference) {
+            MaterialEditTextPreference dialogFragment = new MaterialEditTextPreference(pref);
+            //noinspection deprecation
+            dialogFragment.setTargetFragment(caller, 0);
+            dialogFragment.show(getSupportFragmentManager(), dialogFragment.toString());
+            return true;
         } else {
             return false;
         }
+    }
+
+    public void triggerRefresh() {
+        Config config = new Config(this);
+        config.triggerRefresh();
+        acknowledgeConfigChange();
     }
 }

@@ -10,29 +10,31 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
+import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.ortiz.touchview.TouchImageView;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.util.DrawableAlwaysCrossFadeFactory;
 
+import java.util.Objects;
+
 public class ViewImageActivity extends AppCompatActivity {
     public static final String IMAGE_URL_EXTRA = "com.thebrokenrail.combustible.IMAGE_URL_EXTRA";
 
-    private AppBarLayout appBarLayout;
     private WindowInsetsControllerCompat windowInsetsController;
     private boolean uiVisible = true;
 
@@ -44,7 +46,6 @@ public class ViewImageActivity extends AppCompatActivity {
 
         // Toolbar
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        appBarLayout = (AppBarLayout) toolbar.getParent();
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -55,6 +56,7 @@ public class ViewImageActivity extends AppCompatActivity {
         String url = getUrl();
         TouchImageView imageView = findViewById(R.id.view_image);
         imageView.setSuperZoomEnabled(false);
+        imageView.setMaxZoom(4);
         Glide.with(this)
                 .load(url)
                 .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
@@ -76,6 +78,14 @@ public class ViewImageActivity extends AppCompatActivity {
             }
             uiVisible = !uiVisible;
         });
+
+        // Edge-To-Edge
+        FrameLayout root = findViewById(R.id.view_image_root);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            root.setPadding(insets.left, 0, insets.right, 0);
+            return windowInsets;
+        });
     }
 
     private String getUrl() {
@@ -86,19 +96,12 @@ public class ViewImageActivity extends AppCompatActivity {
         return url;
     }
 
-    private static final long ANIMATION_DURATION = 200;
     private void hideUi() {
-        appBarLayout.animate()
-                .translationY(-appBarLayout.getHeight())
-                .setDuration(ANIMATION_DURATION)
-                .withEndAction(() -> appBarLayout.setVisibility(View.GONE));
+        Objects.requireNonNull(getSupportActionBar()).hide();
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
     }
     private void showUi() {
-        appBarLayout.setVisibility(View.VISIBLE);
-        appBarLayout.animate()
-                .translationY(0)
-                .setDuration(ANIMATION_DURATION);
+        Objects.requireNonNull(getSupportActionBar()).show();
         windowInsetsController.show(WindowInsetsCompat.Type.systemBars());
     }
 
@@ -127,6 +130,7 @@ public class ViewImageActivity extends AppCompatActivity {
 
             // Get Filename
             String filename = uri.getPath();
+            assert filename != null;
             int cut = filename.lastIndexOf('/');
             if (cut != -1) {
                 filename = filename.substring(cut + 1);

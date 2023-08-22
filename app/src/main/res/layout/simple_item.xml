@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/feed_item_margin"
+    android:layout_marginEnd="@dimen/feed_item_margin"
+    android:layout_marginTop="@dimen/feed_item_margin"
+    android:clickable="true"
+    android:focusable="true"
+    style="?attr/materialCardViewElevatedStyle">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="@dimen/post_padding">
+
+        <com.thebrokenrail.combustible.widget.LinkWithIcon
+            android:id="@+id/simple_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/simple_item_icons" />
+
+        <com.thebrokenrail.combustible.widget.CommonIcons
+            android:id="@+id/simple_item_icons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

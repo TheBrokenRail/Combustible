@@ -1,4 +1,4 @@
-package com.thebrokenrail.combustible.activity.feed.prerequisite;
+package com.thebrokenrail.combustible.activity.feed.util.prerequisite;
 
 import androidx.lifecycle.ViewModel;
 
@@ -58,20 +58,34 @@ public class FeedPrerequisites extends ViewModel {
     private final List<FeedPrerequisite<?>> pendingPrerequisites = new ArrayList<>();
     private final List<FeedPrerequisite<?>> failedPrerequisites = new ArrayList<>();
     private final List<FeedPrerequisite<?>> successfulPrerequisites = new ArrayList<>();
+    private final List<FeedPrerequisite<?>> refreshingPrerequisites = new ArrayList<>();
 
     private <T> void load(Connection connection, FeedPrerequisite<T> prerequisite) {
         connection.send(prerequisite.prepare(), t -> {
             prerequisite.value = t;
-            assert pendingPrerequisites.contains(prerequisite);
-            pendingPrerequisites.remove(prerequisite);
-            successfulPrerequisites.add(prerequisite);
+            boolean refreshing = refreshingPrerequisites.contains(prerequisite);
+            if (refreshing) {
+                assert successfulPrerequisites.contains(prerequisite);
+                refreshingPrerequisites.remove(prerequisite);
+            } else {
+                assert pendingPrerequisites.contains(prerequisite);
+                pendingPrerequisites.remove(prerequisite);
+                successfulPrerequisites.add(prerequisite);
+            }
             onEvent(prerequisite);
-            if (areLoaded()) {
+            if (!refreshing && areLoaded()) {
                 onEvent(COMPLETED);
             }
         }, () -> {
-            prerequisite.value = null;
-            failedPrerequisites.add(prerequisite);
+            boolean refreshing = refreshingPrerequisites.contains(prerequisite);
+            if (refreshing) {
+                // Ignore Errors When Prerequisite Has Previously Loaded
+                assert successfulPrerequisites.contains(prerequisite);
+                refreshingPrerequisites.remove(prerequisite);
+            } else {
+                prerequisite.value = null;
+                failedPrerequisites.add(prerequisite);
+            }
             onEvent(null);
         });
     }
@@ -109,7 +123,7 @@ public class FeedPrerequisites extends ViewModel {
      * Check if the specified type of prerequisite is included.
      * @param klass The type of prerequisite to check for
      */
-    public void require(Class<?> klass) {
+    public void require(Class<? extends FeedPrerequisite<?>> klass) {
         List<FeedPrerequisite<?>> allPrerequisites = new ArrayList<>();
         allPrerequisites.addAll(pendingPrerequisites);
         allPrerequisites.addAll(successfulPrerequisites);
@@ -126,18 +140,24 @@ public class FeedPrerequisites extends ViewModel {
      * @param connection The connection to Lemmy
      */
     public void start(Connection connection) {
+        // Emit EVents For Already Loaded Prerequisites
         for (FeedPrerequisite<?> prerequisite : successfulPrerequisites) {
             onEvent(prerequisite);
         }
+        // Check If All Prerequisites Are Loaded
         if (areLoaded()) {
+            // Prerequisites Are Already Loaded, Send Completion Event
             onEvent(COMPLETED);
         } else {
+            // Restart Previous Prerequisites
             for (FeedPrerequisite<?> prerequisite : pendingPrerequisites) {
                 if (!failedPrerequisites.contains(prerequisite)) {
                     load(connection, prerequisite);
                 }
             }
         }
+        // Clear Refreshing Prerequisites
+        refreshingPrerequisites.clear();
     }
 
     private boolean isSetup = false;
@@ -155,5 +175,38 @@ public class FeedPrerequisites extends ViewModel {
      */
     public boolean isError() {
         return failedPrerequisites.size() > 0;
+    }
+
+    /**
+     * Refresh prerequisite.
+     * @param connection The connection to Lemmy
+     * @param klass The type of prerequisite to refresh
+     */
+    public void refresh(Connection connection, Class<? extends FeedPrerequisite<?>> klass) {
+        // Can't Refresh Anything If Loading Hasn't Finished
+        if (!areLoaded()) {
+            throw new RuntimeException();
+        }
+
+        // Check If Prerequisite Is Already Refreshing
+        for (FeedPrerequisite<?> prerequisite : refreshingPrerequisites) {
+            if (prerequisite.getClass() == klass) {
+                // Already Refreshing
+                return;
+            }
+        }
+
+        // Refresh
+        for (FeedPrerequisite<?> prerequisite : successfulPrerequisites) {
+            if (prerequisite.getClass() == klass) {
+                // Found
+                refreshingPrerequisites.add(prerequisite);
+                load(connection, prerequisite);
+                return;
+            }
+        }
+
+        // Couldn't Find Prerequisite
+        throw new RuntimeException();
     }
 }

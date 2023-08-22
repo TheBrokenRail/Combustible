@@ -4,19 +4,16 @@
     <item
         android:id="@+id/post_share"
         android:icon="@drawable/baseline_share_24"
-        android:title="@string/share"
-        android:contentDescription="@string/share" />
+        android:title="@string/share" />
 
     <item
         android:id="@+id/post_save"
         android:icon="@drawable/baseline_bookmark_border_24"
-        android:title="@string/save"
-        android:contentDescription="@string/save" />
+        android:title="@string/save" />
 
     <item
         android:id="@+id/post_unsave"
         android:icon="@drawable/baseline_bookmark_24"
-        android:title="@string/unsave"
-        android:contentDescription="@string/unsave" />
+        android:title="@string/unsave" />
 
 </menu>

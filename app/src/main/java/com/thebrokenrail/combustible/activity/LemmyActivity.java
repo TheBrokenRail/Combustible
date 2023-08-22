@@ -6,9 +6,11 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.thebrokenrail.combustible.activity.fullscreen.WelcomeActivity;
+import com.thebrokenrail.combustible.activity.fullscreen.welcome.WelcomeActivity;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.util.Config;
+
+import okhttp3.HttpUrl;
 
 /**
  * Class that provides a correctly configured {@link Connection{ for sub-classes.
@@ -27,10 +29,10 @@ public class LemmyActivity extends AppCompatActivity {
 
         // Load Configuration
         Config config = new Config(this);
-        lastConfigVersion = config.getVersion();
+        acknowledgeConfigChange();
 
         // Check If Setup Has Been Completed
-        if (!config.isSetup()) {
+        if (!config.isSetup() && !(this instanceof WelcomeActivity)) {
             // Replace Activity
             Intent intent = new Intent(this, WelcomeActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
@@ -39,9 +41,19 @@ public class LemmyActivity extends AppCompatActivity {
         }
 
         // Create Connection
-        connection = new Connection(config.getInstance());
+        connect(config.getInstance());
         connection.setToken(config.getToken());
+    }
 
+    /**
+     * Connect to a different instance
+     * @param url The new instance
+     */
+    public void connect(HttpUrl url) {
+        if (connection != null) {
+            connection.close();
+        }
+        connection = new Connection(url);
         // Setup Callbacks
         connection.setCallbackHelper(this::runOnUiThread);
     }
@@ -51,7 +63,7 @@ public class LemmyActivity extends AppCompatActivity {
         super.onDestroy();
 
         // Disable Callbacks
-        connection.setCallbackHelper(runnable -> {});
+        connection.close();
     }
 
     @Override
@@ -62,8 +74,20 @@ public class LemmyActivity extends AppCompatActivity {
         Config config = new Config(this);
         if (config.getVersion() != lastConfigVersion) {
             // Restart
-            getViewModelStore().clear();
-            recreate();
+            fullRecreate();
         }
+    }
+
+    /**
+     * Recreate activity and clear all {@link androidx.lifecycle.ViewModel}s.
+     */
+    public void fullRecreate() {
+        getViewModelStore().clear();
+        recreate();
+    }
+
+    protected void acknowledgeConfigChange() {
+        Config config = new Config(this);
+        lastConfigVersion = config.getVersion();
     }
 }
