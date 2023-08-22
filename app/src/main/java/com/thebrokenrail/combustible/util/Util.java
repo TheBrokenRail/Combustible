@@ -2,6 +2,7 @@ package com.thebrokenrail.combustible.util;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -22,6 +23,18 @@ public class Util {
 
     public static void unknownError(Context context) {
         Toast.makeText(context.getApplicationContext(), R.string.unknown_error, Toast.LENGTH_SHORT).show();
+    }
+
+    public static boolean isDarkMode(Context context) {
+        int currentNightMode = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                return false;
+            case Configuration.UI_MODE_NIGHT_YES:
+                return true;
+        }
+        return false;
     }
 
     public static class TextDialogFragment extends AppCompatDialogFragment {

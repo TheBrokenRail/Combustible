@@ -74,14 +74,15 @@
         <item name="android:textColorHighlightInverse">@color/text_highlight_inverse</item>
 
         <!-- Edge-To-Edge -->
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/navigation_bar_color</item>
+        <item name="android:statusBarColor">@color/status_bar_color</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Combustible.BottomSheetDialog</item>
     </style>
 
     <!-- Bottom Sheet Theme -->
     <style name="ThemeOverlay.Combustible.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/status_bar_color</item>
+        <item name="android:navigationBarColor">@color/navigation_bar_color</item>
         <item name="bottomSheetStyle">@style/Widget.Combustible.BottomSheetDialog</item>
     </style>
     <style name="Widget.Combustible.BottomSheetDialog" parent="Widget.Material3.BottomSheet.Modal">
@@ -91,8 +92,8 @@
     <!-- Image Viewer Theme -->
     <style name="Theme.Combustible.ViewImage" parent="Base.Theme.Combustible.Night">
         <!-- Edge-To-Edge -->
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/navigation_bar_color</item>
+        <item name="android:statusBarColor">@color/status_bar_color</item>
 
         <!-- Background -->
         <item name="android:windowBackground">@android:color/black</item>
@@ -100,7 +101,7 @@
     </style>
     <style name="Theme.Combustible.ViewImage.AppBar">
         <!-- App Bar -->
-        <item name="colorSurface">?scrimBackground</item>
+        <item name="colorSurface">@color/translucent_overlay</item>
         <item name="colorOnSurface">@android:color/white</item>
         <item name="colorControlNormal">@android:color/white</item>
     </style>

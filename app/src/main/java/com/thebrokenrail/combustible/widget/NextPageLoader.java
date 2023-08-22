@@ -81,7 +81,7 @@ public class NextPageLoader extends FrameLayout {
     }
 
     private void setupError(Runnable retry) {
-        removeAllViews();
+        inner.removeAllViews();
 
         // Create TextView
         TextView text = new TextView(getContext());

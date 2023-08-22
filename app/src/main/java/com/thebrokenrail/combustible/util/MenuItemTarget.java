@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.MenuItemCompat;
 
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -27,7 +28,7 @@ public class MenuItemTarget extends CustomTarget<Drawable> {
     public MenuItemTarget(MenuItem item) {
         this.item = item;
         this.placeholder = Objects.requireNonNull(item.getIcon()).getConstantState();
-        placeholderTint = item.getIconTintMode();
+        placeholderTint = MenuItemCompat.getIconTintMode(item);
     }
 
     @Override
@@ -88,6 +89,6 @@ public class MenuItemTarget extends CustomTarget<Drawable> {
 
     private void setDrawable(Drawable drawable, boolean isPlaceholder) {
         item.setIcon(drawable);
-        item.setIconTintMode(isPlaceholder ? placeholderTint : PorterDuff.Mode.DST);
+        MenuItemCompat.setIconTintMode(item, isPlaceholder ? placeholderTint : PorterDuff.Mode.DST);
     }
 }

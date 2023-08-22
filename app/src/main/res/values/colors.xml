@@ -65,4 +65,9 @@
 
     <!-- Thumbnail Hint -->
     <color name="thumbnail_hint_background">#B3000000</color>
+
+    <!-- Navigation/Status Bar -->
+    <color name="translucent_overlay">#66000000</color>
+    <color name="status_bar_color">@color/translucent_overlay</color>
+    <color name="navigation_bar_color">@color/translucent_overlay</color>
 </resources>

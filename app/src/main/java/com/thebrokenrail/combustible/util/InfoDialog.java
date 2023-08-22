@@ -1,10 +1,15 @@
 package com.thebrokenrail.combustible.util;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,6 +21,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.feed.FeedActivity;
@@ -62,6 +68,26 @@ public class InfoDialog {
     }
 
     public static class Fragment extends BottomSheetDialogFragment {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+            return new BottomSheetDialog(requireContext(), getTheme()) {
+                @Override
+                protected void onCreate(Bundle savedInstanceState) {
+                    super.onCreate(savedInstanceState);
+                    // No Status On Dark Mode
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                        Window window = getWindow();
+                        boolean isDarkMode = Util.isDarkMode(requireContext());
+                        if (window != null && isDarkMode) {
+                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                            window.setStatusBarColor(Color.TRANSPARENT);
+                        }
+                    }
+                }
+            };
+        }
+
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
