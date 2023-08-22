@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Miscellaneous -->
+    <dimen name="link_with_icon_size">20dp</dimen>
+    <dimen name="link_with_icon_font_size">12sp</dimen>
+
+    <!-- Welcome -->
+    <dimen name="welcome_title_font_size">24sp</dimen>
+
+    <!-- Feed -->
+    <dimen name="feed_item_margin">8dp</dimen>
+
+    <!-- Post -->
+    <dimen name="post_padding">8dp</dimen>
+    <dimen name="post_title_font_size">18sp</dimen>
+    <dimen name="post_thumbnail_width">96dp</dimen>
+    <dimen name="post_thumbnail_height">72dp</dimen>
+
+    <!-- Login -->
+    <dimen name="login_padding">16dp</dimen>
+
+    <!-- Depth Gauge -->
+    <dimen name="depth_gauge_width">18dp</dimen>
+    <dimen name="depth_gauge_line_width">2dp</dimen>
+</resources>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Mode Settings -->
+    <string-array name="settings_dark_mode_entries">
+        <item>Auto</item>
+        <item>Always</item>
+        <item>Never</item>
+    </string-array>
+    <string name="settings_dark_mode_default">system</string>
+    <string-array name="settings_dark_mode_values">
+        <item>system</item>
+        <item>on</item>
+        <item>off</item>
+    </string-array>
+
+    <!-- Sorting -->
+    <string-array name="sort_types">
+        <item>Active</item>
+        <item>Hot</item>
+        <item>New</item>
+        <item>Old</item>
+        <item>Top Day</item>
+        <item>Top Week</item>
+        <item>Top Month</item>
+        <item>Top Year</item>
+        <item>Top All</item>
+        <item>Most Comments</item>
+        <item>New Comments</item>
+        <item>Top Hour</item>
+        <item>Top SixHour</item>
+        <item>Top Twelve Hour</item>
+        <item>Top Three Months</item>
+        <item>Top Six Months</item>
+        <item>Top Nine Months</item>
+    </string-array>
+    <string-array name="listing_types">
+        <item>All Posts</item>
+        <item>Local Posts</item>
+        <item>Posts From Subscribed Communities</item>
+    </string-array>
+    <string-array name="comment_sort_types">
+        <item>Hot</item>
+        <item>Top</item>
+        <item>New</item>
+        <item>Old</item>
+    </string-array>
+</resources>

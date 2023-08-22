@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/feed_menu_group_main">
+        <item
+            android:id="@+id/feed_menu_login"
+            android:icon="@drawable/baseline_login_24"
+            android:title="@string/feed_menu_login" />
+        <item
+            android:id="@+id/feed_menu_register"
+            android:icon="@drawable/baseline_account_circle_24"
+            android:title="@string/feed_menu_register" />
+        <item
+            android:id="@+id/feed_menu_view_profile"
+            android:icon="@drawable/baseline_account_circle_24"
+            android:title="@string/feed_menu_view_profile" />
+        <item
+            android:id="@+id/feed_menu_logout"
+            android:icon="@drawable/baseline_logout_24"
+            android:title="@string/feed_menu_logout" />
+    </group>
+
+    <group android:id="@+id/feed_menu_group_settings">
+        <item
+            android:id="@+id/feed_menu_settings"
+            android:icon="@drawable/baseline_settings_24"
+            android:title="@string/feed_menu_settings" />
+    </group>
+</menu>

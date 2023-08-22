@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.thebrokenrail.combustible.util.DepthGauge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/feed_item_margin"
+    android:layout_marginEnd="@dimen/feed_item_margin"
+    android:orientation="vertical">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/feed_item_margin"
+        style="?attr/materialCardViewElevatedStyle">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/post_padding">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@id/comment_icon_container">
+
+                    <com.thebrokenrail.combustible.util.LinkWithIcon
+                        android:id="@+id/comment_creator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/comment_icon_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true">
+
+                    <include
+                        android:id="@+id/comment_icons"
+                        layout="@layout/icons" />
+
+                    <ImageView
+                        android:id="@+id/comment_overflow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/post_padding"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/overflow"
+                        app:srcCompat="@drawable/baseline_more_vert_24" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/comment_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/post_padding" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/post_padding">
+
+                <include
+                    android:id="@+id/comment_karma"
+                    layout="@layout/karma" />
+
+            </LinearLayout>
+
+            <Button
+                style="@style/Widget.Material3.Button.TextButton"
+                android:id="@+id/comment_show_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/post_padding"
+                android:text="@string/comment_show_more" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</com.thebrokenrail.combustible.util.DepthGauge>

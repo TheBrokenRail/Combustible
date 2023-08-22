@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY recommended_instance "https://lemmy.world">
+]>
+<resources>
+    <!-- Basic Information -->
+    <string name="app_name">Combustible</string>
+    <string name="recommended_instance">&recommended_instance;</string>
+    <string name="preference_file_key">com.thebrokenrail.combustible.PREFERENCE_FILE_KEY</string>
+
+    <!-- Miscellaneous -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="error">Error</string>
+    <string name="upvote">Upvote</string>
+    <string name="downvote">Downvote</string>
+    <string name="share">Share</string>
+    <string name="overflow">Overflow Menu</string>
+    <string name="unknown_error">An unknown error has occurred!</string>
+
+    <!-- Welcome Screen -->
+    <string name="welcome_title">Welcome to Combustible!</string>
+    <string name="welcome_explanation">Combustible is an app that allows you to interact with the <a href="https://join-lemmy.org/">Lemmy</a> link aggregation and discussion platform. Lemmy is completely free and open, and not controlled by any company.\n\nHowever, to interact to Lemmy you must select an instance to connect to. Don\'t worry, you can access most content on Lemmy from any instance and you can change this later.\n\nThe <a href="&recommended_instance;">&recommended_instance;</a> instance is recommended, but you can discover other instances on <a href="https://join-lemmy.org/instances">Lemmy\'s official website</a>.</string>
+    <string name="welcome_instance_recommended">Recommended Instance</string>
+    <string name="welcome_instance_custom">Custom Instance</string>
+    <string name="welcome_go">Go!</string>
+    <string name="welcome_error">Unable to connect to specified Lemmy instance!</string>
+    <string name="welcome_invalid_url">Invalid URL</string>
+
+    <!-- Feed -->
+    <string name="feed_loading">Loading…</string>
+    <string name="feed_open_menu">Open Menu</string>
+    <string name="feed_menu_login">Login</string>
+    <string name="feed_menu_view_profile">View Profile</string>
+    <string name="feed_menu_logout">Logout</string>
+    <string name="feed_menu_settings">Settings</string>
+    <string name="feed_menu_register">Register</string>
+    <string name="feed_error">Unable to load data!</string>
+    <string name="feed_retry">Retry</string>
+
+    <!-- Posts -->
+    <string name="posts_home">Home</string>
+    <string name="posts_sort_by">Sort By:</string>
+    <string name="posts_listing_type">Show:</string>
+    <string name="post_creator_community_spacer">on</string>
+
+    <!-- Settings -->
+    <string name="settings_general">General</string>
+    <string name="settings_dark_mode">Dark Mode</string>
+    <string name="settings_change_instance">Change Lemmy Instance</string>
+
+    <!-- Login -->
+    <string name="login_username">Email Or Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_forgot_password">Forgot Password</string>
+    <string name="login_error">Invalid username and/or password!</string>
+    <string name="login_password_recovery">Password Recovery</string>
+    <string name="login_password_recovery_hint">Email</string>
+    <string name="login_password_recovery_success">An email has been sent with password reset instructions.</string>
+    <string name="login_password_recovery_failure">Unable to send password reset email!</string>
+
+    <!-- Icons -->
+    <string name="icon_pinned">Pinned</string>
+    <string name="icon_locked">Locked</string>
+    <string name="icon_deleted">Deleted</string>
+
+    <!-- Comments -->
+    <string name="comment_show_more">Show More Comments</string>
+</resources>

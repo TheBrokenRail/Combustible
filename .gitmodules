@@ -1,0 +1,3 @@
+[submodule "api/lemmy-js-client"]
+	path = api/lemmy-js-client
+	url = https://github.com/LemmyNet/lemmy-js-client
