@@ -62,6 +62,7 @@ public class LemmyActivity extends AppCompatActivity {
         Config config = new Config(this);
         if (config.getVersion() != lastConfigVersion) {
             // Restart
+            getViewModelStore().clear();
             recreate();
         }
     }

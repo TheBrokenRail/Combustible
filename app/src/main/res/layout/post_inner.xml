@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/post_padding">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <com.thebrokenrail.combustible.widget.Metadata
+            android:id="@+id/post_metadata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/post_icons" />
+
+        <com.thebrokenrail.combustible.widget.CommonIcons
+            android:id="@+id/post_icons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/post_padding">
+
+        <TextView
+            android:id="@+id/post_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/post_title_font_size"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/post_thumbnail"
+            android:layout_width="@dimen/post_thumbnail_width"
+            android:layout_height="@dimen/post_thumbnail_height"
+            android:layout_marginStart="@dimen/post_padding"
+            android:importantForAccessibility="no" />
+
+    </LinearLayout>
+
+    <com.thebrokenrail.combustible.widget.SquareView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/post_padding"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageView
+            android:id="@+id/post_big_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no" />
+
+    </com.thebrokenrail.combustible.widget.SquareView>
+
+    <TextView
+        android:id="@+id/post_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/post_padding" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/post_padding">
+
+        <com.thebrokenrail.combustible.widget.Karma
+            android:id="@+id/post_karma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/post_padding"
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/baseline_comment_24" />
+
+        <TextView
+            android:id="@+id/post_comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/post_padding"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+</LinearLayout>

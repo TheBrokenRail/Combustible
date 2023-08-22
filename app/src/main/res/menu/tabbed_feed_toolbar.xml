@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/feed_share"
+        android:icon="@drawable/baseline_share_24"
+        android:title="@string/share"
+        android:contentDescription="@string/share"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/feed_refresh"
+        android:icon="@drawable/baseline_refresh_24"
+        android:title="@string/feed_refresh"
+        android:contentDescription="@string/feed_refresh"
+        app:showAsAction="ifRoom" />
+
+</menu>

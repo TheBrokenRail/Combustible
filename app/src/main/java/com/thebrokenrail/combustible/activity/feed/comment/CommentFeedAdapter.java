@@ -1,32 +1,14 @@
 package com.thebrokenrail.combustible.activity.feed.comment;
 
-import android.content.Context;
-import android.content.Intent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.thebrokenrail.combustible.R;
-import com.thebrokenrail.combustible.activity.feed.FeedAdapter;
 import com.thebrokenrail.combustible.api.Connection;
-import com.thebrokenrail.combustible.api.method.CommentSortType;
 import com.thebrokenrail.combustible.api.method.CommentView;
-import com.thebrokenrail.combustible.api.method.CreateCommentLike;
-import com.thebrokenrail.combustible.api.method.GetComments;
-import com.thebrokenrail.combustible.api.method.PostView;
-import com.thebrokenrail.combustible.util.CommonIcons;
-import com.thebrokenrail.combustible.util.DepthGauge;
-import com.thebrokenrail.combustible.util.Karma;
-import com.thebrokenrail.combustible.util.LinkWithIcon;
+import com.thebrokenrail.combustible.widget.DepthGauge;
 import com.thebrokenrail.combustible.util.Util;
 
 import java.util.ArrayList;
@@ -35,166 +17,38 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.Objects;
 
-class CommentFeedAdapter extends FeedAdapter<CommentView> {
-    private static class CommentViewHolder extends RecyclerView.ViewHolder {
-        private final TextView text;
-        private final View karma;
-        private final LinkWithIcon creator;
-        private final ImageView overflow;
-        private final CommonIcons icons;
-        private final Button showMore;
-
-        public CommentViewHolder(@NonNull View itemView) {
-            super(itemView);
-            text = itemView.findViewById(R.id.comment_text);
-            karma = itemView.findViewById(R.id.comment_karma);
-            creator = itemView.findViewById(R.id.comment_creator);
-            overflow = itemView.findViewById(R.id.comment_overflow);
-            icons = new CommonIcons(itemView.findViewById(R.id.comment_icons));
-            showMore = itemView.findViewById(R.id.comment_show_more);
-        }
-    }
-
-    private CommentSortType sortBy = CommentSortType.Hot;
-
-    enum ParentType {
-        POST,
-        COMMENT
-    }
-    private final ParentType parentType;
-    private final int parent;
-
-    private PostView parentPost = null;
-
-    public CommentFeedAdapter(RecyclerView recyclerView, Connection connection, ParentType parentType, int parent) {
-        super(recyclerView, connection);
-        this.parentType = parentType;
-        this.parent = parent;
-    }
-
-    @Override
-    public boolean hasHeader() {
-        return true;
-    }
-
-    @Override
-    public View createHeader(ViewGroup parent) {
-        // Inflate Layout
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View root = inflater.inflate(R.layout.comment_header, parent, false);
-
-        // Setup Sort Spinner
-        Spinner spinner = root.findViewById(R.id.comments_sort_by_spinner);
-        int textViewResId = android.R.layout.simple_spinner_item;
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(parent.getContext(), R.array.comment_sort_types, textViewResId);
-        int dropDownViewResource = android.R.layout.simple_spinner_dropdown_item;
-        adapter.setDropDownViewResource(dropDownViewResource);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sortBy = CommentSortType.values()[position];
-                refresh(true, () -> {});
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        // Return
-        return root;
-    }
-
-    @Override
-    protected void bindHeader(View root) {
-        // Sort Spinner
-        Spinner spinner = root.findViewById(R.id.comments_sort_by_spinner);
-        spinner.setSelection(sortBy.ordinal());
-    }
-
-    @Override
-    public RecyclerView.ViewHolder createItem(ViewGroup parent) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View root = inflater.inflate(R.layout.comment, parent, false);
-        return new CommentViewHolder(root);
+public class CommentFeedAdapter extends FlatCommentFeedAdapter {
+    public CommentFeedAdapter(View recyclerView, Connection connection, ViewModelProvider viewModelProvider, String viewModelKey, ParentType parentType, int parent) {
+        super(recyclerView, connection, viewModelProvider, viewModelKey, parentType, parent);
     }
 
     @Override
     protected void bindElement(@NonNull RecyclerView.ViewHolder holder, int position) {
-        CommentView obj = dataset.get(position);
+        super.bindElement(holder, position);
+        CommentView obj = viewModel.dataset.get(position);
         CommentViewHolder commentViewHolder = (CommentViewHolder) holder;
-
-        // Title
-        commentViewHolder.text.setText(obj.comment.content);
-
-        // Karma
-        new Karma(commentViewHolder.karma, obj.counts.score, obj.my_vote != null ? obj.my_vote : 0, connection.hasToken(), new Karma.VoteCallback() {
-            @Override
-            public void vote(int score, Runnable successCallback, Runnable errorCallback) {
-                CreateCommentLike method = new CreateCommentLike();
-                method.comment_id = obj.comment.id;
-                method.score = score;
-                connection.send(method, commentResponse -> successCallback.run(), errorCallback);
-            }
-
-            @Override
-            public void storeVote(int score) {
-                obj.my_vote = score;
-            }
-        });
-
-        // Comment Creator
-        commentViewHolder.creator.setup(obj.creator.avatar, Util.getPersonName(obj.creator), () -> {
-            // TODO
-        });
-
-        // Overflow
-        commentViewHolder.overflow.setOnClickListener(v -> {
-        });
-
-        // Icons
-        commentViewHolder.icons.setup(obj.comment.deleted || obj.comment.removed, false, obj.comment.distinguished);
 
         // Depth
         int depth = getDepth(obj);
         int previousDepth = -1;
         if (position > 0) {
-            previousDepth = getDepth(dataset.get(position - 1));
+            previousDepth = getDepth(viewModel.dataset.get(position - 1));
         }
         ((DepthGauge) commentViewHolder.itemView).setDepth(depth, previousDepth);
 
         // Show More
         if (obj.counts.child_count > 0 && depth == (Util.MAX_DEPTH - 1)) {
             commentViewHolder.showMore.setVisibility(View.VISIBLE);
-            commentViewHolder.showMore.setOnClickListener(v -> {
-                Context context = v.getContext();
-                Intent intent = new Intent(context, CommentFeedActivity.class);
-                intent.putExtra(CommentFeedActivity.COMMENT_ID_EXTRA, obj.comment.id);
-                context.startActivity(intent);
-            });
+            commentViewHolder.showMore.setOnClickListener(v -> commentViewHolder.card.callOnClick());
         } else {
             commentViewHolder.showMore.setVisibility(View.GONE);
         }
-    }
 
-    @Override
-    protected void loadPage(int page, Consumer<List<CommentView>> successCallback, Runnable errorCallback) {
-        GetComments method = new GetComments();
-        method.page = page;
-        method.limit = Util.ELEMENTS_PER_PAGE;
-        method.max_depth = Util.MAX_DEPTH;
-        method.sort = sortBy;
-        if (parentType == ParentType.POST) {
-            method.post_id = parent;
-        } else {
-            method.parent_id = parent;
-        }
-        connection.send(method, getCommentsResponse -> successCallback.accept(getCommentsResponse.comments), errorCallback);
+        // Card
+        commentViewHolder.card.setClickable(false);
+        commentViewHolder.card.setFocusable(false);
     }
 
     private String getParentInPath() {
@@ -217,41 +71,92 @@ class CommentFeedAdapter extends FeedAdapter<CommentView> {
 
     private static class CommentData {
         private final CommentView view;
-        private int depth = 0;
-        private CommentData parent = null;
-        private final List<CommentData> realChildren = new ArrayList<>();
+        private final int depth;
+        private final Integer parent;
+        private final List<Integer> realChildren = new ArrayList<>();
 
-        private CommentData(CommentView view) {
+        private CommentData(CommentFeedAdapter adapter, CommentView view) {
             this.view = view;
-        }
+            depth = adapter.getDepth(view);
 
-        private CommentData getLastRealChild() {
-            if (realChildren.size() > 0) {
-                return realChildren.get(realChildren.size() - 1);
+            // Find Parent
+            if (depth > 0) {
+                String[] path = view.comment.path.split("\\.");
+                parent = Integer.parseInt(path[path.length - 2]);
             } else {
-                return null;
+                parent = null;
             }
         }
-    }
-    private final Map<Integer, CommentData> commentTree = new HashMap<>();
 
-    private final List<CommentView> queuedComments = new ArrayList<>();
+        private int getTotalRealChildren(CommentFeedAdapter adapter) {
+            int total = realChildren.size();
+            for (int childID : realChildren) {
+                CommentData child = adapter.commentTree.get(childID);
+                assert child != null;
+                total += child.getTotalRealChildren(adapter);
+            }
+            return total;
+        }
+    }
+    protected final Map<Integer, CommentData> commentTree = new HashMap<>();
+
+    protected final List<CommentView> queuedComments = new ArrayList<>();
 
     @Override
     protected void addElements(List<CommentView> elements, boolean manualNotifications) {
+        // Copy For Modification
+        elements = new ArrayList<>(elements);
+
+        // Remove Comments Exceeding Maximum Depth
+        elements.removeIf(commentView -> {
+            int depth = getDepth(commentView);
+            return depth >= Util.MAX_DEPTH;
+        });
+
+        // Remove Blocked Elements
+        elements.removeIf(this::isBlocked);
+
+        // Fix Broken Paths
+        for (CommentView comment : elements) {
+            if (comment.comment.path.equals("0")) {
+                System.err.println("Bad Comment: " + comment.comment.id);
+                comment.comment.path = "0." + comment.comment.id;
+            }
+        }
+
         // Process Queue
         elements.addAll(0, queuedComments);
         queuedComments.clear();
 
         // Add To Tree
         for (CommentView comment : elements) {
-            if (!commentTree.containsKey(comment.comment.id)) {
-                CommentData data = new CommentData(comment);
-                commentTree.put(comment.comment.id, data);
-            }
+            CommentData data = new CommentData(this, comment);
+            commentTree.put(comment.comment.id, data);
         }
 
-        // Attach Children To Parents
+        // Check If All Parent's Have Been Loaded
+        elements.removeIf(commentView -> {
+            int depth = getDepth(commentView);
+            String[] path = commentView.comment.path.split("\\.");
+            boolean allParentsLoaded = true;
+            for (int i = 0; i < depth; i++) {
+                int commentParentId = Integer.parseInt(path[path.length - i - 2]);
+                if (!commentTree.containsKey(commentParentId)) {
+                    // Parent Not Loaded
+                    allParentsLoaded = false;
+                    break;
+                }
+            }
+            if (!allParentsLoaded) {
+                // Queue For Later
+                queuedComments.add(commentView);
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        // Find Minimum/Maximum Depth
         int minDepth = Integer.MAX_VALUE;
         int maxDepth = 0;
         for (CommentView comment : elements) {
@@ -260,24 +165,9 @@ class CommentFeedAdapter extends FeedAdapter<CommentView> {
             assert data != null;
 
             // Check Depth
-            int depth = getDepth(comment);
+            int depth = data.depth;
             maxDepth = Math.max(maxDepth, depth);
             minDepth = Math.min(minDepth, depth);
-            if (depth != 0) {
-                // Find Parent
-                String[] path = comment.comment.path.split("\\.");
-                int commentParentId = Integer.parseInt(path[path.length - 2]);
-                CommentData commentParentData = commentTree.get(commentParentId);
-                if (commentParentData == null) {
-                    // Parent Comment Isn't Loaded Yet
-                    queuedComments.add(comment);
-                    continue;
-                }
-
-                // Add Parent To Child
-                data.parent = commentParentData;
-            }
-            data.depth = depth;
         }
 
         // Add To Dataset
@@ -290,55 +180,52 @@ class CommentFeedAdapter extends FeedAdapter<CommentView> {
                 assert data != null;
 
                 // Check Depth
-                if (data.depth != targetDepth || queuedComments.contains(comment)) {
+                if (data.depth != targetDepth) {
                     // Skip
                     continue;
                 } else {
                     it.remove();
                 }
 
+                // Check If Already Added To Dataset
+                boolean isDuplicate = false;
+                for (int i = 0; i < viewModel.dataset.size(); i++) {
+                    CommentView existingComment = viewModel.dataset.get(i);
+                    if (existingComment.comment.id.equals(comment.comment.id)) {
+                        // Duplicate (Newer Comment Replaces Older)
+                        isDuplicate = true;
+                        viewModel.dataset.set(i, comment);
+                        if (manualNotifications) {
+                            // Notify RecyclerView
+                            notifyItemChanged(getFirstElementPosition() + i);
+                        }
+                        break;
+                    }
+                }
+                if (isDuplicate) {
+                    continue;
+                }
+
                 // Add To Dataset
                 int insertPosition;
-                if (data.depth == 0) {
+                if (data.depth <= 0) {
                     // No Parent, Add To The End
-                    insertPosition = dataset.size();
+                    insertPosition = viewModel.dataset.size();
                 } else {
-                    // Find Parent
-                    CommentData commentParentData = data.parent;
-                    if (commentParentData == null) {
-                        // Parent Does Not Exist Yet
-                        continue;
-                    }
+                    // Insert After Parent
+                    CommentData commentParentData = commentTree.get(data.parent);
+                    assert commentParentData != null;
+                    insertPosition = viewModel.dataset.indexOf(commentParentData.view);
+                    assert insertPosition != -1;
+                    insertPosition++;
 
-                    // Find Insert Position
-                    CommentView insertAfter;
-                    if (commentParentData.getLastRealChild() != null) {
-                        // Insert After Last Child Of Parent (Transitively)
-                        CommentData temp = commentParentData;
-                        while (true) {
-                            CommentData newTemp = temp.getLastRealChild();
-                            if (newTemp.getLastRealChild() == null) {
-                                break;
-                            } else {
-                                temp = newTemp;
-                            }
-                        }
-                        insertAfter = temp.getLastRealChild().view;
-                        assert dataset.contains(insertAfter);
-                    } else {
-                        // Insert After Parent
-                        insertAfter = commentParentData.view;
-                    }
-                    int insertAfterIndex = dataset.indexOf(insertAfter);
-                    if (insertAfterIndex == -1) {
-                        // Parent Comment Isn't Loaded Yet
-                        queuedComments.add(comment);
-                        continue;
-                    }
-                    insertPosition = insertAfterIndex + 1;
-                    commentParentData.realChildren.add(commentTree.get(comment.comment.id));
+                    // Insert After All Parent's Children
+                    insertPosition += data.getTotalRealChildren(this);
+
+                    // Add Child To Parent
+                    commentParentData.realChildren.add(comment.comment.id);
                 }
-                dataset.add(insertPosition, comment);
+                viewModel.dataset.add(insertPosition, comment);
 
                 // Notify RecyclerView
                 if (manualNotifications) {
@@ -353,5 +240,35 @@ class CommentFeedAdapter extends FeedAdapter<CommentView> {
         super.clear();
         commentTree.clear();
         queuedComments.clear();
+    }
+
+    @Override
+    protected void replace(CommentView oldElement, CommentView newElement) {
+        if (!isBlocked(newElement)) {
+            for (Map.Entry<Integer, CommentData> entry : commentTree.entrySet()) {
+                if (entry.getValue().view == oldElement) {
+                    assert Objects.equals(entry.getKey(), newElement.comment.id);
+                    commentTree.put(entry.getKey(), new CommentData(this, newElement));
+                    break;
+                }
+            }
+        }
+        super.replace(oldElement, newElement);
+    }
+
+    @Override
+    protected void remove(CommentView element) {
+        // Remove Children
+        CommentData data = commentTree.get(element.comment.id);
+        assert data != null;
+        for (int child : data.realChildren) {
+            CommentData childData = commentTree.get(child);
+            assert childData != null;
+            remove(childData.view);
+        }
+
+        // Remove
+        commentTree.remove(element.comment.id);
+        super.remove(element);
     }
 }

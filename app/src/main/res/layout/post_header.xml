@@ -16,7 +16,8 @@
         android:layout_marginStart="@dimen/feed_item_margin"
         android:layout_marginEnd="@dimen/feed_item_margin"
         android:layout_marginTop="@dimen/feed_item_margin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,7 +40,8 @@
         android:layout_marginStart="@dimen/feed_item_margin"
         android:layout_marginEnd="@dimen/feed_item_margin"
         android:layout_marginTop="@dimen/feed_item_margin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"

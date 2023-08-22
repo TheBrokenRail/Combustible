@@ -42,6 +42,19 @@
             android:name=".activity.feed.comment.CommentFeedActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".activity.feed.tabbed.saved.SavedFeedActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.feed.tabbed.user.UserFeedActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.ViewImageActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Combustible.ViewImage" />
+
     </application>
 
 </manifest>

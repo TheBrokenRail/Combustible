@@ -1,7 +1,6 @@
 package com.thebrokenrail.combustible.activity.fullscreen;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,7 +19,7 @@ import com.thebrokenrail.combustible.activity.feed.post.PostFeedActivity;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.ListCommunities;
 import com.thebrokenrail.combustible.util.Config;
-import com.thebrokenrail.combustible.util.LinkOnTouchListener;
+import com.thebrokenrail.combustible.util.NiceLinkMovementMethod;
 import com.thebrokenrail.combustible.util.Util;
 
 import java.util.Objects;
@@ -43,7 +42,7 @@ public class WelcomeActivity extends FullscreenActivity {
 
         // Make Link Clickable
         TextView explanation = findViewById(R.id.welcome_explanation);
-        explanation.setOnTouchListener(new LinkOnTouchListener());
+        explanation.setMovementMethod(NiceLinkMovementMethod.getInstance());
 
         // Handle Button Press
         go = findViewById(R.id.welcome_go);

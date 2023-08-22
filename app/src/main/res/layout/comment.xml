@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.thebrokenrail.combustible.util.DepthGauge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.thebrokenrail.combustible.widget.DepthGauge xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/feed_item_margin"
     android:layout_marginEnd="@dimen/feed_item_margin"
     android:orientation="vertical">
 
+    <Button
+        style="?materialButtonOutlinedStyle"
+        android:id="@+id/comment_view_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/post_padding"
+        android:visibility="gone"
+        android:text="@string/comment_view_all" />
+
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/comment_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/feed_item_margin"
+        android:clickable="true"
+        android:focusable="true"
         style="?attr/materialCardViewElevatedStyle">
 
         <LinearLayout
@@ -25,48 +37,21 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
 
-                <LinearLayout
+                <com.thebrokenrail.combustible.widget.Metadata
+                    android:id="@+id/comment_metadata"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
-                    android:layout_toStartOf="@id/comment_icon_container">
+                    android:layout_toStartOf="@id/comment_icons" />
 
-                    <com.thebrokenrail.combustible.util.LinkWithIcon
-                        android:id="@+id/comment_creator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/comment_icon_container"
+                <com.thebrokenrail.combustible.widget.CommonIcons
+                    android:id="@+id/comment_icons"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true">
-
-                    <include
-                        android:id="@+id/comment_icons"
-                        layout="@layout/icons" />
-
-                    <ImageView
-                        android:id="@+id/comment_overflow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="@dimen/post_padding"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="@string/overflow"
-                        app:srcCompat="@drawable/baseline_more_vert_24" />
-
-                </LinearLayout>
+                    android:layout_alignParentEnd="true" />
 
             </RelativeLayout>
 
@@ -74,32 +59,25 @@
                 android:id="@+id/comment_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="@dimen/post_padding" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_marginTop="@dimen/post_padding">
-
-                <include
-                    android:id="@+id/comment_karma"
-                    layout="@layout/karma" />
-
-            </LinearLayout>
-
-            <Button
-                style="@style/Widget.Material3.Button.TextButton"
-                android:id="@+id/comment_show_more"
+            <com.thebrokenrail.combustible.widget.Karma
+                android:id="@+id/comment_karma"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/post_padding"
-                android:text="@string/comment_show_more" />
+                android:layout_marginTop="@dimen/post_padding" />
 
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
-</com.thebrokenrail.combustible.util.DepthGauge>
+    <Button
+        style="@style/Widget.Material3.Button.TextButton"
+        android:id="@+id/comment_show_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/post_padding"
+        android:visibility="gone"
+        android:text="@string/comment_show_more" />
+
+</com.thebrokenrail.combustible.widget.DepthGauge>

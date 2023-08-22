@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
         android:id="@+id/post_share"
         android:icon="@drawable/baseline_share_24"
         android:title="@string/share"
         android:contentDescription="@string/share" />
+
+    <item
+        android:id="@+id/post_save"
+        android:icon="@drawable/baseline_bookmark_border_24"
+        android:title="@string/save"
+        android:contentDescription="@string/save" />
+
+    <item
+        android:id="@+id/post_unsave"
+        android:icon="@drawable/baseline_bookmark_24"
+        android:title="@string/unsave"
+        android:contentDescription="@string/unsave" />
+
 </menu>

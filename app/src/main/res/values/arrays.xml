@@ -44,4 +44,11 @@
         <item>New</item>
         <item>Old</item>
     </string-array>
+
+    <!-- Subscriptions -->
+    <string-array name="subscribed_type">
+        <item>Unsubscribe</item>
+        <item>Subscribe</item>
+        <item>Pending Subscription</item>
+    </string-array>
 </resources>
