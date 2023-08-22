@@ -155,6 +155,10 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
 
     @Override
     protected List<Class<? extends FeedPrerequisite<?>>> getPrerequisitesToRefresh() {
-        return Collections.singletonList(FeedPrerequisite.Post.class);
+        if (parentType == CommentTreeDataset.ParentType.POST) {
+            return Collections.singletonList(FeedPrerequisite.Post.class);
+        } else {
+            return super.getPrerequisitesToRefresh();
+        }
     }
 }
