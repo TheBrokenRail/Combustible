@@ -26,14 +26,14 @@
 - [x] Load Avatar Into "View Profile" Menu Item
 - [x] Fix Lift On Scroll In `SettingsActivity` (For Screen Rotation)
 - [ ] Make Links Opened By Keyboard Use Chrome Custom Tabs
-- [ ] Better Overlay In `ViewImageActivity`
+- [x] Better Overlay In `ViewImageActivity`
 - [ ] Fix Weird Ripples In `TabbedFeedActivity`
 - [x] Way To Refresh Posts (Hard because it's loaded through `FeedPrerequistes`)
-- [ ] Delete Account Button In `UserSettingsActivity`
+- [x] Delete Account Button In `UserSettingsActivity`
 - [x] Person/Community Blocking/Unblocking
 - [ ] Glide Caching Configuration
 - [ ] App Icon!
-- [ ] Reconsider use of `scrimBackground`
+- [x] Reconsider use of `scrimBackground`
 - [x] Blocking
   - [x] Community Blocking
   - [x] Person Blocking

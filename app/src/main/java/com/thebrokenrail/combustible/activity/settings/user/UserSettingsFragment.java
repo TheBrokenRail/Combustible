@@ -118,6 +118,15 @@ public class UserSettingsFragment extends SettingsFragment {
             dataStore.putBoolean("generate_totp_2fa", !hasTotp);
             return true;
         });
+
+        // Delete Account
+        Preference deleteAccount = findPreference("delete_account");
+        assert deleteAccount != null;
+        deleteAccount.setOnPreferenceClickListener(preference -> {
+            // Open Change Password Dialog
+            new DeleteAccountDialogFragment().show(requireActivity().getSupportFragmentManager(), "delete_account");
+            return true;
+        });
     }
 
     @Override

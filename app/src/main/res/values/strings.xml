@@ -89,6 +89,7 @@
     <string name="user_settings_totp_enable">Enable 2FA</string>
     <string name="user_settings_totp_disable">Disable 2FA</string>
     <string name="user_settings_totp_url">Open 2FA Setup URL</string>
+    <string name="user_settings_delete_account">Delete Account</string>
 
     <!-- Login -->
     <string name="login_username">Email Or Username</string>
@@ -130,4 +131,7 @@
     <string name="change_password_new_verify">Verify Password</string>
     <string name="change_password_match_error">Does Not Match</string>
     <string name="change_password_error">Unable to change password!</string>
+
+    <!-- Delete Account -->
+    <string name="delete_account_error">Unable to delete account!</string>
 </resources>

@@ -109,6 +109,11 @@
             app:title="@string/user_settings_totp_enable"
             app:iconSpaceReserved="false" />
 
+        <com.thebrokenrail.combustible.widget.ScaryPreference
+            app:key="delete_account"
+            app:title="@string/user_settings_delete_account"
+            app:iconSpaceReserved="false" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

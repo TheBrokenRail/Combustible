@@ -170,7 +170,7 @@ public class Connection {
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
                 currentCalls.remove(call);
                 try {
                     try (ResponseBody responseBody = response.body()) {
@@ -191,6 +191,11 @@ public class Connection {
                             }
                             callbackHelper.accept(errorCallback);
                             return;
+                        }
+
+                        // Skip Deserializing If Method Doesn't Have Response
+                        if (method.getResponseClass() == Object.class) {
+                            callbackHelper.accept(() -> successCallback.accept(null));
                         }
 
                         // Deserialize Body
