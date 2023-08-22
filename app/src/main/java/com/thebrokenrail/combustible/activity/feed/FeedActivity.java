@@ -17,12 +17,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.thebrokenrail.combustible.R;
+import com.thebrokenrail.combustible.activity.feed.util.FeedUtil;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
-import com.thebrokenrail.combustible.activity.feed.util.FeedUtil;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
+import com.thebrokenrail.combustible.util.Util;
 
 /**
  * Activity with a single infinitely-scrolling feed.
@@ -136,6 +138,19 @@ public abstract class FeedActivity extends HamburgerActivity {
                 String legal = getSiteResponse.site_view.local_site.legal_information;
                 infoLegal.set(legal);
                 updateNavigation();
+
+                // View Profile Avatar
+                if (getSiteResponse.my_user != null) {
+                    boolean showAvatars = getSiteResponse.my_user.local_user_view.local_user.show_avatars;
+                    String avatar = getSiteResponse.my_user.local_user_view.person.avatar;
+                    if (showAvatars && avatar != null) {
+                        Glide.with(FeedActivity.this)
+                                .load(Util.getThumbnailUrl(avatar))
+                                .circleCrop()
+                                .placeholder(viewProfileTarget.placeholder.newDrawable())
+                                .into(viewProfileTarget);
+                    }
+                }
             } else if (prerequisite == FeedPrerequisites.COMPLETED) {
                 // Sanity Check
                 assert infoCommunity.isSetup();

@@ -23,12 +23,12 @@
 - [ ] Resolve All `// TODO`s
 - [ ] Clean Up JavaDoc Comments
 - [ ] Comment/Post Reporting
-- [ ] Load Avatar Into "View Profile" Menu Item
+- [x] Load Avatar Into "View Profile" Menu Item
 - [x] Fix Lift On Scroll In `SettingsActivity` (For Screen Rotation)
 - [ ] Make Links Opened By Keyboard Use Chrome Custom Tabs
 - [ ] Better Overlay In `ViewImageActivity`
 - [ ] Fix Weird Ripples In `TabbedFeedActivity`
-- [ ] Way To Refresh Posts (Hard because it's loaded through `FeedPrerequistes`)
+- [x] Way To Refresh Posts (Hard because it's loaded through `FeedPrerequistes`)
 - [ ] Delete Account Button In `UserSettingsActivity`
 - [x] Person/Community Blocking/Unblocking
 - [ ] Glide Caching Configuration

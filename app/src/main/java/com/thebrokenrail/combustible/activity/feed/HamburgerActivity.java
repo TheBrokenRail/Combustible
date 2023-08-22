@@ -21,6 +21,7 @@ import com.thebrokenrail.combustible.api.method.BlockCommunity;
 import com.thebrokenrail.combustible.util.Config;
 import com.thebrokenrail.combustible.util.InfoDialog;
 import com.thebrokenrail.combustible.util.Links;
+import com.thebrokenrail.combustible.util.MenuItemTarget;
 import com.thebrokenrail.combustible.util.Util;
 
 /**
@@ -44,6 +45,9 @@ public class HamburgerActivity extends LemmyActivity implements NavigationView.O
     protected boolean canBlockCommunity = false;
     protected Boolean isCommunityBlocked = null;
 
+    // View Profile Icon
+    protected MenuItemTarget viewProfileTarget = null;
+
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
@@ -58,6 +62,7 @@ public class HamburgerActivity extends LemmyActivity implements NavigationView.O
         updateNavigation();
         navigationView.setNavigationItemSelectedListener(this);
         drawerLayout = findViewById(R.id.feed_drawer_layout);
+        viewProfileTarget = new MenuItemTarget(navigationView.getMenu().findItem(R.id.feed_menu_view_profile));
     }
 
     /**

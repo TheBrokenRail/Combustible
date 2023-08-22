@@ -59,4 +59,8 @@ public class Util {
         appBarLayout.setLiftOnScrollTargetView(target);
         appBarLayout.setLifted(target.canScrollVertically(-1) || target.getScrollY() > 0);
     }
+
+    public static String getThumbnailUrl(String iconUrl) {
+        return iconUrl + "?thumbnail=128" + (iconUrl.endsWith(".jpeg") ? "&format=jpg" : "");
+    }
 }

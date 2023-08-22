@@ -19,6 +19,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.util.DrawableAlwaysCrossFadeFactory;
 import com.thebrokenrail.combustible.util.Images;
+import com.thebrokenrail.combustible.util.Util;
 
 /**
  * Widget that displays a clickable link with a corresponding icon.
@@ -85,7 +86,7 @@ public class LinkWithIcon extends LinearLayout {
 
             // Load Image
             Glide.with(getContext())
-                    .load(iconUrl + "?thumbnail=128" + (iconUrl.endsWith(".jpeg") ? "&format=jpg" : ""))
+                    .load(Util.getThumbnailUrl(iconUrl))
                     .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
                     .transform(Images.addBlurTransformation(blur, new CircleCrop()))
                     .placeholder(R.drawable.baseline_image_24)
