@@ -68,6 +68,8 @@
 
     <!-- Navigation/Status Bar -->
     <color name="translucent_overlay">#66000000</color>
+    <!-- On APIs < 23, status bar icons are always white, so add a translucent background to provide contrast in light mode. -->
     <color name="status_bar_color">@color/translucent_overlay</color>
+    <!-- On APIs < 29, the system doesn't provide an automatic translucent background to the navigation bar. -->
     <color name="navigation_bar_color">@color/translucent_overlay</color>
 </resources>

@@ -16,4 +16,9 @@
         android:icon="@drawable/baseline_bookmark_24"
         android:title="@string/unsave" />
 
+    <item
+        android:id="@+id/post_report"
+        android:icon="@drawable/baseline_report_24"
+        android:title="@string/report" />
+
 </menu>

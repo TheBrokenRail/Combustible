@@ -18,16 +18,29 @@
   - [ ] Deleting (For Users)
   - [ ] Removing (For Moderators/Admins)
 - [ ] Inbox (For Notifications)
+  - [ ] Replies
+  - [ ] Mentions
+  - [ ] Private Messages
+    - [ ] Editing
+    - [ ] Deleting
+    - [ ] Split Sent/Received?
 - [ ] Push Notifications
+  - [ ] Replies
+  - [ ] Mentions
+  - [ ] Private Messages
 - [ ] Better Handling For Invalid Tokens
 - [ ] Resolve All `// TODO`s
 - [ ] Clean Up JavaDoc Comments
-- [ ] Comment/Post Reporting
+- [ ] Reporting
+  - [x] Posts
+  - [x] Comments
+  - [ ] Private Messages
 - [x] Load Avatar Into "View Profile" Menu Item
 - [x] Fix Lift On Scroll In `SettingsActivity` (For Screen Rotation)
 - [x] Make Links Opened By Keyboard Use Chrome Custom Tabs
 - [x] Better Overlay In `ViewImageActivity`
 - [ ] Fix Weird Ripples In `TabbedFeedActivity`
+  - Fixed In Material Components 1.10.0
 - [x] Way To Refresh Posts (Hard because it's loaded through `FeedPrerequistes`)
 - [x] Delete Account Button In `UserSettingsActivity`
 - [x] Person/Community Blocking/Unblocking
@@ -42,3 +55,5 @@
   - [x] NSFW Marker
   - [x] Share
 - [ ] Modlog
+- [ ] Fancy New Android Back Code
+- [ ] Update `DepthGauge` When Previous Element Is Changed

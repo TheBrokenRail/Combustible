@@ -2,6 +2,7 @@ package com.thebrokenrail.combustible.util;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
@@ -75,5 +76,16 @@ public class Util {
 
     public static String getThumbnailUrl(String iconUrl) {
         return iconUrl + "?thumbnail=128" + (iconUrl.endsWith(".jpeg") ? "&format=jpg" : "");
+    }
+
+    public static AppCompatActivity getActivityFromContext(@NonNull Context context){
+        while (context instanceof ContextWrapper) {
+            if (context instanceof AppCompatActivity) {
+                return (AppCompatActivity) context;
+            } else {
+                context = ((ContextWrapper) context).getBaseContext();
+            }
+        }
+        throw new RuntimeException();
     }
 }

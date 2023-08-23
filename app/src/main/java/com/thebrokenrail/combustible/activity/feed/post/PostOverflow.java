@@ -3,6 +3,8 @@ package com.thebrokenrail.combustible.activity.feed.post;
 import android.view.View;
 
 import com.thebrokenrail.combustible.activity.feed.util.overflow.PostOrCommentOverflow;
+import com.thebrokenrail.combustible.activity.feed.util.report.PostReportDialogFragment;
+import com.thebrokenrail.combustible.activity.feed.util.report.ReportDialogFragment;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.PostView;
 import com.thebrokenrail.combustible.api.method.SavePost;
@@ -32,5 +34,12 @@ class PostOverflow extends PostOrCommentOverflow<PostView> {
     @Override
     protected void share() {
         Sharing.sharePost(context, obj.post.id);
+    }
+
+    @Override
+    protected ReportDialogFragment createReportDialog() {
+        PostReportDialogFragment dialog = new PostReportDialogFragment();
+        dialog.setId(obj.post.id);
+        return dialog;
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Navigation/Status Bar -->
+    <!-- On APIs >= 29, the system automatically provides a translucent background to the navigation bar. -->
     <color name="navigation_bar_color">@android:color/transparent</color>
 </resources>

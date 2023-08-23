@@ -90,4 +90,8 @@ public class LemmyActivity extends AppCompatActivity {
         Config config = new Config(this);
         lastConfigVersion = config.getVersion();
     }
+
+    public Connection getConnection() {
+        return connection;
+    }
 }

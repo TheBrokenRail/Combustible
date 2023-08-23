@@ -5,7 +5,6 @@ import android.os.Bundle;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.settings.SettingsActivity;
 import com.thebrokenrail.combustible.activity.settings.SettingsFragment;
-import com.thebrokenrail.combustible.api.Connection;
 
 import java.util.Objects;
 
@@ -26,9 +25,5 @@ public class UserSettingsActivity extends SettingsActivity {
     @Override
     protected SettingsFragment createFragment() {
         return new UserSettingsFragment();
-    }
-
-    Connection getConnection() {
-        return connection;
     }
 }

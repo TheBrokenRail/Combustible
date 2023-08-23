@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import com.google.android.material.textfield.TextInputLayout;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.fullscreen.FullscreenActivity;
-import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.Login;
 import com.thebrokenrail.combustible.util.Config;
 import com.thebrokenrail.combustible.util.Util;
@@ -74,9 +73,5 @@ public class LoginActivity extends FullscreenActivity {
     private void loginError() {
         // Error Dialog
         Util.showTextDialog(this, R.string.error, R.string.login_error);
-    }
-
-    Connection getConnection() {
-        return connection;
     }
 }

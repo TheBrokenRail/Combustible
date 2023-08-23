@@ -134,4 +134,10 @@
 
     <!-- Delete Account -->
     <string name="delete_account_error">Unable to delete account!</string>
+
+    <!-- Report -->
+    <string name="report">Report</string>
+    <string name="report_hint">Reason</string>
+    <string name="report_error">Unable to submit report!</string>
+    <string name="report_success">Submitted report!</string>
 </resources>
