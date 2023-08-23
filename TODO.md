@@ -25,7 +25,7 @@
 - [ ] Comment/Post Reporting
 - [x] Load Avatar Into "View Profile" Menu Item
 - [x] Fix Lift On Scroll In `SettingsActivity` (For Screen Rotation)
-- [ ] Make Links Opened By Keyboard Use Chrome Custom Tabs
+- [x] Make Links Opened By Keyboard Use Chrome Custom Tabs
 - [x] Better Overlay In `ViewImageActivity`
 - [ ] Fix Weird Ripples In `TabbedFeedActivity`
 - [x] Way To Refresh Posts (Hard because it's loaded through `FeedPrerequistes`)
@@ -41,3 +41,4 @@
 - [x] Community/User Overflows/Metadata
   - [x] NSFW Marker
   - [x] Share
+- [ ] Modlog

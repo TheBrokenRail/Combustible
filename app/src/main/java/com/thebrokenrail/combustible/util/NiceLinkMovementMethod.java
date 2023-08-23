@@ -3,13 +3,14 @@ package com.thebrokenrail.combustible.util;
 import android.graphics.RectF;
 import android.text.Layout;
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.TextView;
-
-import io.noties.markwon.core.spans.LinkSpan;
 
 public class NiceLinkMovementMethod extends LinkMovementMethod {
     private static NiceLinkMovementMethod singleInstance;
@@ -19,6 +20,24 @@ public class NiceLinkMovementMethod extends LinkMovementMethod {
             singleInstance = new NiceLinkMovementMethod();
         }
         return singleInstance;
+    }
+
+    public static void setup(TextView textView) {
+        textView.setMovementMethod(getInstance());
+        // Override URLSpan
+        SpannableStringBuilder text = SpannableStringBuilder.valueOf(textView.getText());
+        URLSpan[] spans = text.getSpans(0, text.length(), URLSpan.class);
+        for (URLSpan span : spans) {
+            URLSpan newSpan = new URLSpan(span.getURL()) {
+                @Override
+                public void onClick(View widget) {
+                    Links.open(widget.getContext(), getURL());
+                }
+            };
+            text.setSpan(newSpan, text.getSpanStart(span), text.getSpanEnd(span), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            text.removeSpan(span);
+        }
+        textView.setText(text);
     }
 
     private ClickableSpan selectedLink = null;
@@ -39,12 +58,7 @@ public class NiceLinkMovementMethod extends LinkMovementMethod {
             if (action == MotionEvent.ACTION_DOWN) {
                 selectedLink = link;
             } else if (link != null && link == selectedLink) {
-                if (link instanceof URLSpan && !(link instanceof LinkSpan)) {
-                    // Use Custom Tabs
-                    Links.open(widget.getContext(), ((URLSpan) link).getURL());
-                } else {
-                    link.onClick(widget);
-                }
+                link.onClick(widget);
             }
 
             ret = selectedLink != null;

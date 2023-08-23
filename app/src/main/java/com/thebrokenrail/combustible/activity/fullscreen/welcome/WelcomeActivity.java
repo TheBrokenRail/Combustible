@@ -34,7 +34,7 @@ public class WelcomeActivity extends FullscreenActivity {
 
         // Make Link Clickable
         TextView explanation = findViewById(R.id.welcome_explanation);
-        explanation.setMovementMethod(NiceLinkMovementMethod.getInstance());
+        NiceLinkMovementMethod.setup(explanation);
 
         // Handle Button Press
         Button go = findViewById(R.id.welcome_go);
