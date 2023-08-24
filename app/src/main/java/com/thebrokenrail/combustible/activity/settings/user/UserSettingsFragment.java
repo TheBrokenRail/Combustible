@@ -20,11 +20,12 @@ import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.settings.SettingsFragment;
 import com.thebrokenrail.combustible.api.method.ListingType;
 import com.thebrokenrail.combustible.api.method.SortType;
+import com.thebrokenrail.combustible.util.Uploader;
 
 import java.util.Arrays;
 
 public class UserSettingsFragment extends SettingsFragment {
-    private UserSettingsDataStore dataStore;
+    UserSettingsDataStore dataStore;
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
@@ -125,6 +126,36 @@ public class UserSettingsFragment extends SettingsFragment {
         deleteAccount.setOnPreferenceClickListener(preference -> {
             // Open Change Password Dialog
             new DeleteAccountDialogFragment().show(requireActivity().getSupportFragmentManager(), "delete_account");
+            return true;
+        });
+
+        // Upload Avatar
+        Preference uploadAvatar = findPreference("upload_avatar");
+        assert uploadAvatar != null;
+        uploadAvatar.setOnPreferenceClickListener(preference -> {
+            Uploader.upload(requireActivity(), UserSettingsActivity.UPLOAD_AVATAR);
+            return true;
+        });
+        // Upload Banner
+        Preference uploadBanner = findPreference("upload_banner");
+        assert uploadBanner != null;
+        uploadBanner.setOnPreferenceClickListener(preference -> {
+            Uploader.upload(requireActivity(), UserSettingsActivity.UPLOAD_BANNER);
+            return true;
+        });
+
+        // Remove Avatar
+        Preference removeAvatar = findPreference("remove_avatar");
+        assert removeAvatar != null;
+        removeAvatar.setOnPreferenceClickListener(preference -> {
+            dataStore.putString("avatar", "");
+            return true;
+        });
+        // Remove Banner
+        Preference removeBanner = findPreference("remove_banner");
+        assert removeBanner != null;
+        removeBanner.setOnPreferenceClickListener(preference -> {
+            dataStore.putString("banner", "");
             return true;
         });
     }

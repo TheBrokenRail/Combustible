@@ -41,19 +41,19 @@ public class LemmyActivity extends AppCompatActivity {
         }
 
         // Create Connection
-        connect(config.getInstance());
-        connection.setToken(config.getToken());
+        connect(config.getInstance(), config.getToken());
     }
 
     /**
      * Connect to a different instance
      * @param url The new instance
+     * @param token The new token
      */
-    public void connect(HttpUrl url) {
+    public void connect(HttpUrl url, String token) {
         if (connection != null) {
             connection.close();
         }
-        connection = new Connection(url);
+        connection = new Connection(url, token);
         // Setup Callbacks
         connection.setCallbackHelper(this::runOnUiThread);
     }

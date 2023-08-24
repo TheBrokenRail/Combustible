@@ -84,11 +84,20 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
         // Depth
         CommentTreeDataset dataset = (CommentTreeDataset) viewModel.dataset;
         int depth = dataset.getDepth(obj);
-        int previousDepth = -1;
-        if (position > 0) {
-            previousDepth = dataset.getDepth(viewModel.dataset.get(position - 1));
-        }
-        ((DepthGauge) commentViewHolder.itemView).setDepth(depth, previousDepth);
+        ((DepthGauge) commentViewHolder.itemView).setDepth(depth, () -> {
+            // Get Current Position
+            int newPosition = dataset.indexOf(obj);
+            assert newPosition != -1;
+
+            // Get Previous Item's Depth
+            int previousDepth1 = -1;
+            if (newPosition > 0) {
+                previousDepth1 = dataset.getDepth(viewModel.dataset.get(newPosition - 1));
+            }
+
+            // Return
+            return previousDepth1;
+        });
 
         // Show More
         if (obj.counts.child_count > 0 && depth == (Util.MAX_DEPTH - 1)) {

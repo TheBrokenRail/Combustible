@@ -2,10 +2,6 @@ package com.thebrokenrail.combustible.activity.feed.util.dataset;
 
 import androidx.annotation.Nullable;
 
-import com.thebrokenrail.combustible.api.method.CommentView;
-import com.thebrokenrail.combustible.api.method.CommunityView;
-import com.thebrokenrail.combustible.api.method.PostView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,5 +61,10 @@ public class SimpleFeedDataset<T> extends FeedDataset<T> {
     @Override
     protected boolean isBlocked(T element) {
         return false;
+    }
+
+    @Override
+    public int indexOf(T element) {
+        return dataset.indexOf(element);
     }
 }

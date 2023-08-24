@@ -36,23 +36,20 @@ public class Connection {
      */
     public static final String VERSION = "v3";
 
-    private final HttpUrl instance;
+    final HttpUrl instance;
+    final String token;
+
+    private Consumer<Runnable> callbackHelper = Runnable::run;
+    private final List<Call> currentCalls = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * Connect to an instance.
      * @param instance The target instance's URL
+     * @param token The authentication token to use (or null)
      */
-    public Connection(HttpUrl instance) {
+    public Connection(HttpUrl instance, String token) {
         this.instance = instance;
-    }
-
-    private String token = null;
-
-    /**
-     * Sets the authentication token to be used for requests. A null token disables authentication.
-     * @param token The new token
-     */
-    public void setToken(String token) {
+        assert instance != null;
         this.token = token;
     }
 
@@ -64,8 +61,6 @@ public class Connection {
         return token != null;
     }
 
-    private Consumer<Runnable> callbackHelper = Runnable::run;
-
     /**
      * Sets a new callback helper.
      * @param callbackHelper A consumer that handles executing callbacks
@@ -73,8 +68,6 @@ public class Connection {
     public void setCallbackHelper(Consumer<Runnable> callbackHelper) {
         this.callbackHelper = callbackHelper;
     }
-
-    private final List<Call> currentCalls = Collections.synchronizedList(new ArrayList<>());
 
     /**
      * Run API method.
@@ -84,12 +77,6 @@ public class Connection {
      * @param <T> The API method's response
      */
     public <T> void send(Method<T> method, Consumer<T> successCallback, Runnable errorCallback) {
-        // Check Instance URL
-        if (instance == null) {
-            callbackHelper.accept(errorCallback);
-            return;
-        }
-
         // Check Authentication
         if (method instanceof AuthenticatedMethod) {
             AuthenticatedMethod<T> authenticatedMethod = (AuthenticatedMethod<T>) method;
@@ -158,63 +145,19 @@ public class Connection {
 
         // Send Request
         Call call = client.newCall(request);
-        currentCalls.add(call);
-        call.enqueue(new Callback() {
+        new ResponseHandler<T>(call, method.getResponseClass(), successCallback, errorCallback) {
             @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                e.printStackTrace();
-
-                // Run Error Callback
-                currentCalls.remove(call);
-                callbackHelper.accept(errorCallback);
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) {
-                currentCalls.remove(call);
-                try {
-                    try (ResponseBody responseBody = response.body()) {
-                        // Check Response
-                        if (!response.isSuccessful()) {
-                            // Run Error Callback
-                            if (responseBody != null) {
-                                // 2FA Token Needed
-                                String error = responseBody.string();
-                                if (method instanceof Login && (error.contains("MissingTotpToken") || error.contains("missing_totp_token"))) {
-                                    // A null Response To Login Signals That 2FA Should Be Used
-                                    callbackHelper.accept(() -> successCallback.accept(null));
-                                    return;
-                                }
-
-                                // Debugging
-                                System.err.println("API ERROR: " + error);
-                            }
-                            callbackHelper.accept(errorCallback);
-                            return;
-                        }
-
-                        // Skip Deserializing If Method Doesn't Have Response
-                        if (method.getResponseClass() == Object.class) {
-                            callbackHelper.accept(() -> successCallback.accept(null));
-                        }
-
-                        // Deserialize Body
-                        Moshi moshi = new Moshi.Builder().build();
-                        JsonAdapter<T> jsonAdapter = moshi.adapter(method.getResponseClass());
-                        assert responseBody != null;
-                        T obj = jsonAdapter.fromJson(responseBody.string());
-
-                        // Run Callback
-                        callbackHelper.accept(() -> successCallback.accept(obj));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-
-                    // Run Error Callback
-                    callbackHelper.accept(errorCallback);
+            protected boolean apiError(String error) {
+                // 2FA Token Needed
+                if (method instanceof Login && (error.contains("MissingTotpToken") || error.contains("missing_totp_token"))) {
+                    // A null Response To Login Signals That 2FA Should Be Used
+                    success(null);
+                    return true;
+                } else {
+                    return super.apiError(error);
                 }
             }
-        });
+        };
     }
 
     /**
@@ -280,6 +223,85 @@ public class Connection {
          */
         public boolean requiresToken() {
             return false;
+        }
+    }
+
+    class ResponseHandler<T> implements Callback {
+        private final Class<T> responseClass;
+        private final Consumer<T> successCallback;
+        private final Runnable errorCallback;
+
+        ResponseHandler(Call call, Class<T> responseClass, Consumer<T> successCallback, Runnable errorCallback) {
+            this.responseClass = responseClass;
+            this.successCallback = successCallback;
+            this.errorCallback = errorCallback;
+            currentCalls.add(call);
+            call.enqueue(this);
+        }
+
+        private void error() {
+            callbackHelper.accept(errorCallback);
+        }
+
+        protected void success(T obj) {
+            callbackHelper.accept(() -> successCallback.accept(obj));
+        }
+
+        protected boolean apiError(String error) {
+            // Debugging
+            System.err.println("API ERROR: " + error);
+            return false;
+        }
+
+        @Override
+        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+            e.printStackTrace();
+
+            // Run Error Callback
+            currentCalls.remove(call);
+            error();
+        }
+
+        @Override
+        public void onResponse(@NotNull Call call, @NotNull Response response) {
+            currentCalls.remove(call);
+            try {
+                try (ResponseBody responseBody = response.body()) {
+                    // Check Response
+                    if (!response.isSuccessful()) {
+                        // Run Error Callback
+                        if (responseBody != null) {
+                            // API Error
+                            String error = responseBody.string();
+                            if (apiError(error)) {
+                                // Error Handled
+                                return;
+                            }
+                        }
+                        error();
+                        return;
+                    }
+
+                    // Skip Deserializing If Method Doesn't Have Response
+                    if (responseClass == Object.class) {
+                        success(null);
+                    }
+
+                    // Deserialize Body
+                    Moshi moshi = new Moshi.Builder().build();
+                    JsonAdapter<T> jsonAdapter = moshi.adapter(responseClass);
+                    assert responseBody != null;
+                    T obj = jsonAdapter.fromJson(responseBody.string());
+
+                    // Run Callback
+                    success(obj);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                // Run Error Callback
+                error();
+            }
         }
     }
 }

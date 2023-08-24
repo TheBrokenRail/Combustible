@@ -92,6 +92,32 @@
 
     <PreferenceCategory
         app:iconSpaceReserved="false"
+        app:title="@string/settings_media">
+
+        <Preference
+            app:key="upload_avatar"
+            app:title="@string/user_settings_upload_avatar"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="remove_avatar"
+            app:title="@string/user_settings_remove_avatar"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="upload_banner"
+            app:title="@string/user_settings_upload_banner"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="remove_banner"
+            app:title="@string/user_settings_remove_banner"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
         app:title="@string/settings_security">
 
         <Preference

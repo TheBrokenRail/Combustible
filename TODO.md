@@ -7,9 +7,8 @@
   - [ ] Editing
 - [ ] Making Comments
   - [ ] Editing
-- [ ] User Banners/Biographies
-  - [ ] `UserFeedActivity` (Consider ignoring?)
-  - [ ] `UserSettingsActivity` (Uploading)
+- [x] User Banners/Biographies
+  - [x] `UserSettingsActivity` (Uploading)
 - [ ] Fix Weird Ellipsizing
 - [ ] Investigate Voting/Posting/Editing/Deleting In
   - [ ] Locked Posts
@@ -45,6 +44,7 @@
 - [x] Delete Account Button In `UserSettingsActivity`
 - [x] Person/Community Blocking/Unblocking
 - [ ] Glide Caching Configuration
+- [ ] [Fix Glide Warning](https://github.com/bumptech/glide/issues/5231)
 - [ ] App Icon!
 - [x] Reconsider use of `scrimBackground`
 - [x] Blocking
@@ -57,3 +57,6 @@
 - [ ] Modlog
 - [ ] Fancy New Android Back Code
 - [ ] Update `DepthGauge` When Previous Element Is Changed
+- [ ] Update `lemmy-js-client`
+  - [ ] Extract API Version From `lemmy-js-client`
+- [ ] Pinning/Distinguishing Posts/Comments

@@ -55,7 +55,7 @@ public class WelcomeActivity extends FullscreenActivity {
     }
 
     void checkAndSetInstance(HttpUrl instance) {
-        connect(instance);
+        connect(instance, null);
 
         // Test Instance
         connection.send(new ListCommunities(), response -> {

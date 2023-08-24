@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.util.Util;
 
+import java.util.function.Supplier;
+
 /**
  * Widget that visualizes the depth of its children.
  */
@@ -24,7 +26,7 @@ public class DepthGauge extends LinearLayout {
     private final Paint linePaint;
 
     private final int topMargin;
-    private int previousDepth = -1;
+    private Supplier<Integer> previousDepthSupplier = null;
 
     public DepthGauge(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -53,21 +55,27 @@ public class DepthGauge extends LinearLayout {
     /**
      * Set the depth for the children to be displayed at.
      * @param depth The new depth
-     * @param previousDepth The preceding object's depth
+     * @param previousDepthSupplier The preceding object's depth
      */
-    public void setDepth(int depth, int previousDepth) {
+    public void setDepth(int depth, Supplier<Integer> previousDepthSupplier) {
         // Find Original Padding
         int originalPadding = getPaddingStart() - (this.depth * width);
         // Set New Padding
         this.depth = depth;
         setPaddingRelative((depth * width) + originalPadding, getPaddingTop(), getPaddingEnd(), getPaddingBottom());
         // Top Margin
-        this.previousDepth = previousDepth;
+        this.previousDepthSupplier = previousDepthSupplier;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        // Get Previous Depth
+        int previousDepth = -1;
+        if (previousDepthSupplier != null) {
+            previousDepth = previousDepthSupplier.get();
+        }
 
         // Draw Lines
         boolean isRtl = getLayoutDirection() == LAYOUT_DIRECTION_RTL;

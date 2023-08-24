@@ -276,6 +276,11 @@ public class CommentTreeDataset extends FeedDataset<CommentView> {
         return depth >= Util.MAX_DEPTH;
     }
 
+    @Override
+    public int indexOf(CommentView element) {
+        return dataset.indexOf(element);
+    }
+
     public int getQueuedCommentsSize() {
         return queuedComments.size();
     }

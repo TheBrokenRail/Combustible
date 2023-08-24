@@ -19,6 +19,7 @@
     <string name="unknown_error">An unknown error has occurred!</string>
     <string name="save">Save</string>
     <string name="unsave">Unsave</string>
+    <string name="uploading_image">Uploading image…</string>
 
     <!-- Welcome Screen -->
     <string name="welcome_title">Welcome to Combustible!</string>
@@ -61,6 +62,7 @@
     <!-- Settings -->
     <string name="settings_general">General</string>
     <string name="settings_advanced">Advanced</string>
+    <string name="settings_media">Media</string>
     <string name="settings_security">Security</string>
 
     <!-- App Settings -->
@@ -85,6 +87,10 @@
     <string name="user_settings_show_new_post_notifs">Show Notifications For New Posts</string>
     <string name="user_settings_send_notifications_to_email">Email Notifications</string>
     <string name="user_settings_verification_email_sent">A verification email has been sent.</string>
+    <string name="user_settings_upload_avatar">Upload Avatar</string>
+    <string name="user_settings_remove_avatar">Remove Avatar</string>
+    <string name="user_settings_upload_banner">Upload Banner</string>
+    <string name="user_settings_remove_banner">Remove Banner</string>
     <string name="user_settings_change_password">Change Password</string>
     <string name="user_settings_totp_enable">Enable 2FA</string>
     <string name="user_settings_totp_disable">Disable 2FA</string>

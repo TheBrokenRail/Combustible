@@ -54,8 +54,7 @@ public class Links {
     private static <T> void sendMethod(Context context, Connection.Method<T> method, Consumer<T> callback) {
         assert context.getApplicationContext() == context;
         Config config = new Config(context);
-        Connection connection = new Connection(config.getInstance());
-        connection.setToken(config.getToken());
+        Connection connection = new Connection(config.getInstance(), config.getToken());
         Handler handler = new Handler(Looper.getMainLooper());
         connection.setCallbackHelper(handler::post);
         connection.send(method, callback, () -> Util.unknownError(context));

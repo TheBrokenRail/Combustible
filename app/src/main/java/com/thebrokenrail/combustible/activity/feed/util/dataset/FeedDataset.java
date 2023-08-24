@@ -84,6 +84,13 @@ public abstract class FeedDataset<T> implements Iterable<T> {
      */
     protected abstract boolean isBlocked(T element);
 
+    /**
+     * Returns the index of the first occurrence of the specified element.
+     * @param element The element to search for
+     * @return The element's index (or -1 if it isn't present in the dataset)
+     */
+    public abstract int indexOf(T element);
+
     @NonNull
     @Override
     public Iterator<T> iterator() {
