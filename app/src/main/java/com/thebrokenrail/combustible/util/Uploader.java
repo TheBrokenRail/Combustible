@@ -58,7 +58,7 @@ public class Uploader {
     }
 
     public static void onActivityResult(Context context, Connection connection, int resultCode, Intent data, Consumer<String> successCallback) {
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
             Uri uri = data.getData();
             if (uri != null) {
                 // Gather Information

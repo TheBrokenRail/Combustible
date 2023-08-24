@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/create_post_go"
+        android:icon="@drawable/baseline_check_24"
+        android:title="@string/create_post_go"
+        app:showAsAction="ifRoom" />
+
+</menu>

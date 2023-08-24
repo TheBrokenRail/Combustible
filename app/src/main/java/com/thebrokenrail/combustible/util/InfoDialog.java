@@ -16,9 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -102,6 +100,16 @@ public class InfoDialog {
             // Create Layout
             inflater = LayoutInflater.from(requireActivity());
             @SuppressLint("InflateParams") View root = inflater.inflate(R.layout.dialog_info, null);
+
+            // Return
+            return root;
+        }
+
+        @Override
+        public void onViewCreated(@NonNull View root, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(root, savedInstanceState);
+            InfoDialog info = getInfo();
+            assert info != null;
             PossiblyOutlinedButton subscribeButton = root.findViewById(R.id.community_subscribe);
             TextView infoView = root.findViewById(R.id.community_info);
 
@@ -141,14 +149,13 @@ public class InfoDialog {
             }
 
             // Edge-To-Edge
-            ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
+            NestedScrollView scroll = root.findViewById(R.id.community_dialog_root);
+            EdgeToEdge.setupScroll(scroll);
+            /*ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
                 Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
                 root.findViewById(R.id.community_dialog_root).setPadding(0, 0, 0, insets.bottom);
                 return windowInsets;
-            });
-
-            // Return
-            return root;
+            });*/
         }
 
         private void updateSubscriptionText(PossiblyOutlinedButton button) {
@@ -172,6 +179,8 @@ public class InfoDialog {
     private String text = "";
     private CommunityView community = null;
     private Consumer<SubscribedType> updateSubscribed = null;
+
+    private boolean setup = false;
 
     private InfoDialog(AppCompatActivity context, Connection connection, String key) {
         this.context = context;
@@ -205,6 +214,7 @@ public class InfoDialog {
             text = null;
         }
         this.text = text;
+        setup = true;
     }
 
     /**
@@ -212,7 +222,7 @@ public class InfoDialog {
      * @return True if it is setup, false otherwise
      */
     public boolean isSetup() {
-        return text != null;
+        return setup;
     }
 
     /**

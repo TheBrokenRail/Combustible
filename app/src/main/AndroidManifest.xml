@@ -59,6 +59,14 @@
             android:exported="false" />
 
         <activity
+            android:name=".activity.create.PostCreateActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.create.CommentCreateActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".activity.ViewImageActivity"
             android:exported="false"
             android:theme="@style/Theme.Combustible.ViewImage" />

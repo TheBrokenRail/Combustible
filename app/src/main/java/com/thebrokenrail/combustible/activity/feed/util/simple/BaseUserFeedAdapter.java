@@ -7,7 +7,6 @@ import android.view.View;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.thebrokenrail.combustible.activity.feed.tabbed.user.UserFeedActivity;
-import com.thebrokenrail.combustible.activity.feed.util.overflow.UserOverflow;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.PersonView;
 import com.thebrokenrail.combustible.util.Names;
@@ -38,6 +37,11 @@ public abstract class BaseUserFeedAdapter extends SimpleFeedAdapter<PersonView> 
     @Override
     protected void setupIcons(CommonIcons icons, PersonView obj) {
         icons.setup(false, false, false, false);
-        icons.overflow.setOnClickListener(v -> new UserOverflow(v, connection, obj, personView -> viewModel.dataset.replace(notifier, obj, personView), false));
+        icons.overflow.setOnClickListener(v -> new UserOverflow(v, connection, obj) {
+            @Override
+            protected void update(PersonView newObj) {
+                viewModel.dataset.replace(notifier, obj, newObj);
+            }
+        });
     }
 }

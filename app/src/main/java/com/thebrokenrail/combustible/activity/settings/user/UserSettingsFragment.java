@@ -20,6 +20,7 @@ import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.settings.SettingsFragment;
 import com.thebrokenrail.combustible.api.method.ListingType;
 import com.thebrokenrail.combustible.api.method.SortType;
+import com.thebrokenrail.combustible.util.RequestCodes;
 import com.thebrokenrail.combustible.util.Uploader;
 
 import java.util.Arrays;
@@ -133,14 +134,14 @@ public class UserSettingsFragment extends SettingsFragment {
         Preference uploadAvatar = findPreference("upload_avatar");
         assert uploadAvatar != null;
         uploadAvatar.setOnPreferenceClickListener(preference -> {
-            Uploader.upload(requireActivity(), UserSettingsActivity.UPLOAD_AVATAR);
+            Uploader.upload(requireActivity(), RequestCodes.PICK_AVATAR_REQUEST_CODE);
             return true;
         });
         // Upload Banner
         Preference uploadBanner = findPreference("upload_banner");
         assert uploadBanner != null;
         uploadBanner.setOnPreferenceClickListener(preference -> {
-            Uploader.upload(requireActivity(), UserSettingsActivity.UPLOAD_BANNER);
+            Uploader.upload(requireActivity(), RequestCodes.PICK_BANNER_REQUEST_CODE);
             return true;
         });
 

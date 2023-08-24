@@ -15,6 +15,7 @@ import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequ
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
 import com.thebrokenrail.combustible.util.ExtendableViewModel;
+import com.thebrokenrail.combustible.util.Permissions;
 import com.thebrokenrail.combustible.util.Util;
 import com.thebrokenrail.combustible.widget.NextPageLoader;
 
@@ -106,6 +107,16 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     protected GetSiteResponse site = null;
 
     /**
+     * A parent view.
+     */
+    protected final View parent;
+
+    /**
+     * Permission manager.
+     */
+    protected final Permissions permissions = new Permissions();
+
+    /**
      * The bridge between {@link FeedDataset} and {@link RecyclerView.Adapter}.
      */
     protected final FeedDataset.Notifier notifier = new FeedDataset.Notifier() {
@@ -151,8 +162,6 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         }
     }
     private final ScrollingBugWorkaround scrollingBugWorkaround = new ScrollingBugWorkaround();
-
-    private final View parent;
 
     /**
      * Create a FeedAdapter.
@@ -205,6 +214,8 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         prerequisites.listen(prerequisite -> {
             if (prerequisite instanceof FeedPrerequisite.Site) {
                 site = ((FeedPrerequisite.Site) prerequisite).get();
+                // Update Permissions
+                permissions.setSite(site);
             }
         });
     }
@@ -238,7 +249,7 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
                 }
             } else if (prerequisite == FeedPrerequisites.COMPLETED) {
                 // All Prerequisites Loaded
-                if (viewModel.loadingStatus == LoadingStatus.PENDING && viewModel.dataset.size() == 0) {
+                if (viewModel.loadingStatus == LoadingStatus.PENDING && viewModel.dataset.size() == 0 && viewModel.nextPage == ViewModel.FIRST_PAGE) {
                     load();
                 }
             }
@@ -527,5 +538,12 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
         scrollingBugWorkaround.recyclerViews.remove(recyclerView);
+    }
+
+    /**
+     * Override this to handle when an element is edited. This element may or may not be in this feed.
+     * @param element The edited element
+     */
+    public void handleEdit(Object element) {
     }
 }

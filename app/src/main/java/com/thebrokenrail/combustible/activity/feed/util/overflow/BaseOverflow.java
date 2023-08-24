@@ -4,25 +4,20 @@ import android.content.Context;
 import android.view.Menu;
 import android.view.View;
 
+import androidx.annotation.MenuRes;
 import androidx.appcompat.widget.PopupMenu;
 
-import androidx.annotation.MenuRes;
-
 import com.thebrokenrail.combustible.api.Connection;
-
-import java.util.function.Consumer;
 
 public abstract class BaseOverflow<T> implements PopupMenu.OnMenuItemClickListener {
     protected final Context context;
     protected final Connection connection;
     protected final T obj;
-    protected final Consumer<T> updateFunction;
 
-    public BaseOverflow(View view, Connection connection, T obj, Consumer<T> updateFunction) {
+    public BaseOverflow(View view, Connection connection, T obj) {
         this.context = view.getContext();
         this.connection = connection;
         this.obj = obj;
-        this.updateFunction = updateFunction;
 
         // Show
         PopupMenu popup = new PopupMenu(context, view);
@@ -36,4 +31,6 @@ public abstract class BaseOverflow<T> implements PopupMenu.OnMenuItemClickListen
     protected abstract @MenuRes int getMenuResource();
 
     protected abstract void onCreateMenu(Menu menu);
+
+    protected abstract void update(T newObj);
 }

@@ -26,12 +26,11 @@
 
     <Button
         style="?materialButtonOutlinedStyle"
-        android:id="@+id/comments_view_all"
+        android:id="@+id/comments_header_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/post_padding"
-        android:visibility="gone"
-        android:text="@string/comment_view_all" />
+        android:visibility="gone" />
 
 </LinearLayout>

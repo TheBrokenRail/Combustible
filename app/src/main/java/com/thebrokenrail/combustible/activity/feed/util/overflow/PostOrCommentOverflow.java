@@ -12,11 +12,9 @@ import com.thebrokenrail.combustible.activity.feed.util.report.ReportDialogFragm
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.util.Util;
 
-import java.util.function.Consumer;
-
 public abstract class PostOrCommentOverflow<T> extends BaseOverflow<T> {
-    public PostOrCommentOverflow(View view, Connection connection, T obj, Consumer<T> updateFunction) {
-        super(view, connection, obj, updateFunction);
+    public PostOrCommentOverflow(View view, Connection connection, T obj) {
+        super(view, connection, obj);
     }
 
     @Override
@@ -42,6 +40,9 @@ public abstract class PostOrCommentOverflow<T> extends BaseOverflow<T> {
             ReportDialogFragment dialog = createReportDialog();
             dialog.show(fragmentManager, "report_" + dialog.getClass().getName());
             return true;
+        } else if (item.getItemId() == R.id.post_edit) {
+            edit();
+            return true;
         } else {
             return false;
         }
@@ -57,6 +58,7 @@ public abstract class PostOrCommentOverflow<T> extends BaseOverflow<T> {
         menu.findItem(R.id.post_save).setVisible(connection.hasToken() && !isSaved());
         menu.findItem(R.id.post_unsave).setVisible(connection.hasToken() && isSaved());
         menu.findItem(R.id.post_share).setVisible(showShare());
+        menu.findItem(R.id.post_edit).setVisible(canEdit());
     }
 
     protected abstract void save(boolean shouldSave);
@@ -70,4 +72,10 @@ public abstract class PostOrCommentOverflow<T> extends BaseOverflow<T> {
     protected abstract void share();
 
     protected abstract ReportDialogFragment createReportDialog();
+
+    protected abstract boolean canEdit();
+
+    protected abstract void edit();
+
+    protected abstract Integer getCurrentUser();
 }

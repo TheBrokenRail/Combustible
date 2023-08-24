@@ -2,14 +2,17 @@ package com.thebrokenrail.combustible.activity.feed.comment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.TypedValue;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thebrokenrail.combustible.R;
+import com.thebrokenrail.combustible.activity.create.CommentCreateActivity;
 import com.thebrokenrail.combustible.activity.feed.util.dataset.FeedDataset;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
@@ -18,6 +21,7 @@ import com.thebrokenrail.combustible.api.method.CommentSortType;
 import com.thebrokenrail.combustible.api.method.CommentView;
 import com.thebrokenrail.combustible.api.method.GetComments;
 import com.thebrokenrail.combustible.api.method.ListingType;
+import com.thebrokenrail.combustible.util.RequestCodes;
 import com.thebrokenrail.combustible.util.Util;
 import com.thebrokenrail.combustible.widget.DepthGauge;
 
@@ -57,13 +61,15 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
     protected void bindHeader(View root) {
         super.bindHeader(root);
 
-        // View All
-        AppCompatButton viewAll = root.findViewById(R.id.comments_view_all);
+        // Header Button
+        AppCompatButton headerButton = root.findViewById(R.id.comments_header_button);
+        headerButton.setVisibility(View.VISIBLE);
         if (parentType == CommentTreeDataset.ParentType.COMMENT) {
-            viewAll.setVisibility(View.VISIBLE);
-            viewAll.setEnabled(postId != null);
-            if (viewAll.isEnabled()) {
-                viewAll.setOnClickListener(v -> {
+            // View All
+            headerButton.setText(R.string.comment_view_all);
+            headerButton.setEnabled(postId != null);
+            if (headerButton.isEnabled()) {
+                headerButton.setOnClickListener(v -> {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, CommentFeedActivity.class);
                     intent.putExtra(CommentFeedActivity.POST_ID_EXTRA, postId);
@@ -71,7 +77,18 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
                 });
             }
         } else {
-            viewAll.setVisibility(View.GONE);
+            // Reply
+            headerButton.setText(R.string.reply);
+            headerButton.setEnabled(post != null && site != null && permissions.canReply(post.post_view.post));
+            if (headerButton.isEnabled()) {
+                headerButton.setOnClickListener(v -> {
+                    AppCompatActivity activity = Util.getActivityFromContext(v.getContext());
+                    Intent intent = new Intent(activity, CommentCreateActivity.class);
+                    intent.putExtra(CommentFeedActivity.POST_ID_EXTRA, post.post_view.post.id);
+                    //noinspection deprecation
+                    activity.startActivityForResult(intent, RequestCodes.CREATE_COMMENT_REQUEST_CODE);
+                });
+            }
         }
     }
 
@@ -87,7 +104,10 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
         ((DepthGauge) commentViewHolder.itemView).setDepth(depth, () -> {
             // Get Current Position
             int newPosition = dataset.indexOf(obj);
-            assert newPosition != -1;
+            if (newPosition == -1) {
+                // Invalid State
+                return -1;
+            }
 
             // Get Previous Item's Depth
             int previousDepth1 = -1;
@@ -110,6 +130,28 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
         // Card
         commentViewHolder.card.setClickable(false);
         commentViewHolder.card.setFocusable(false);
+
+        // Reply
+        boolean canReply = permissions.canReply(obj.post);
+        commentViewHolder.reply.setVisibility(View.VISIBLE);
+        commentViewHolder.reply.setEnabled(canReply);
+        if (commentViewHolder.reply.isEnabled()) {
+            commentViewHolder.reply.setImageAlpha(255);
+            commentViewHolder.reply.setOnClickListener(v -> {
+                AppCompatActivity activity = Util.getActivityFromContext(v.getContext());
+                Intent intent = new Intent(activity, CommentCreateActivity.class);
+                intent.putExtra(CommentFeedActivity.POST_ID_EXTRA, obj.post.id);
+                intent.putExtra(CommentFeedActivity.COMMENT_ID_EXTRA, obj.comment.id);
+                //noinspection deprecation
+                activity.startActivityForResult(intent, RequestCodes.CREATE_COMMENT_REQUEST_CODE);
+            });
+        } else {
+            // Disabled Appearance
+            TypedValue typedValue = new TypedValue();
+            commentViewHolder.itemView.getContext().getResources().getValue(com.google.android.material.R.dimen.material_emphasis_disabled, typedValue, true);
+            float alpha = typedValue.getFloat();
+            commentViewHolder.reply.setImageAlpha((int) (alpha * 255));
+        }
     }
 
     @Override

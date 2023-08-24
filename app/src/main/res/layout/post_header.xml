@@ -15,4 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <Button
+        style="?attr/materialButtonOutlinedStyle"
+        android:id="@+id/posts_create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/feed_item_margin"
+        android:text="@string/create_post"
+        android:visibility="gone" />
+
 </LinearLayout>

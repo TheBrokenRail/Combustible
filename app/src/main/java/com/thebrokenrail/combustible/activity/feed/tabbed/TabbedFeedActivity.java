@@ -9,10 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -27,6 +24,7 @@ import com.thebrokenrail.combustible.activity.feed.FeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
+import com.thebrokenrail.combustible.util.EdgeToEdge;
 import com.thebrokenrail.combustible.util.Util;
 
 import java.util.AbstractMap;
@@ -106,11 +104,7 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
 
         // Edge-To-Edge
         CoordinatorLayout root = findViewById(R.id.tabbed_feed_root);
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            root.setPadding(insets.left, 0, insets.right, 0);
-            return windowInsets;
-        });
+        EdgeToEdge.setupRoot(root);
     }
 
     @Override
@@ -216,5 +210,12 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
     protected void onDestroy() {
         super.onDestroy();
         prerequisites.clearListeners();
+    }
+
+    @Override
+    protected void handleEdit(Object element) {
+        for (Map.Entry<Integer, FeedAdapter<?>> tab : tabs) {
+            tab.getValue().handleEdit(element);
+        }
     }
 }

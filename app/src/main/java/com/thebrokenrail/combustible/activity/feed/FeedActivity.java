@@ -9,10 +9,7 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -24,6 +21,7 @@ import com.thebrokenrail.combustible.activity.feed.util.FeedUtil;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
+import com.thebrokenrail.combustible.util.EdgeToEdge;
 import com.thebrokenrail.combustible.util.Util;
 
 /**
@@ -50,17 +48,9 @@ public abstract class FeedActivity extends HamburgerActivity {
         feed.setAdapter(adapter);
 
         // Edge-To-Edge
-        ViewCompat.setOnApplyWindowInsetsListener(feed, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            feed.setPadding(0, 0, 0, insets.bottom + getResources().getDimensionPixelSize(R.dimen.feed_item_margin));
-            return windowInsets;
-        });
+        EdgeToEdge.setupScroll(feed);
         CoordinatorLayout root = findViewById(R.id.feed_root);
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            root.setPadding(insets.left, 0, insets.right, 0);
-            return windowInsets;
-        });
+        EdgeToEdge.setupRoot(root);
 
         // Swipe-To-Refresh
         SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.feed_swipe_refresh_layout);
@@ -188,5 +178,10 @@ public abstract class FeedActivity extends HamburgerActivity {
     protected void onDestroy() {
         super.onDestroy();
         prerequisites.clearListeners();
+    }
+
+    @Override
+    protected void handleEdit(Object element) {
+        adapter.handleEdit(element);
     }
 }

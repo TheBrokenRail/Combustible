@@ -6,18 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.feed.FeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.util.FeedUtil;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
+import com.thebrokenrail.combustible.util.EdgeToEdge;
 
 import java.util.HashMap;
 import java.util.List;
@@ -76,11 +73,7 @@ class TabbedFeedAdapter extends RecyclerView.Adapter<TabbedFeedAdapter.TabViewHo
         swipeRefreshLayout.addView(recyclerView);
 
         // Edge-To-Edge
-        ViewCompat.setOnApplyWindowInsetsListener(recyclerView, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            recyclerView.setPadding(0, 0, 0, insets.bottom + context.getResources().getDimensionPixelSize(R.dimen.feed_item_margin));
-            return windowInsets;
-        });
+        EdgeToEdge.setupScroll(recyclerView);
         recyclerView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
             public void onViewAttachedToWindow(@NonNull View v) {

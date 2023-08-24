@@ -17,8 +17,6 @@ import android.widget.FrameLayout;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -29,6 +27,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.ortiz.touchview.TouchImageView;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.util.DrawableAlwaysCrossFadeFactory;
+import com.thebrokenrail.combustible.util.EdgeToEdge;
 
 import java.util.Objects;
 
@@ -81,11 +80,7 @@ public class ViewImageActivity extends AppCompatActivity {
 
         // Edge-To-Edge
         FrameLayout root = findViewById(R.id.view_image_root);
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            root.setPadding(insets.left, 0, insets.right, 0);
-            return windowInsets;
-        });
+        EdgeToEdge.setupRoot(root);
     }
 
     private String getUrl() {

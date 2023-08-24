@@ -1,17 +1,24 @@
 package com.thebrokenrail.combustible.activity.feed.post;
 
+import android.content.Intent;
 import android.view.View;
+import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.thebrokenrail.combustible.R;
+import com.thebrokenrail.combustible.activity.create.PostCreateActivity;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
 import com.thebrokenrail.combustible.api.Connection;
+import com.thebrokenrail.combustible.api.method.Community;
 import com.thebrokenrail.combustible.api.method.GetCommunityResponse;
 import com.thebrokenrail.combustible.api.method.GetPosts;
 import com.thebrokenrail.combustible.api.method.ListingType;
 import com.thebrokenrail.combustible.api.method.PostView;
 import com.thebrokenrail.combustible.api.method.SortType;
+import com.thebrokenrail.combustible.util.RequestCodes;
 import com.thebrokenrail.combustible.util.Util;
 
 import java.util.List;
@@ -19,6 +26,8 @@ import java.util.function.Consumer;
 
 class PostFeedAdapter extends BasePostFeedAdapter {
     private final Integer communityId;
+
+    private Community community;
 
     public PostFeedAdapter(View parent, Connection connection, ViewModelProvider viewModelProvider, Integer communityId) {
         super(parent, connection, viewModelProvider);
@@ -36,16 +45,24 @@ class PostFeedAdapter extends BasePostFeedAdapter {
             if (prerequisite instanceof FeedPrerequisite.Site) {
                 // Site Loaded
                 assert site != null;
+                reloadHeader = true;
 
                 // Banner
                 if (showBanner() && communityId == null) {
                     setBannerUrl(site.site_view.site.banner, false);
-                    reloadHeader = true;
                 }
-            } else if (showBanner() && communityId != null && prerequisite instanceof FeedPrerequisite.Community) {
+            } else if (communityId != null && prerequisite instanceof FeedPrerequisite.Community) {
+                // Community Loaded
+                reloadHeader = true;
+
                 // Banner
                 GetCommunityResponse getCommunityResponse = ((FeedPrerequisite.Community) prerequisite).get();
-                reloadHeader = setBannerUrl(getCommunityResponse.community_view.community.banner, getCommunityResponse.community_view.community.nsfw);
+                if (showBanner()) {
+                    setBannerUrl(getCommunityResponse.community_view.community.banner, getCommunityResponse.community_view.community.nsfw);
+                }
+
+                // Store For Permissions
+                community = getCommunityResponse.community_view.community;
             }
             if (reloadHeader) {
                 // Reload Header
@@ -105,5 +122,29 @@ class PostFeedAdapter extends BasePostFeedAdapter {
     @Override
     protected boolean useDefaultSort() {
         return true;
+    }
+
+    @Override
+    protected void bindHeader(View root) {
+        super.bindHeader(root);
+
+        // Create Post
+        boolean canPost = false;
+        if (community != null) {
+            canPost = permissions.canPost(community);
+        }
+        Button createPost = root.findViewById(R.id.posts_create);
+        if (canPost) {
+            createPost.setVisibility(View.VISIBLE);
+            createPost.setOnClickListener(v -> {
+                AppCompatActivity activity = Util.getActivityFromContext(v.getContext());
+                Intent intent = new Intent(activity, PostCreateActivity.class);
+                intent.putExtra(PostFeedActivity.COMMUNITY_ID_EXTRA, communityId);
+                //noinspection deprecation
+                activity.startActivityForResult(intent, RequestCodes.CREATE_POST_REQUEST_CODE);
+            });
+        } else {
+            createPost.setVisibility(View.GONE);
+        }
     }
 }

@@ -8,14 +8,12 @@ import androidx.annotation.Nullable;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.settings.SettingsActivity;
 import com.thebrokenrail.combustible.activity.settings.SettingsFragment;
+import com.thebrokenrail.combustible.util.RequestCodes;
 import com.thebrokenrail.combustible.util.Uploader;
 
 import java.util.Objects;
 
 public class UserSettingsActivity extends SettingsActivity {
-    static final int UPLOAD_AVATAR = 200;
-    static final int UPLOAD_BANNER = 300;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,10 +46,10 @@ public class UserSettingsActivity extends SettingsActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Uploading
-        if (requestCode == UPLOAD_AVATAR) {
+        if (requestCode == RequestCodes.PICK_AVATAR_REQUEST_CODE) {
             // Avatar
             Uploader.onActivityResult(this, connection, resultCode, data, s -> getDataStore().putString("avatar", s));
-        } else if (requestCode == UPLOAD_BANNER) {
+        } else if (requestCode == RequestCodes.PICK_BANNER_REQUEST_CODE) {
             // Banner
             Uploader.onActivityResult(this, connection, resultCode, data, s -> getDataStore().putString("banner", s));
         }

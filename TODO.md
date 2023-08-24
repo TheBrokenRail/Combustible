@@ -2,17 +2,17 @@
 - [x] 2FA Support
   - [x] `LoginActivity`
   - [x] `UserSettingsActivity`
-- [ ] Making Posts
-  - [ ] Uploading Images
-  - [ ] Editing
-- [ ] Making Comments
-  - [ ] Editing
+- [x] Making Posts
+  - [x] Uploading Images
+  - [x] Editing
+- [x] Making Comments
+  - [x] Editing
 - [x] User Banners/Biographies
   - [x] `UserSettingsActivity` (Uploading)
 - [ ] Fix Weird Ellipsizing
-- [ ] Investigate Voting/Posting/Editing/Deleting In
-  - [ ] Locked Posts
-  - [ ] Moderator-Only Communities
+- [x] Investigate Voting/Posting/Editing/Deleting In
+  - [x] Locked Posts
+  - [x] Moderator-Only Communities
 - [ ] Comment/Post Deleting
   - [ ] Deleting (For Users)
   - [ ] Removing (For Moderators/Admins)
@@ -56,7 +56,10 @@
   - [x] Share
 - [ ] Modlog
 - [ ] Fancy New Android Back Code
-- [ ] Update `DepthGauge` When Previous Element Is Changed
+- [x] Update `DepthGauge` When Previous Element Is Changed
 - [ ] Update `lemmy-js-client`
   - [ ] Extract API Version From `lemmy-js-client`
 - [ ] Pinning/Distinguishing Posts/Comments
+- [ ] Investigate Deleted/Removed Comments
+  - Should the content be replaced?
+  - Option to hide deleted content?

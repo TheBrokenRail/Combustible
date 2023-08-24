@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +29,8 @@ import com.thebrokenrail.combustible.widget.CommonIcons;
 import com.thebrokenrail.combustible.widget.Karma;
 import com.thebrokenrail.combustible.widget.Metadata;
 
+import java.util.Collections;
+
 public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<CommentView> {
     protected static class CommentViewHolder extends RecyclerView.ViewHolder {
         protected final CardView card;
@@ -36,6 +39,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
         private final Metadata metadata;
         private final CommonIcons icons;
         protected final Button showMore;
+        protected final AppCompatImageView reply;
 
         private CommentViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -45,6 +49,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
             metadata = itemView.findViewById(R.id.comment_metadata);
             icons = itemView.findViewById(R.id.comment_icons);
             showMore = itemView.findViewById(R.id.comment_show_more);
+            reply = itemView.findViewById(R.id.comment_reply);
         }
     }
 
@@ -55,6 +60,13 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
     public BaseCommentFeedAdapter(View recyclerView, Connection connection, ViewModelProvider viewModelProvider) {
         super(recyclerView, connection, viewModelProvider);
         markdown = new Markdown(recyclerView.getContext());
+    }
+
+    private void updatePost(PostView post) {
+        assert this.post != null && site != null;
+        this.post.post_view = post;
+        // Reload Header
+        notifyItemChanged(0);
     }
 
     @Override
@@ -103,9 +115,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
                 @Override
                 public void replace(PostView oldElement, PostView newElement) {
                     assert post.post_view == oldElement;
-                    post.post_view = newElement;
-                    // Reload Header
-                    notifyItemChanged(0);
+                    updatePost(newElement);
                 }
 
                 @Override
@@ -180,9 +190,59 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
         commentViewHolder.metadata.setup(showCreator() ? obj.creator : null, showCommunity() ? obj.community : null, isEdited ? obj.comment.updated : obj.comment.published, isEdited, blurNsfw, showAvatars);
 
         // Overflow
-        commentViewHolder.icons.overflow.setOnClickListener(v -> new CommentOverflow(v, connection, obj, newObj -> viewModel.dataset.replace(notifier, obj, newObj)));
+        commentViewHolder.icons.overflow.setOnClickListener(v -> new CommentOverflow(v, connection, obj) {
+            @Override
+            protected Integer getCurrentUser() {
+                return site.my_user != null ? site.my_user.local_user_view.person.id : null;
+            }
+
+            @Override
+            protected void update(CommentView newObj) {
+                viewModel.dataset.replace(notifier, obj, newObj);
+            }
+        });
 
         // Icons
         commentViewHolder.icons.setup(obj.comment.deleted || obj.comment.removed, false, false, obj.comment.distinguished);
+    }
+
+    @Override
+    public void handleEdit(Object element) {
+        super.handleEdit(element);
+
+        // Check
+        if (!arePrerequisitesLoaded()) {
+            return;
+        }
+
+        // Check Object
+        if (element instanceof PostView) {
+            // Post Header
+            PostView newPost = (PostView) element;
+            if (post != null && post.post_view.post.id.equals(newPost.post.id)) {
+                updatePost(newPost);
+            }
+        } else if (element instanceof CommentView) {
+            // Comment
+            CommentView newComment = (CommentView) element;
+
+            // Get Existing
+            CommentView existingComment = null;
+            for (CommentView comment : viewModel.dataset) {
+                if (comment.comment.id.equals(newComment.comment.id)) {
+                    existingComment = comment;
+                    break;
+                }
+            }
+
+            // Update Dataset
+            if (existingComment == null) {
+                // Add New Comment
+                viewModel.dataset.add(notifier, Collections.singletonList(newComment), true);
+            } else {
+                // Replace Existing Comment
+                viewModel.dataset.replace(notifier, existingComment, newComment);
+            }
+        }
     }
 }

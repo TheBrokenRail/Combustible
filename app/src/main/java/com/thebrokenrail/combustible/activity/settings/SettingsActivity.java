@@ -11,10 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.preference.EditTextPreference;
 import androidx.preference.EditTextPreferenceDialogFragmentCompat;
 import androidx.preference.ListPreference;
@@ -27,6 +24,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.LemmyActivity;
 import com.thebrokenrail.combustible.util.Config;
+import com.thebrokenrail.combustible.util.EdgeToEdge;
 
 public abstract class SettingsActivity extends LemmyActivity implements PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
     @Override
@@ -45,11 +43,7 @@ public abstract class SettingsActivity extends LemmyActivity implements Preferen
 
         // Edge-To-Edge
         CoordinatorLayout root = findViewById(R.id.settings_root);
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
-            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            root.setPadding(insets.left, 0, insets.right, 0);
-            return windowInsets;
-        });
+        EdgeToEdge.setupRoot(root);
 
         // Load
         if (savedInstanceState == null) {

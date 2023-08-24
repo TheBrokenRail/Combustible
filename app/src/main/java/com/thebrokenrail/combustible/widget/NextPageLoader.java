@@ -39,14 +39,17 @@ public class NextPageLoader extends FrameLayout {
     public NextPageLoader(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         inner = new LinearLayout(context);
-        LayoutParams layoutParams = new LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-        int margin = getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
-        layoutParams.setMargins(margin, margin, margin, 0);
-        inner.setLayoutParams(layoutParams);
         inner.setGravity(Gravity.CENTER_HORIZONTAL);
         inner.setOrientation(LinearLayout.VERTICAL);
         addView(inner);
-        setupProgress();
+        setup(DisplayMode.PROGRESS, null);
+    }
+
+    private void updateMargins(boolean includeTop) {
+        LayoutParams layoutParams = new LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
+        int margin = getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
+        layoutParams.setMargins(margin, includeTop ? margin : 0, margin, margin);
+        inner.setLayoutParams(layoutParams);
     }
 
     /**
@@ -56,9 +59,9 @@ public class NextPageLoader extends FrameLayout {
      */
     public void setup(DisplayMode displayMode, Runnable retry) {
         if (displayMode == DisplayMode.NONE) {
-            inner.setVisibility(GONE);
+            inner.removeAllViews();
+            updateMargins(false);
         } else {
-            inner.setVisibility(VISIBLE);
             if (displayMode == DisplayMode.PROGRESS) {
                 setupProgress();
             } else if (displayMode == DisplayMode.ERROR) {
@@ -66,6 +69,7 @@ public class NextPageLoader extends FrameLayout {
             } else {
                 throw new RuntimeException();
             }
+            updateMargins(true);
         }
     }
 

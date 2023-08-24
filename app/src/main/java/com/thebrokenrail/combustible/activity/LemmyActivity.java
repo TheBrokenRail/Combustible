@@ -6,9 +6,19 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
+import com.thebrokenrail.combustible.activity.create.BaseCreateActivity;
+import com.thebrokenrail.combustible.activity.feed.comment.CommentFeedActivity;
 import com.thebrokenrail.combustible.activity.fullscreen.welcome.WelcomeActivity;
 import com.thebrokenrail.combustible.api.Connection;
+import com.thebrokenrail.combustible.api.method.CommentView;
+import com.thebrokenrail.combustible.api.method.PostView;
 import com.thebrokenrail.combustible.util.Config;
+import com.thebrokenrail.combustible.util.RequestCodes;
+
+import java.io.IOException;
+import java.util.Objects;
 
 import okhttp3.HttpUrl;
 
@@ -93,5 +103,46 @@ public class LemmyActivity extends AppCompatActivity {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data != null) {
+            try {
+                if (requestCode == RequestCodes.CREATE_POST_REQUEST_CODE) {
+                    // Post Created/Edited
+                    boolean wasEdit = data.getBooleanExtra(BaseCreateActivity.WAS_EDIT_KEY, false);
+                    Moshi moshi = new Moshi.Builder().build();
+                    JsonAdapter<PostView> jsonAdapter = moshi.adapter(PostView.class);
+                    PostView post = jsonAdapter.fromJson(Objects.requireNonNull(data.getStringExtra(BaseCreateActivity.OBJ_KEY)));
+                    assert post != null;
+                    if (!wasEdit) {
+                        Intent intent = new Intent(this, CommentFeedActivity.class);
+                        intent.putExtra(CommentFeedActivity.POST_ID_EXTRA, post.post.id);
+                        startActivity(intent);
+                    } else {
+                        handleEdit(post);
+                    }
+                } else if (requestCode == RequestCodes.CREATE_COMMENT_REQUEST_CODE) {
+                    // Comment Created/Edited
+                    Moshi moshi = new Moshi.Builder().build();
+                    JsonAdapter<CommentView> jsonAdapter = moshi.adapter(CommentView.class);
+                    CommentView comment = jsonAdapter.fromJson(Objects.requireNonNull(data.getStringExtra(BaseCreateActivity.OBJ_KEY)));
+                    assert comment != null;
+                    handleEdit(comment);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * Override this to handle when an element is edited.
+     * @param element The edited element
+     */
+    protected void handleEdit(Object element) {
+        throw new RuntimeException();
     }
 }

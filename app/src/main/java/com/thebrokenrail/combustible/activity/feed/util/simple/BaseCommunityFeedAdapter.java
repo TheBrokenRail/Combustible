@@ -7,7 +7,6 @@ import android.view.View;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.thebrokenrail.combustible.activity.feed.post.PostFeedActivity;
-import com.thebrokenrail.combustible.activity.feed.util.overflow.CommunityOverflow;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CommunityView;
 import com.thebrokenrail.combustible.util.Names;
@@ -38,6 +37,11 @@ public abstract class BaseCommunityFeedAdapter extends SimpleFeedAdapter<Communi
     @Override
     protected void setupIcons(CommonIcons icons, CommunityView obj) {
         icons.setup(false, obj.community.nsfw, false, false);
-        icons.overflow.setOnClickListener(v -> new CommunityOverflow(v, connection, obj, communityView -> viewModel.dataset.replace(notifier, obj, communityView)));
+        icons.overflow.setOnClickListener(v -> new CommunityOverflow(v, connection, obj) {
+            @Override
+            protected void update(CommunityView newObj) {
+                viewModel.dataset.replace(notifier, obj, newObj);
+            }
+        });
     }
 }

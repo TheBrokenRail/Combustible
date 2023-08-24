@@ -1,26 +1,25 @@
-package com.thebrokenrail.combustible.activity.feed.util.overflow;
+package com.thebrokenrail.combustible.activity.feed.util.simple;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.thebrokenrail.combustible.R;
+import com.thebrokenrail.combustible.activity.feed.util.overflow.BaseOverflow;
 import com.thebrokenrail.combustible.api.Connection;
-import com.thebrokenrail.combustible.api.method.PersonView;
+import com.thebrokenrail.combustible.api.method.CommunityView;
 import com.thebrokenrail.combustible.util.Sharing;
 
-import java.util.function.Consumer;
-
-public class UserOverflow extends BaseOverflow<PersonView> {
-    public UserOverflow(View view, Connection connection, PersonView obj, Consumer<PersonView> updateFunction, boolean isBlocked) {
-        super(view, connection, obj, updateFunction);
+abstract class CommunityOverflow extends BaseOverflow<CommunityView> {
+    public CommunityOverflow(View view, Connection connection, CommunityView obj) {
+        super(view, connection, obj);
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.community_share) {
             // Share
-            Sharing.sharePerson(context, obj);
+            Sharing.shareCommunity(context, obj);
             return true;
         } else {
             return false;

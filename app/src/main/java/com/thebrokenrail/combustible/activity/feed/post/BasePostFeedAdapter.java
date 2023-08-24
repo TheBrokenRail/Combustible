@@ -36,8 +36,6 @@ import com.thebrokenrail.combustible.widget.CommonIcons;
 import com.thebrokenrail.combustible.widget.Karma;
 import com.thebrokenrail.combustible.widget.Metadata;
 
-import java.util.Objects;
-
 import okhttp3.HttpUrl;
 
 public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> {
@@ -101,14 +99,9 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
 
     protected abstract boolean showBanner();
 
-    protected boolean setBannerUrl(String bannerUrl, boolean bannerNsfw) {
-        if (!Objects.equals(this.bannerUrl, bannerUrl)) {
-            this.bannerUrl = bannerUrl;
-            this.bannerNsfw = bannerNsfw;
-            return true;
-        } else {
-            return false;
-        }
+    protected void setBannerUrl(String bannerUrl, boolean bannerNsfw) {
+        this.bannerUrl = bannerUrl;
+        this.bannerNsfw = bannerNsfw;
     }
 
     @Override
@@ -222,6 +215,7 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
 
         // Pick Thumbnail Size
         String thumbnailUrl = obj.post.thumbnail_url;
+        boolean showThumbnail = obj.post.url != null;
         boolean useBigThumbnail = false;
         boolean disableLargeThumbnail = PreferenceManager.getDefaultSharedPreferences(postViewHolder.itemView.getContext()).getBoolean("disable_large_thumbnail", false);
         if (Images.isImage(obj.post.url) && !disableLargeThumbnail) {
@@ -240,7 +234,7 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         }
         FrameLayout thumbnailParent = (FrameLayout) thumbnail.getParent();
         FrameLayout otherThumbnailParent = (FrameLayout) otherThumbnail.getParent();
-        if (thumbnailUrl != null) {
+        if (showThumbnail) {
             thumbnailParent.setVisibility(View.VISIBLE);
             thumbnail.setAdjustViewBounds(false);
             Glide.with(postViewHolder.itemView.getContext())
@@ -257,10 +251,10 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         Glide.with(postViewHolder.itemView.getContext()).clear(otherThumbnail);
 
         // Thumbnail Click Handler
-        boolean temp = useBigThumbnail;
+        boolean finalUseBigThumbnail = useBigThumbnail;
         thumbnailParent.setOnClickListener(v -> {
             Context context = v.getContext();
-            if (temp) {
+            if (finalUseBigThumbnail) {
                 Intent intent = new Intent(context, ViewImageActivity.class);
                 intent.putExtra(ViewImageActivity.IMAGE_URL_EXTRA, obj.post.url);
                 context.startActivity(intent);
@@ -270,7 +264,7 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         });
 
         // Thumbnail Hint
-        if (thumbnailUrl != null && !useBigThumbnail) {
+        if (showThumbnail && !useBigThumbnail) {
             HttpUrl url = HttpUrl.parse(obj.post.url);
             assert url != null;
             String host = url.host();
@@ -290,10 +284,20 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         postViewHolder.metadata.setup(postContext.showCreator() ? obj.creator : null, postContext.showCommunity() ? obj.community : null, isEdited ? obj.post.updated : obj.post.published, isEdited, blurNsfw, showAvatars);
 
         // Overflow
-        postViewHolder.icons.overflow.setOnClickListener(v -> new PostOverflow(v, connection, obj, newObj -> postContext.replace(obj, newObj)) {
+        postViewHolder.icons.overflow.setOnClickListener(v -> new PostOverflow(v, connection, obj) {
             @Override
             protected boolean showShare() {
                 return !postContext.showText();
+            }
+
+            @Override
+            protected Integer getCurrentUser() {
+                return site.my_user != null ? site.my_user.local_user_view.person.id : null;
+            }
+
+            @Override
+            protected void update(PostView newObj) {
+                postContext.replace(obj, newObj);
             }
         });
 
@@ -350,5 +354,37 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
             intent.putExtra(CommentFeedActivity.POST_ID_EXTRA, obj.post.id);
             context.startActivity(intent);
         });
+    }
+
+    @Override
+    public void handleEdit(Object element) {
+        super.handleEdit(element);
+
+        // Check
+        if (!arePrerequisitesLoaded()) {
+            return;
+        }
+
+        // Check Object
+        if (element instanceof PostView) {
+            // Edited Post
+            PostView newPost = (PostView) element;
+
+            // Get Existing
+            PostView existingPost = null;
+            for (PostView post : viewModel.dataset) {
+                if (post.post.id.equals(newPost.post.id)) {
+                    existingPost = post;
+                    break;
+                }
+            }
+            if (existingPost == null) {
+                // Can't Find Post
+                return;
+            }
+
+            // Replace
+            viewModel.dataset.replace(notifier, existingPost, newPost);
+        }
     }
 }

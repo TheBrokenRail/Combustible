@@ -43,7 +43,7 @@ public class CustomInstanceDialogFragment extends AppCompatDialogFragment {
                 HttpUrl url = HttpUrl.parse(urlStr);
                 if (url == null) {
                     // Error
-                    urlField.setError(getString(R.string.welcome_invalid_url));
+                    urlField.setError(getString(R.string.invalid_url));
                     return;
                 }
 
