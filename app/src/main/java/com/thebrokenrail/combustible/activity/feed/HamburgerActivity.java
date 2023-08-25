@@ -3,7 +3,9 @@ package com.thebrokenrail.combustible.activity.feed;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -63,6 +65,31 @@ public class HamburgerActivity extends LemmyActivity implements NavigationView.O
         navigationView.setNavigationItemSelectedListener(this);
         drawerLayout = findViewById(R.id.feed_drawer_layout);
         viewProfileTarget = new MenuItemTarget(navigationView.getMenu().findItem(R.id.feed_menu_view_profile));
+
+        // Handle Back
+        OnBackPressedCallback backCallback = new OnBackPressedCallback(false) {
+            @Override
+            public void handleOnBackPressed() {
+                // Close Drawer
+                drawerLayout.closeDrawer(DRAWER_GRAVITY);
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, backCallback);
+        drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                // Enable Callback
+                backCallback.setEnabled(true);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                // Disable Callback
+                backCallback.setEnabled(false);
+            }
+        });
     }
 
     /**
@@ -142,16 +169,6 @@ public class HamburgerActivity extends LemmyActivity implements NavigationView.O
             return true;
         } else {
             return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(DRAWER_GRAVITY)) {
-            // Close Drawer
-            drawerLayout.closeDrawer(DRAWER_GRAVITY);
-        } else {
-            super.onBackPressed();
         }
     }
 

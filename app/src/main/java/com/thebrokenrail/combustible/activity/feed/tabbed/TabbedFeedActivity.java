@@ -117,7 +117,7 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.feed_refresh) {
             for (Map.Entry<Integer, FeedAdapter<?>> tab : tabs) {

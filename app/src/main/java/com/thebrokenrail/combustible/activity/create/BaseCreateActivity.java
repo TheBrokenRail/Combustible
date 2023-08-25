@@ -142,7 +142,7 @@ public abstract class BaseCreateActivity<T, K> extends LemmyActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.create_post_go) {
             go();

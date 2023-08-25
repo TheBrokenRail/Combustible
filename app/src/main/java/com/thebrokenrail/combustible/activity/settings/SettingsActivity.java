@@ -56,10 +56,11 @@ public abstract class SettingsActivity extends LemmyActivity implements Preferen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     // https://stackoverflow.com/a/74112704/16198887

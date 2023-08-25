@@ -30,7 +30,7 @@ public class LoginActivity extends FullscreenActivity {
 
         // Cancel
         Button cancel = findViewById(R.id.login_cancel);
-        cancel.setOnClickListener(v -> onBackPressed());
+        cancel.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         // Login
         Button login = findViewById(R.id.login_submit);

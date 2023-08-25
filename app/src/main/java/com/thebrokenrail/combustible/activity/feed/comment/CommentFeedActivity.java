@@ -84,7 +84,7 @@ public class CommentFeedActivity extends FeedActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

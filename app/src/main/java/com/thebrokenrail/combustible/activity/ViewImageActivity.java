@@ -109,7 +109,7 @@ public class ViewImageActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.view_image_share) {
             Intent sendIntent = new Intent();

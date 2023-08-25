@@ -55,7 +55,7 @@
   - [x] NSFW Marker
   - [x] Share
 - [ ] Modlog
-- [ ] Fancy New Android Back Code
+- [x] Fancy New Android Back Code
 - [x] Update `DepthGauge` When Previous Element Is Changed
 - [ ] Update `lemmy-js-client`
   - [ ] Extract API Version From `lemmy-js-client`
