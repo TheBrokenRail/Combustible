@@ -114,7 +114,7 @@ abstract class PostOverflow extends PostOrCommentOverflow<PostView> {
         Intent intent = new Intent(activity, PostCreateActivity.class);
         intent.putExtra(PostCreateActivity.EDIT_ID_EXTRA, obj.post.id);
         //noinspection deprecation
-        activity.startActivityForResult(intent, RequestCodes.CREATE_POST_REQUEST_CODE);
+        activity.startActivityForResult(intent, RequestCodes.CREATE_POST);
     }
 
     @Override

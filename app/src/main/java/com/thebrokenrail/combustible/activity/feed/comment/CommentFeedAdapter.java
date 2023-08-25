@@ -86,7 +86,7 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
                     Intent intent = new Intent(activity, CommentCreateActivity.class);
                     intent.putExtra(CommentFeedActivity.POST_ID_EXTRA, post.post_view.post.id);
                     //noinspection deprecation
-                    activity.startActivityForResult(intent, RequestCodes.CREATE_COMMENT_REQUEST_CODE);
+                    activity.startActivityForResult(intent, RequestCodes.CREATE_COMMENT);
                 });
             }
         }
@@ -132,7 +132,7 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
         commentViewHolder.card.setFocusable(false);
 
         // Reply
-        boolean canReply = permissions.canReply(obj.post);
+        boolean canReply = permissions.canReply(post != null ? post.post_view.post : obj.post);
         commentViewHolder.reply.setVisibility(View.VISIBLE);
         commentViewHolder.reply.setEnabled(canReply);
         if (commentViewHolder.reply.isEnabled()) {
@@ -143,7 +143,7 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
                 intent.putExtra(CommentFeedActivity.POST_ID_EXTRA, obj.post.id);
                 intent.putExtra(CommentFeedActivity.COMMENT_ID_EXTRA, obj.comment.id);
                 //noinspection deprecation
-                activity.startActivityForResult(intent, RequestCodes.CREATE_COMMENT_REQUEST_CODE);
+                activity.startActivityForResult(intent, RequestCodes.CREATE_COMMENT);
             });
         } else {
             // Disabled Appearance

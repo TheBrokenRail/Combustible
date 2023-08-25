@@ -114,16 +114,23 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
         return true;
     }
 
+    /**
+     * Refresh all tabs.
+     */
+    protected void refresh() {
+        for (Map.Entry<Integer, FeedAdapter<?>> tab : tabs) {
+            FeedAdapter<?> adapter = tab.getValue();
+            adapter.refresh(true, () -> {});
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.feed_refresh) {
-            for (Map.Entry<Integer, FeedAdapter<?>> tab : tabs) {
-                FeedAdapter<?> adapter = tab.getValue();
-                adapter.refresh(true, () -> {});
-            }
+            refresh();
             return true;
         } else if (item.getItemId() == R.id.feed_share) {
             share();

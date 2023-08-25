@@ -59,6 +59,7 @@
     <string name="feed_menu_block_community">Block Community</string>
     <string name="feed_menu_unblock_community">Unblock Community</string>
     <string name="feed_menu_blocked">Blocked</string>
+    <string name="feed_menu_inbox">Inbox</string>
     <string name="feed_error">Unable to load data!</string>
     <string name="feed_retry">Retry</string>
 
@@ -69,8 +70,8 @@
     <string name="posts_listing_type">Show:</string>
     <string name="post_creator_community_spacer">on</string>
     <string name="post_community_time_spacer">•</string>
-    <string name="post_block_creator">Block User</string>
-    <string name="post_unblock_creator">Unblock User</string>
+    <string name="post_block_user">Block User</string>
+    <string name="post_unblock_user">Unblock User</string>
 
     <!-- Settings -->
     <string name="settings_general">General</string>
@@ -128,6 +129,7 @@
     <string name="icon_deleted">Deleted</string>
     <string name="icon_nsfw">NSFW</string>
     <string name="icon_distinguished">Distinguished</string>
+    <string name="icon_unread">Unread</string>
 
     <!-- Comments -->
     <string name="comments">Comments</string>
@@ -173,4 +175,16 @@
     <!-- Create Comment -->
     <string name="create_comment_content">Content</string>
     <string name="edit_comment">Edit Comment</string>
+
+    <!-- Inbox -->
+    <string name="inbox_replies">Replies</string>
+    <string name="inbox_mentions">Mentions</string>
+    <string name="inbox_private_messages">Private Messages</string>
+    <string name="inbox_mark_all_as_read">Mark All As Read</string>
+
+    <!-- Private Message -->
+    <string name="private_message">Private Message</string>
+    <string name="private_message_hint">Message</string>
+    <string name="private_message_success">Sent private message!</string>
+    <string name="private_message_error">Unable to send private message!</string>
 </resources>

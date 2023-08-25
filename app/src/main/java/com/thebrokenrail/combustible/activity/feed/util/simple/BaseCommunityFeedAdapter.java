@@ -36,7 +36,7 @@ public abstract class BaseCommunityFeedAdapter extends SimpleFeedAdapter<Communi
 
     @Override
     protected void setupIcons(CommonIcons icons, CommunityView obj) {
-        icons.setup(false, obj.community.nsfw, false, false, false);
+        icons.setup(false, obj.community.nsfw, false, false, false, false);
         icons.overflow.setOnClickListener(v -> new CommunityOverflow(v, connection, obj) {
             @Override
             protected void update(CommunityView newObj) {

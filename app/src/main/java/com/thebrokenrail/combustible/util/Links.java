@@ -4,8 +4,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.annotation.ColorInt;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
@@ -13,6 +11,7 @@ import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
 
 import com.thebrokenrail.combustible.R;
+import com.thebrokenrail.combustible.activity.LemmyActivity;
 import com.thebrokenrail.combustible.activity.feed.comment.CommentFeedActivity;
 import com.thebrokenrail.combustible.activity.feed.post.PostFeedActivity;
 import com.thebrokenrail.combustible.activity.feed.tabbed.user.UserFeedActivity;
@@ -51,13 +50,9 @@ public class Links {
         }
     }
 
-    private static <T> void sendMethod(Context context, Connection.Method<T> method, Consumer<T> callback) {
-        assert context.getApplicationContext() == context;
-        Config config = new Config(context);
-        Connection connection = new Connection(config.getInstance(), config.getToken());
-        Handler handler = new Handler(Looper.getMainLooper());
-        connection.setCallbackHelper(handler::post);
-        connection.send(method, callback, () -> Util.unknownError(context));
+    private static <T> void sendMethod(LemmyActivity activity, Connection.Method<T> method, Consumer<T> callback) {
+        Connection connection = activity.getConnection();
+        connection.send(method, callback, () -> Util.unknownError(activity));
     }
 
     private static String stripOtherSegments(String url) {
@@ -74,6 +69,7 @@ public class Links {
         String communityPrefix = relativeToInstance(context, Sharing.COMMUNITY_PREFIX + "/");
         String commentPrefix = relativeToInstance(context, Sharing.COMMENT_PREFIX + "/");
         String postPrefix = relativeToInstance(context, Sharing.POST_PREFIX + "/");
+        LemmyActivity activity = (LemmyActivity) Util.getActivityFromContext(context);
         if (url.startsWith(userPrefix)) {
             // User
             url = url.substring(userPrefix.length());
@@ -81,10 +77,10 @@ public class Links {
             GetPersonDetails method = new GetPersonDetails();
             method.limit = 1;
             method.username = url;
-            sendMethod(context, method, getPersonDetailsResponse -> {
+            sendMethod(activity, method, getPersonDetailsResponse -> {
                 Intent intent = new Intent(context, UserFeedActivity.class);
                 intent.putExtra(UserFeedActivity.USER_ID_EXTRA, getPersonDetailsResponse.person_view.person.id);
-                context.startActivity(intent);
+                activity.startActivity(intent);
             });
             return true;
         } else if (url.startsWith(communityPrefix)) {
@@ -93,10 +89,10 @@ public class Links {
             url = stripOtherSegments(url);
             GetCommunity method = new GetCommunity();
             method.name = url;
-            sendMethod(context, method, getCommunityResponse -> {
+            sendMethod(activity, method, getCommunityResponse -> {
                 Intent intent = new Intent(context, PostFeedActivity.class);
                 intent.putExtra(PostFeedActivity.COMMUNITY_ID_EXTRA, getCommunityResponse.community_view.community.id);
-                context.startActivity(intent);
+                activity.startActivity(intent);
             });
             return true;
         } else if (url.startsWith(commentPrefix) || url.startsWith(postPrefix)) {
@@ -104,10 +100,10 @@ public class Links {
             boolean isComment = url.startsWith(commentPrefix);
             url = url.substring((isComment ? commentPrefix : postPrefix).length());
             url = stripOtherSegments(url);
-            Intent intent = new Intent(context, CommentFeedActivity.class);
+            Intent intent = new Intent(activity, CommentFeedActivity.class);
             String extra = isComment ? CommentFeedActivity.COMMENT_ID_EXTRA : CommentFeedActivity.POST_ID_EXTRA;
             intent.putExtra(extra, Integer.parseInt(url));
-            context.startActivity(intent);
+            activity.startActivity(intent);
             return true;
         } else {
             return false;
@@ -122,7 +118,7 @@ public class Links {
         if (url == null) {
             return;
         }
-        if (openLemmy(context.getApplicationContext(), url)) {
+        if (openLemmy(context, url)) {
             return;
         }
 

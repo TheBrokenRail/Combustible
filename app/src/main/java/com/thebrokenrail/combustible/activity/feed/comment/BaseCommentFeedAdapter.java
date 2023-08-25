@@ -65,9 +65,16 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
 
     private void updatePost(PostView post) {
         assert this.post != null && site != null;
+        // Set Post
+        PostView oldPost = this.post.post_view;
         this.post.post_view = post;
         // Reload Header
         notifyItemChanged(0);
+        // Reload Comments If Post Locked/Unlock
+        boolean lockChanged = !post.post.locked.equals(oldPost.post.locked);
+        if (lockChanged) {
+            notifyItemRangeChanged(getFirstElementPosition(), viewModel.dataset.size());
+        }
     }
 
     @Override
@@ -147,6 +154,13 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
 
     protected abstract boolean showCommunity();
 
+    protected void processIntent(Intent intent, CommentView obj) {
+    }
+
+    protected boolean isRead(CommentView obj) {
+        return true;
+    }
+
     @Override
     protected void bindElement(@NonNull RecyclerView.ViewHolder holder, int position) {
         CommentView obj = viewModel.dataset.get(position);
@@ -157,6 +171,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
             Context context = v.getContext();
             Intent intent = new Intent(context, CommentFeedActivity.class);
             intent.putExtra(CommentFeedActivity.COMMENT_ID_EXTRA, obj.comment.id);
+            processIntent(intent, obj);
             context.startActivity(intent);
         });
 
@@ -209,7 +224,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
         });
 
         // Icons
-        commentViewHolder.icons.setup(obj.comment.deleted || obj.comment.removed, false, false, false, obj.comment.distinguished);
+        commentViewHolder.icons.setup(obj.comment.deleted || obj.comment.removed, false, false, false, obj.comment.distinguished, !isRead(obj));
     }
 
     @Override

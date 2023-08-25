@@ -1,10 +1,13 @@
 package com.thebrokenrail.combustible.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -110,7 +113,7 @@ public class LemmyActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
             try {
-                if (requestCode == RequestCodes.CREATE_POST_REQUEST_CODE) {
+                if (requestCode == RequestCodes.CREATE_POST) {
                     // Post Created/Edited
                     boolean wasEdit = data.getBooleanExtra(BaseCreateActivity.WAS_EDIT_KEY, false);
                     Moshi moshi = new Moshi.Builder().build();
@@ -124,7 +127,7 @@ public class LemmyActivity extends AppCompatActivity {
                     } else {
                         handleEdit(post);
                     }
-                } else if (requestCode == RequestCodes.CREATE_COMMENT_REQUEST_CODE) {
+                } else if (requestCode == RequestCodes.CREATE_COMMENT) {
                     // Comment Created/Edited
                     Moshi moshi = new Moshi.Builder().build();
                     JsonAdapter<CommentView> jsonAdapter = moshi.adapter(CommentView.class);
@@ -144,5 +147,13 @@ public class LemmyActivity extends AppCompatActivity {
      */
     protected void handleEdit(Object element) {
         throw new RuntimeException();
+    }
+
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // https://stackoverflow.com/a/42253596/16198887
+        ((MenuBuilder) menu).setOptionalIconsVisible(true);
+        return super.onPrepareOptionsMenu(menu);
     }
 }

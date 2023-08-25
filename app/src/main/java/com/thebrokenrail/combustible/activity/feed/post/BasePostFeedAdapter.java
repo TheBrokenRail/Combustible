@@ -323,7 +323,7 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         // Icons
         boolean isDeleted = obj.post.deleted || obj.post.removed;
         boolean isLocked = obj.post.locked;
-        postViewHolder.icons.setup(isDeleted, isNsfw, isLocked, isPinned, false);
+        postViewHolder.icons.setup(isDeleted, isNsfw, isLocked, isPinned, false, false);
 
         // Comment Count
         postViewHolder.commentCount.setText(String.valueOf(obj.counts.comments));

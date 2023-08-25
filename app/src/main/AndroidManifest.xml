@@ -68,6 +68,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".activity.feed.tabbed.inbox.InboxFeedActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".activity.ViewImageActivity"
             android:exported="false"
             android:theme="@style/Theme.Combustible.ViewImage" />

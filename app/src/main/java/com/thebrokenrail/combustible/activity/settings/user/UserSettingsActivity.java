@@ -46,10 +46,10 @@ public class UserSettingsActivity extends SettingsActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Uploading
-        if (requestCode == RequestCodes.PICK_AVATAR_REQUEST_CODE) {
+        if (requestCode == RequestCodes.PICK_AVATAR) {
             // Avatar
             Uploader.onActivityResult(this, connection, resultCode, data, s -> getDataStore().putString("avatar", s));
-        } else if (requestCode == RequestCodes.PICK_BANNER_REQUEST_CODE) {
+        } else if (requestCode == RequestCodes.PICK_BANNER) {
             // Banner
             Uploader.onActivityResult(this, connection, resultCode, data, s -> getDataStore().putString("banner", s));
         }

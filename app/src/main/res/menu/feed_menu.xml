@@ -28,9 +28,14 @@
     <group android:id="@+id/feed_menu_group_saved">
 
         <item
-                android:id="@+id/feed_menu_saved"
-                android:icon="@drawable/baseline_bookmark_24"
-                android:title="@string/feed_menu_saved" />
+            android:id="@+id/feed_menu_saved"
+            android:icon="@drawable/baseline_bookmark_24"
+            android:title="@string/feed_menu_saved" />
+
+        <item
+            android:id="@+id/feed_menu_inbox"
+            android:icon="@drawable/baseline_inbox_24"
+            android:title="@string/feed_menu_inbox" />
 
         <item
             android:id="@+id/feed_menu_blocked"

@@ -14,6 +14,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.LemmyActivity;
 import com.thebrokenrail.combustible.activity.feed.tabbed.blocked.BlockedFeedActivity;
+import com.thebrokenrail.combustible.activity.feed.tabbed.inbox.InboxFeedActivity;
 import com.thebrokenrail.combustible.activity.feed.tabbed.saved.SavedFeedActivity;
 import com.thebrokenrail.combustible.activity.feed.tabbed.user.UserFeedActivity;
 import com.thebrokenrail.combustible.activity.fullscreen.login.LoginActivity;
@@ -156,6 +157,10 @@ public class HamburgerActivity extends LemmyActivity implements NavigationView.O
         } else if (item.getItemId() == R.id.feed_menu_block_community) {
             BlockCommunity method = blockCommunity(!isCommunityBlocked);
             connection.send(method, blockCommunityResponse -> fullRecreate(), () -> Util.unknownError(HamburgerActivity.this));
+            return true;
+        } else if (item.getItemId() == R.id.feed_menu_inbox) {
+            Intent intent = new Intent(this, InboxFeedActivity.class);
+            startActivity(intent);
             return true;
         } else {
             return false;

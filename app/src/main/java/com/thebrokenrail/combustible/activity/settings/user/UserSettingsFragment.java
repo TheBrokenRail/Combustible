@@ -134,14 +134,14 @@ public class UserSettingsFragment extends SettingsFragment {
         Preference uploadAvatar = findPreference("upload_avatar");
         assert uploadAvatar != null;
         uploadAvatar.setOnPreferenceClickListener(preference -> {
-            Uploader.upload(requireActivity(), RequestCodes.PICK_AVATAR_REQUEST_CODE);
+            Uploader.upload(requireActivity(), RequestCodes.PICK_AVATAR);
             return true;
         });
         // Upload Banner
         Preference uploadBanner = findPreference("upload_banner");
         assert uploadBanner != null;
         uploadBanner.setOnPreferenceClickListener(preference -> {
-            Uploader.upload(requireActivity(), RequestCodes.PICK_BANNER_REQUEST_CODE);
+            Uploader.upload(requireActivity(), RequestCodes.PICK_BANNER);
             return true;
         });
 

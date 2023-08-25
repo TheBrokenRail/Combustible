@@ -15,9 +15,23 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/feed_mark_all_as_read"
+        android:icon="@drawable/baseline_mark_email_read_24"
+        android:title="@string/inbox_mark_all_as_read"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/feed_private_message"
+        android:icon="@drawable/baseline_message_24"
+        android:title="@string/private_message"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/feed_block_user"
         android:icon="@drawable/baseline_block_24"
-        android:title="@string/post_block_creator"
+        android:title="@string/post_block_user"
         android:visible="false"
         app:showAsAction="ifRoom" />
 

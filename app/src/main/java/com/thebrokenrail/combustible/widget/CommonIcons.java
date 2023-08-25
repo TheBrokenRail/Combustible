@@ -23,6 +23,7 @@ public class CommonIcons extends LinearLayout {
     private final AppCompatImageView locked;
     private final AppCompatImageView pinned;
     private final AppCompatImageView distinguished;
+    private final AppCompatImageView unread;
     public final AppCompatImageView overflow;
 
     public CommonIcons(Context context, @Nullable AttributeSet attrs) {
@@ -38,6 +39,7 @@ public class CommonIcons extends LinearLayout {
         locked = addIcon(R.drawable.baseline_lock_18, R.string.icon_locked);
         pinned = addIcon(R.drawable.baseline_push_pin_18, R.string.icon_pinned);
         distinguished = addIcon(R.drawable.baseline_mic_18, R.string.icon_distinguished);
+        unread = addIcon(R.drawable.baseline_notifications_18, R.string.icon_unread);
 
         // Overflow
         overflow = addIcon(R.drawable.baseline_more_vert_24, R.string.overflow);
@@ -78,12 +80,14 @@ public class CommonIcons extends LinearLayout {
      * @param isLocked If the post is locked
      * @param isPinned If the post is pinned
      * @param isDistinguished If the comment is distinguished
+     * @param isUnread If the private message is unread
      */
-    public void setup(boolean isDeleted, boolean isNsfw, boolean isLocked, boolean isPinned, boolean isDistinguished) {
+    public void setup(boolean isDeleted, boolean isNsfw, boolean isLocked, boolean isPinned, boolean isDistinguished, boolean isUnread) {
         setVisible(deleted, isDeleted);
         setVisible(nsfw, isNsfw);
         setVisible(locked, isLocked);
         setVisible(pinned, isPinned);
         setVisible(distinguished, isDistinguished);
+        setVisible(unread, isUnread);
     }
 }

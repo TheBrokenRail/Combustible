@@ -108,6 +108,7 @@ public class UserFeedActivity extends TabbedFeedActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean ret = super.onCreateOptionsMenu(menu);
         menu.findItem(R.id.feed_block_user).setVisible(connection.hasToken());
+        menu.findItem(R.id.feed_private_message).setVisible(connection.hasToken());
         return ret;
     }
 
@@ -117,17 +118,22 @@ public class UserFeedActivity extends TabbedFeedActivity {
         menu.findItem(R.id.feed_share).setEnabled(infoPerson != null);
         MenuItem blockUser = menu.findItem(R.id.feed_block_user);
         blockUser.setEnabled(isBlocked != null);
-        blockUser.setTitle((isBlocked != null && isBlocked) ? R.string.post_unblock_creator : R.string.post_block_creator);
+        blockUser.setTitle((isBlocked != null && isBlocked) ? R.string.post_unblock_user : R.string.post_block_user);
         return ret;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.feed_block_user) {
+            // Block User
             BlockPerson method = new BlockPerson();
             method.person_id = getUser();
             method.block = !isBlocked;
             connection.send(method, blockPersonResponse -> fullRecreate(), () -> Util.unknownError(UserFeedActivity.this));
+            return true;
+        } else if (item.getItemId() == R.id.feed_private_message) {
+            // Private Message
+            new PrivateMessageDialogFragment(getUser()).show(getSupportFragmentManager(), "private_message");
             return true;
         } else {
             return super.onOptionsItemSelected(item);

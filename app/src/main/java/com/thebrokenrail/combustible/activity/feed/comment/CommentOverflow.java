@@ -88,7 +88,7 @@ abstract class CommentOverflow extends PostOrCommentOverflow<CommentView> {
         Intent intent = new Intent(activity, CommentCreateActivity.class);
         intent.putExtra(CommentCreateActivity.EDIT_ID_EXTRA, obj.comment.id);
         //noinspection deprecation
-        activity.startActivityForResult(intent, RequestCodes.CREATE_COMMENT_REQUEST_CODE);
+        activity.startActivityForResult(intent, RequestCodes.CREATE_COMMENT);
     }
 
     @Override

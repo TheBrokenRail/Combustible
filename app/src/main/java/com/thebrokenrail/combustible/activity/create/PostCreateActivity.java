@@ -31,7 +31,7 @@ public class PostCreateActivity extends BaseCreateActivity<GetPostResponse, Post
         // Upload Image
         urlField.setEndIconOnClickListener(v -> {
             // Pick Image
-            Uploader.upload(PostCreateActivity.this, RequestCodes.PICK_IMAGE_REQUEST_CODE);
+            Uploader.upload(PostCreateActivity.this, RequestCodes.PICK_IMAGE);
         });
 
         // Community ID
@@ -140,7 +140,7 @@ public class PostCreateActivity extends BaseCreateActivity<GetPostResponse, Post
         super.onActivityResult(requestCode, resultCode, data);
 
         // Handle Image
-        if (requestCode == RequestCodes.PICK_IMAGE_REQUEST_CODE) {
+        if (requestCode == RequestCodes.PICK_IMAGE) {
             Uploader.onActivityResult(this, connection, resultCode, data, s -> {
                 // Set URL
                 url.setText(s);

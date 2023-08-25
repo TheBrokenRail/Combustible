@@ -53,6 +53,7 @@
                 android:layout_marginTop="@dimen/post_padding" />
 
             <LinearLayout
+                android:id="@+id/comment_bottom_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/post_padding"

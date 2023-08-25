@@ -141,7 +141,7 @@ class PostFeedAdapter extends BasePostFeedAdapter {
                 Intent intent = new Intent(activity, PostCreateActivity.class);
                 intent.putExtra(PostFeedActivity.COMMUNITY_ID_EXTRA, communityId);
                 //noinspection deprecation
-                activity.startActivityForResult(intent, RequestCodes.CREATE_POST_REQUEST_CODE);
+                activity.startActivityForResult(intent, RequestCodes.CREATE_POST);
             });
         } else {
             createPost.setVisibility(View.GONE);
