@@ -14,6 +14,9 @@ import io.noties.markwon.AbstractMarkwonPlugin;
 import io.noties.markwon.Markwon;
 import io.noties.markwon.MarkwonConfiguration;
 import io.noties.markwon.ext.strikethrough.StrikethroughPlugin;
+import io.noties.markwon.ext.tables.TableAwareMovementMethod;
+import io.noties.markwon.ext.tables.TablePlugin;
+import io.noties.markwon.html.HtmlPlugin;
 import io.noties.markwon.linkify.LinkifyPlugin;
 import io.noties.markwon.movement.MovementMethodPlugin;
 import io.noties.markwon.syntax.Prism4jTheme;
@@ -35,7 +38,9 @@ public class Markdown {
                 .usePlugin(new CustomImagePlugin(context))
                 .usePlugin(LinkifyPlugin.create(Linkify.WEB_URLS, true)) // email urls interfere with lemmy links
                 .usePlugin(new LemmyLinkPlugin())
-                .usePlugin(MovementMethodPlugin.create(NiceLinkMovementMethod.getInstance()))
+                .usePlugin(TablePlugin.create(context))
+                .usePlugin(HtmlPlugin.create())
+                .usePlugin(MovementMethodPlugin.create(TableAwareMovementMethod.wrap(NiceLinkMovementMethod.getInstance())))
                 .usePlugin(SyntaxHighlightPlugin.create(prism4j, prism4jTheme))
                 .usePlugin(new SpoilerPlugin(true))
                 .usePlugin(new AbstractMarkwonPlugin() {

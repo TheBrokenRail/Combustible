@@ -61,7 +61,11 @@ public class NiceLinkMovementMethod extends LinkMovementMethod {
                 link.onClick(widget);
             }
 
-            ret = selectedLink != null;
+            if (action == MotionEvent.ACTION_DOWN) {
+                ret = true;
+            } else {
+                ret = selectedLink != null;
+            }
 
             if (action == MotionEvent.ACTION_UP) {
                 selectedLink = null;
