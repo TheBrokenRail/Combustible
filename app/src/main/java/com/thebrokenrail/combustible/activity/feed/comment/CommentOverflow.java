@@ -11,6 +11,8 @@ import com.thebrokenrail.combustible.activity.feed.util.report.CommentReportDial
 import com.thebrokenrail.combustible.activity.feed.util.report.ReportDialogFragment;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CommentView;
+import com.thebrokenrail.combustible.api.method.DeleteComment;
+import com.thebrokenrail.combustible.api.method.RemoveComment;
 import com.thebrokenrail.combustible.api.method.SaveComment;
 import com.thebrokenrail.combustible.util.RequestCodes;
 import com.thebrokenrail.combustible.util.Sharing;
@@ -58,5 +60,43 @@ abstract class CommentOverflow extends PostOrCommentOverflow<CommentView> {
         intent.putExtra(CommentCreateActivity.EDIT_ID_EXTRA, obj.comment.id);
         //noinspection deprecation
         activity.startActivityForResult(intent, RequestCodes.CREATE_COMMENT_REQUEST_CODE);
+    }
+
+    @Override
+    protected boolean canDelete() {
+        return getPermissions().canDelete(obj);
+    }
+
+    @Override
+    protected boolean canRemove() {
+        return getPermissions().canRemove(obj);
+    }
+
+    @Override
+    protected boolean isDeleted() {
+        return obj.comment.deleted;
+    }
+
+    @Override
+    protected boolean isRemoved() {
+        return obj.comment.removed;
+    }
+
+
+
+    @Override
+    protected void delete(boolean restore) {
+        DeleteComment method = new DeleteComment();
+        method.comment_id = obj.comment.id;
+        method.deleted = !restore;
+        connection.send(method, commentResponse -> update(commentResponse.comment_view), () -> Util.unknownError(context));
+    }
+
+    @Override
+    protected void remove(boolean restore) {
+        RemoveComment method = new RemoveComment();
+        method.comment_id = obj.comment.id;
+        method.removed = !restore;
+        connection.send(method, commentResponse -> update(commentResponse.comment_view), () -> Util.unknownError(context));
     }
 }

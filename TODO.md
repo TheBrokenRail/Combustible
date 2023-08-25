@@ -13,9 +13,9 @@
 - [x] Investigate Voting/Posting/Editing/Deleting In
   - [x] Locked Posts
   - [x] Moderator-Only Communities
-- [ ] Comment/Post Deleting
-  - [ ] Deleting (For Users)
-  - [ ] Removing (For Moderators/Admins)
+- [x] Comment/Post Deleting
+  - [x] Deleting (For Users)
+  - [x] Removing (For Moderators/Admins)
 - [ ] Inbox (For Notifications)
   - [ ] Replies
   - [ ] Mentions
@@ -59,7 +59,4 @@
 - [x] Update `DepthGauge` When Previous Element Is Changed
 - [ ] Update `lemmy-js-client`
   - [ ] Extract API Version From `lemmy-js-client`
-- [ ] Pinning/Distinguishing Posts/Comments
-- [ ] Investigate Deleted/Removed Comments
-  - Should the content be replaced?
-  - Option to hide deleted content?
+- [ ] Pinning/Distinguishing/Locking Posts/Comments

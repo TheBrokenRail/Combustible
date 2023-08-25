@@ -31,6 +31,7 @@ import com.thebrokenrail.combustible.api.method.PostView;
 import com.thebrokenrail.combustible.util.DrawableAlwaysCrossFadeFactory;
 import com.thebrokenrail.combustible.util.Images;
 import com.thebrokenrail.combustible.util.Links;
+import com.thebrokenrail.combustible.util.Permissions;
 import com.thebrokenrail.combustible.util.markdown.Markdown;
 import com.thebrokenrail.combustible.widget.CommonIcons;
 import com.thebrokenrail.combustible.widget.Karma;
@@ -298,6 +299,13 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
             @Override
             protected void update(PostView newObj) {
                 postContext.replace(obj, newObj);
+            }
+
+            @Override
+            protected Permissions getPermissions() {
+                Permissions permissions = new Permissions();
+                permissions.setSite(postContext.getSite());
+                return permissions;
             }
         });
 

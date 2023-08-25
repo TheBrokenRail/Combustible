@@ -1,5 +1,6 @@
 package com.thebrokenrail.combustible.util;
 
+import com.thebrokenrail.combustible.api.method.CommentView;
 import com.thebrokenrail.combustible.api.method.Community;
 import com.thebrokenrail.combustible.api.method.CommunityModeratorView;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
@@ -22,7 +23,7 @@ public class Permissions {
         return site.my_user.local_user_view.person.admin;
     }
 
-    private boolean isModerator(Community community) {
+    private boolean isModerator(int communityId) {
         // Check If Logged In
         if (site == null || site.my_user == null) {
             return false;
@@ -30,7 +31,7 @@ public class Permissions {
 
         // Iterate Moderated Communities
         for (CommunityModeratorView communityModeratorView : site.my_user.moderates) {
-            if (communityModeratorView.community.id.equals(community.id)) {
+            if (communityModeratorView.community.id.equals(communityId)) {
                 // Is Moderator
                 return true;
             }
@@ -49,7 +50,7 @@ public class Permissions {
         // Check Community
         if (community.posting_restricted_to_mods) {
             // Restricted To Mods And Admins
-            return isAdmin() || isModerator(community);
+            return isAdmin() || isModerator(community.id);
         } else {
             // Public
             return true;
@@ -64,5 +65,45 @@ public class Permissions {
 
         // Check Post
         return !post.locked;
+    }
+
+    public boolean canDelete(Post post) {
+        // Check If Logged In
+        if (site == null || site.my_user == null) {
+            return false;
+        }
+
+        // Check If Author
+        return post.creator_id.equals(site.my_user.local_user_view.person.id);
+    }
+
+    public boolean canDelete(CommentView comment) {
+        // Check If Logged In
+        if (site == null || site.my_user == null) {
+            return false;
+        }
+
+        // Check If Author
+        return comment.comment.creator_id.equals(site.my_user.local_user_view.person.id);
+    }
+
+    public boolean canRemove(Post post) {
+        // Check If Logged In
+        if (site == null || site.my_user == null) {
+            return false;
+        }
+
+        // Check If Moderator/Admin
+        return isAdmin() || isModerator(post.community_id);
+    }
+
+    public boolean canRemove(CommentView comment) {
+        // Check If Logged In
+        if (site == null || site.my_user == null) {
+            return false;
+        }
+
+        // Check If Moderator/Admin
+        return isAdmin() || isModerator(comment.community.id);
     }
 }

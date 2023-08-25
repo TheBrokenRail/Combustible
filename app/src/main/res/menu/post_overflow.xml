@@ -12,14 +12,19 @@
         android:title="@string/save" />
 
     <item
-        android:id="@+id/post_unsave"
-        android:icon="@drawable/baseline_bookmark_24"
-        android:title="@string/unsave" />
-
-    <item
         android:id="@+id/post_edit"
         android:icon="@drawable/baseline_edit_24"
         android:title="@string/edit" />
+
+    <item
+        android:id="@+id/post_delete"
+        android:icon="@drawable/baseline_delete_24"
+        android:title="@string/delete" />
+
+    <item
+        android:id="@+id/post_remove"
+        android:icon="@drawable/baseline_delete_24"
+        android:title="@string/remove" />
 
     <item
         android:id="@+id/post_report"

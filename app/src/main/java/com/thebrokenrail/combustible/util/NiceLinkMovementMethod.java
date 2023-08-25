@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import io.noties.markwon.ext.tables.TableRowSpan;
+
 public class NiceLinkMovementMethod extends LinkMovementMethod {
     private static NiceLinkMovementMethod singleInstance;
 
@@ -61,14 +63,15 @@ public class NiceLinkMovementMethod extends LinkMovementMethod {
                 link.onClick(widget);
             }
 
-            if (action == MotionEvent.ACTION_DOWN) {
-                ret = true;
-            } else {
-                ret = selectedLink != null;
-            }
+            ret = selectedLink != null;
 
             if (action == MotionEvent.ACTION_UP) {
                 selectedLink = null;
+            }
+
+            if (action == MotionEvent.ACTION_DOWN && findSpanUnderTouch(widget, spannable, event, TableRowSpan.class) != null) {
+                // Special Handling For Markdown Tables
+                ret = true;
             }
         }
 
@@ -76,7 +79,7 @@ public class NiceLinkMovementMethod extends LinkMovementMethod {
     }
 
     // https://github.com/saket/Better-Link-Movement-Method/blob/64be11b73db868a4fa615b53c0a76174227a7585/better-link-movement-method/src/main/java/me/saket/bettermovementmethod/BetterLinkMovementMethod.java#L294-L332
-    private ClickableSpan findClickableSpanUnderTouch(TextView textView, Spannable text, MotionEvent event) {
+    private <T> T findSpanUnderTouch(TextView textView, Spannable text, MotionEvent event, Class<T> type) {
         int touchX = (int) event.getX();
         int touchY = (int) event.getY();
         touchX -= textView.getTotalPaddingLeft();
@@ -93,13 +96,17 @@ public class NiceLinkMovementMethod extends LinkMovementMethod {
         touchedLineBounds.bottom = layout.getLineBottom(touchedLine);
 
         if (touchedLineBounds.contains(touchX, touchY)) {
-            final Object[] spans = text.getSpans(touchOffset, touchOffset, ClickableSpan.class);
+            final Object[] spans = text.getSpans(touchOffset, touchOffset, type);
             for (final Object span : spans) {
-                if (span instanceof ClickableSpan) {
-                    return (ClickableSpan) span;
+                if (type.isInstance(span)) {
+                    //noinspection unchecked
+                    return (T) span;
                 }
             }
         }
         return null;
+    }
+    private ClickableSpan findClickableSpanUnderTouch(TextView textView, Spannable text, MotionEvent event) {
+        return findSpanUnderTouch(textView, text, event, ClickableSpan.class);
     }
 }

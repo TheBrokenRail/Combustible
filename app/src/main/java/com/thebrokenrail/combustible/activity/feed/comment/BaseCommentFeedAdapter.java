@@ -24,6 +24,7 @@ import com.thebrokenrail.combustible.api.method.CreateCommentLike;
 import com.thebrokenrail.combustible.api.method.GetPostResponse;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
 import com.thebrokenrail.combustible.api.method.PostView;
+import com.thebrokenrail.combustible.util.Permissions;
 import com.thebrokenrail.combustible.util.markdown.Markdown;
 import com.thebrokenrail.combustible.widget.CommonIcons;
 import com.thebrokenrail.combustible.widget.Karma;
@@ -199,6 +200,11 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
             @Override
             protected void update(CommentView newObj) {
                 viewModel.dataset.replace(notifier, obj, newObj);
+            }
+
+            @Override
+            protected Permissions getPermissions() {
+                return permissions;
             }
         });
 

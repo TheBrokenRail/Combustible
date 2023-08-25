@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.feed.util.report.ReportDialogFragment;
 import com.thebrokenrail.combustible.api.Connection;
+import com.thebrokenrail.combustible.util.Permissions;
 import com.thebrokenrail.combustible.util.Util;
 
 public abstract class PostOrCommentOverflow<T> extends BaseOverflow<T> {
@@ -24,12 +25,8 @@ public abstract class PostOrCommentOverflow<T> extends BaseOverflow<T> {
             share();
             return true;
         } else if (item.getItemId() == R.id.post_save) {
-            // Save
-            save(true);
-            return true;
-        } else if (item.getItemId() == R.id.post_unsave) {
-            // Unsave
-            save(false);
+            // Save/Unsave
+            save(!isSaved());
             return true;
         } else if (item.getItemId() == R.id.post_report) {
             // Get Fragment Manager
@@ -43,6 +40,12 @@ public abstract class PostOrCommentOverflow<T> extends BaseOverflow<T> {
         } else if (item.getItemId() == R.id.post_edit) {
             edit();
             return true;
+        } else if (item.getItemId() == R.id.post_delete) {
+            delete(isDeleted());
+            return true;
+        } else if (item.getItemId() == R.id.post_remove) {
+            remove(isRemoved());
+            return true;
         } else {
             return false;
         }
@@ -55,10 +58,28 @@ public abstract class PostOrCommentOverflow<T> extends BaseOverflow<T> {
 
     @Override
     protected void onCreateMenu(Menu menu) {
-        menu.findItem(R.id.post_save).setVisible(connection.hasToken() && !isSaved());
-        menu.findItem(R.id.post_unsave).setVisible(connection.hasToken() && isSaved());
+        // Save/Unsave
+        menu.findItem(R.id.post_save).setVisible(connection.hasToken());
+        if (isSaved()) {
+            menu.findItem(R.id.post_save).setTitle(R.string.unsave);
+            menu.findItem(R.id.post_save).setIcon(R.drawable.baseline_bookmark_24);
+        }
+        // Share
         menu.findItem(R.id.post_share).setVisible(showShare());
+        // Edit
         menu.findItem(R.id.post_edit).setVisible(canEdit());
+        // Delete
+        menu.findItem(R.id.post_delete).setVisible(canDelete());
+        if (isDeleted()) {
+            menu.findItem(R.id.post_delete).setTitle(R.string.restore);
+            menu.findItem(R.id.post_delete).setIcon(R.drawable.baseline_restore_from_trash_24);
+        }
+        // Remove
+        menu.findItem(R.id.post_remove).setVisible(canRemove());
+        if (isRemoved()) {
+            menu.findItem(R.id.post_remove).setTitle(R.string.restore);
+            menu.findItem(R.id.post_remove).setIcon(R.drawable.baseline_restore_from_trash_24);
+        }
     }
 
     protected abstract void save(boolean shouldSave);
@@ -78,4 +99,15 @@ public abstract class PostOrCommentOverflow<T> extends BaseOverflow<T> {
     protected abstract void edit();
 
     protected abstract Integer getCurrentUser();
+
+    protected abstract Permissions getPermissions();
+
+    protected abstract boolean canDelete();
+    protected abstract boolean canRemove();
+
+    protected abstract boolean isDeleted();
+    protected abstract boolean isRemoved();
+
+    protected abstract void delete(boolean restore);
+    protected abstract void remove(boolean restore);
 }

@@ -23,6 +23,9 @@
     <string name="edit">Edit</string>
     <string name="reply">Reply</string>
     <string name="invalid_url">Invalid URL</string>
+    <string name="delete">Delete</string>
+    <string name="remove">Remove</string>
+    <string name="restore">Restore</string>
 
     <!-- Welcome Screen -->
     <string name="welcome_title">Welcome to Combustible!</string>
