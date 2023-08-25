@@ -26,6 +26,14 @@
     <string name="delete">Delete</string>
     <string name="remove">Remove</string>
     <string name="restore">Restore</string>
+    <string name="distinguish">Distinguish</string>
+    <string name="undistinguish">Undistinguish</string>
+    <string name="pin_community">Pin To Community</string>
+    <string name="unpin_community">Unpin From Community</string>
+    <string name="pin_instance">Pin To Instance</string>
+    <string name="unpin_instance">Unpin From Instance</string>
+    <string name="lock">Lock</string>
+    <string name="unlock">Unlock</string>
 
     <!-- Welcome Screen -->
     <string name="welcome_title">Welcome to Combustible!</string>
@@ -119,6 +127,7 @@
     <string name="icon_locked">Locked</string>
     <string name="icon_deleted">Deleted</string>
     <string name="icon_nsfw">NSFW</string>
+    <string name="icon_distinguished">Distinguished</string>
 
     <!-- Comments -->
     <string name="comments">Comments</string>

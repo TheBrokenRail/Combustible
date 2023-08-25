@@ -106,4 +106,37 @@ public class Permissions {
         // Check If Moderator/Admin
         return isAdmin() || isModerator(comment.community.id);
     }
+
+    public boolean canDistinguish(CommentView comment) {
+        // Check If Logged In
+        if (site == null || site.my_user == null) {
+            return false;
+        }
+
+        // Check If Not Author
+        if (!comment.comment.creator_id.equals(site.my_user.local_user_view.person.id)) {
+            return false;
+        }
+
+        // Check If Moderator/Admin
+        return isAdmin() || isModerator(comment.community.id);
+    }
+
+    public boolean canLock(Post post) {
+        return canRemove(post);
+    }
+
+    public boolean canPinCommunity(Post post) {
+        return canRemove(post);
+    }
+
+    public boolean canPinInstance() {
+        // Check If Logged In
+        if (site == null || site.my_user == null) {
+            return false;
+        }
+
+        // Check If Moderator/Admin
+        return isAdmin();
+    }
 }

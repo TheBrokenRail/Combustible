@@ -1,10 +1,13 @@
 package com.thebrokenrail.combustible.activity.feed.comment;
 
 import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.create.CommentCreateActivity;
 import com.thebrokenrail.combustible.activity.feed.util.overflow.PostOrCommentOverflow;
 import com.thebrokenrail.combustible.activity.feed.util.report.CommentReportDialogFragment;
@@ -12,6 +15,7 @@ import com.thebrokenrail.combustible.activity.feed.util.report.ReportDialogFragm
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CommentView;
 import com.thebrokenrail.combustible.api.method.DeleteComment;
+import com.thebrokenrail.combustible.api.method.DistinguishComment;
 import com.thebrokenrail.combustible.api.method.RemoveComment;
 import com.thebrokenrail.combustible.api.method.SaveComment;
 import com.thebrokenrail.combustible.util.RequestCodes;
@@ -21,6 +25,31 @@ import com.thebrokenrail.combustible.util.Util;
 abstract class CommentOverflow extends PostOrCommentOverflow<CommentView> {
     public CommentOverflow(View view, Connection connection, CommentView obj) {
         super(view, connection, obj);
+    }
+
+    @Override
+    protected void onCreateMenu(Menu menu) {
+        super.onCreateMenu(menu);
+        // Distinguish
+        menu.findItem(R.id.post_distinguish).setVisible(getPermissions().canDistinguish(obj));
+        if (obj.comment.distinguished) {
+            menu.findItem(R.id.post_distinguish).setIcon(R.drawable.baseline_mic_off_24);
+            menu.findItem(R.id.post_distinguish).setTitle(R.string.undistinguish);
+        }
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        if (item.getItemId() == R.id.post_distinguish) {
+            // Distinguish Comment
+            DistinguishComment method = new DistinguishComment();
+            method.comment_id = obj.comment.id;
+            method.distinguished = !obj.comment.distinguished;
+            connection.send(method, commentResponse -> update(commentResponse.comment_view), () -> Util.unknownError(context));
+            return true;
+        } else {
+            return super.onMenuItemClick(item);
+        }
     }
 
     @Override

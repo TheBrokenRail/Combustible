@@ -36,7 +36,7 @@ public abstract class BaseUserFeedAdapter extends SimpleFeedAdapter<PersonView> 
 
     @Override
     protected void setupIcons(CommonIcons icons, PersonView obj) {
-        icons.setup(false, false, false, false);
+        icons.setup(false, false, false, false, false);
         icons.overflow.setOnClickListener(v -> new UserOverflow(v, connection, obj) {
             @Override
             protected void update(PersonView newObj) {

@@ -209,7 +209,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
         });
 
         // Icons
-        commentViewHolder.icons.setup(obj.comment.deleted || obj.comment.removed, false, false, obj.comment.distinguished);
+        commentViewHolder.icons.setup(obj.comment.deleted || obj.comment.removed, false, false, false, obj.comment.distinguished);
     }
 
     @Override

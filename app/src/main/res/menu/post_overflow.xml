@@ -17,6 +17,30 @@
         android:title="@string/edit" />
 
     <item
+        android:id="@+id/post_distinguish"
+        android:icon="@drawable/baseline_mic_24"
+        android:title="@string/distinguish"
+        android:visible="false" />
+
+    <item
+        android:id="@+id/post_lock"
+        android:icon="@drawable/baseline_lock_24"
+        android:title="@string/lock"
+        android:visible="false" />
+
+    <item
+        android:id="@+id/post_pin_community"
+        android:icon="@drawable/baseline_push_pin_24"
+        android:title="@string/pin_community"
+        android:visible="false" />
+
+    <item
+        android:id="@+id/post_pin_instance"
+        android:icon="@drawable/baseline_push_pin_24"
+        android:title="@string/pin_instance"
+        android:visible="false" />
+
+    <item
         android:id="@+id/post_delete"
         android:icon="@drawable/baseline_delete_24"
         android:title="@string/delete" />

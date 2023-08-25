@@ -59,4 +59,4 @@
 - [x] Update `DepthGauge` When Previous Element Is Changed
 - [ ] Update `lemmy-js-client`
   - [ ] Extract API Version From `lemmy-js-client`
-- [ ] Pinning/Distinguishing/Locking Posts/Comments
+- [x] Pinning/Distinguishing/Locking Posts/Comments

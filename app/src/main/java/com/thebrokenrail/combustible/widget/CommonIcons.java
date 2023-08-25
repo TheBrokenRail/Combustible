@@ -22,6 +22,7 @@ public class CommonIcons extends LinearLayout {
     private final AppCompatImageView nsfw;
     private final AppCompatImageView locked;
     private final AppCompatImageView pinned;
+    private final AppCompatImageView distinguished;
     public final AppCompatImageView overflow;
 
     public CommonIcons(Context context, @Nullable AttributeSet attrs) {
@@ -33,9 +34,10 @@ public class CommonIcons extends LinearLayout {
 
         // Icons
         deleted = addIcon(R.drawable.baseline_delete_18, R.string.icon_deleted);
-        nsfw = addIcon(R.drawable.baseline_warning_24, R.string.icon_nsfw);
+        nsfw = addIcon(R.drawable.baseline_warning_18, R.string.icon_nsfw);
         locked = addIcon(R.drawable.baseline_lock_18, R.string.icon_locked);
         pinned = addIcon(R.drawable.baseline_push_pin_18, R.string.icon_pinned);
+        distinguished = addIcon(R.drawable.baseline_mic_18, R.string.icon_distinguished);
 
         // Overflow
         overflow = addIcon(R.drawable.baseline_more_vert_24, R.string.overflow);
@@ -74,12 +76,14 @@ public class CommonIcons extends LinearLayout {
      * @param isDeleted If the post/comment is removed or deleted
      * @param isNsfw If the post is NSFW
      * @param isLocked If the post is locked
-     * @param isPinned If the post/comment is pinned or distinguished
+     * @param isPinned If the post is pinned
+     * @param isDistinguished If the comment is distinguished
      */
-    public void setup(boolean isDeleted, boolean isNsfw, boolean isLocked, boolean isPinned) {
+    public void setup(boolean isDeleted, boolean isNsfw, boolean isLocked, boolean isPinned, boolean isDistinguished) {
         setVisible(deleted, isDeleted);
         setVisible(nsfw, isNsfw);
         setVisible(locked, isLocked);
         setVisible(pinned, isPinned);
+        setVisible(distinguished, isDistinguished);
     }
 }
