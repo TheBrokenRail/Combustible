@@ -9,7 +9,7 @@
   - [x] Editing
 - [x] User Banners/Biographies
   - [x] `UserSettingsActivity` (Uploading)
-- [ ] Fix Weird Ellipsizing
+- [ ] [Fix Weird Ellipsizing](https://stackoverflow.com/q/76941977/16198887)
 - [x] Investigate Voting/Posting/Editing/Deleting In
   - [x] Locked Posts
   - [x] Moderator-Only Communities
@@ -20,10 +20,7 @@
   - [x] Replies
   - [x] Mentions
   - [x] Private Messages
-- [ ] Push Notifications
-  - [ ] Replies
-  - [ ] Mentions
-  - [ ] Private Messages
+- [ ] ~~Push Notifications~~ (Not feasible without a separate server.)
 - [ ] Better Handling For Invalid Tokens
 - [ ] Resolve All `// TODO`s
 - [ ] Clean Up JavaDoc Comments
@@ -40,7 +37,7 @@
 - [x] Way To Refresh Posts (Hard because it's loaded through `FeedPrerequistes`)
 - [x] Delete Account Button In `UserSettingsActivity`
 - [x] Person/Community Blocking/Unblocking
-- [ ] Glide Caching Configuration
+- [x] Glide Caching Configuration (Using Default)
 - [ ] [Fix Glide Warning](https://github.com/bumptech/glide/issues/5231)
 - [ ] App Icon!
 - [x] Reconsider use of `scrimBackground`
@@ -51,7 +48,6 @@
 - [x] Community/User Overflows/Metadata
   - [x] NSFW Marker
   - [x] Share
-- [ ] Modlog
 - [x] Fancy New Android Back Code
 - [x] Update `DepthGauge` When Previous Element Is Changed
 - [ ] Update `lemmy-js-client`
