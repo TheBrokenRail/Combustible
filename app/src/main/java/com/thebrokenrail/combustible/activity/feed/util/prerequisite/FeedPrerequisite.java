@@ -11,6 +11,8 @@ import com.thebrokenrail.combustible.api.method.GetPost;
 import com.thebrokenrail.combustible.api.method.GetPostResponse;
 import com.thebrokenrail.combustible.api.method.GetSite;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
+import com.thebrokenrail.combustible.api.method.GetUnreadCount;
+import com.thebrokenrail.combustible.api.method.GetUnreadCountResponse;
 
 /**
  * Utility class representing a single feed prerequisite.
@@ -123,6 +125,20 @@ public abstract class FeedPrerequisite<T> {
             method.person_id = id;
             method.limit = 1; // Limit Cannot Be 0
             return method;
+        }
+    }
+
+    /**
+     * Retrieve number of unread notifications.
+     */
+    public final static class UnreadCount extends FeedPrerequisite<GetUnreadCountResponse> {
+        public UnreadCount() {
+            super();
+        }
+
+        @Override
+        protected Connection.Method<GetUnreadCountResponse> prepare() {
+            return new GetUnreadCount();
         }
     }
 }

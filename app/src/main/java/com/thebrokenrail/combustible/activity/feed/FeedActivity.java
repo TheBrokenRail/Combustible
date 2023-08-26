@@ -3,12 +3,16 @@ package com.thebrokenrail.combustible.activity.feed;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
 import androidx.appcompat.widget.SearchView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,11 +20,15 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
+import com.google.android.material.badge.ExperimentalBadgeUtils;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.feed.util.FeedUtil;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
+import com.thebrokenrail.combustible.api.method.GetUnreadCountResponse;
 import com.thebrokenrail.combustible.util.EdgeToEdge;
 import com.thebrokenrail.combustible.util.Util;
 
@@ -28,7 +36,13 @@ import com.thebrokenrail.combustible.util.Util;
  * Activity with a single infinitely-scrolling feed.
  */
 public abstract class FeedActivity extends HamburgerActivity {
+    private FeedAdapter<?> adapter = null;
     private FeedPrerequisites prerequisites;
+
+    private MaterialToolbar toolbar;
+
+    private BadgeDrawable notificationBadge = null;
+    private int unreadNotifications = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +51,7 @@ public abstract class FeedActivity extends HamburgerActivity {
         setContentView(R.layout.activity_feed);
 
         // Setup Toolbar
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Setup Adapter
@@ -87,6 +101,46 @@ public abstract class FeedActivity extends HamburgerActivity {
         return true;
     }
 
+    private void createNotificationBadge() {
+        // Notification Badge
+        notificationBadge = BadgeDrawable.create(this);
+        TypedValue typedValue = new TypedValue();
+        getTheme().resolveAttribute(com.google.android.material.R.attr.colorPrimary, typedValue, true);
+        @ColorInt int primaryColor = ContextCompat.getColor(this, typedValue.resourceId);
+        notificationBadge.setBackgroundColor(primaryColor);
+    }
+
+    @OptIn(markerClass = ExperimentalBadgeUtils.class)
+    private void updateNotificationBadge() {
+        // Badge
+        if (notificationBadge != null) {
+            // https://stackoverflow.com/a/66386279/16198887
+            BadgeUtils.detachBadgeDrawable(notificationBadge, toolbar, R.id.feed_open_menu);
+            notificationBadge = null;
+        }
+        if (unreadNotifications > 0) {
+            createNotificationBadge();
+            notificationBadge.setNumber(unreadNotifications);
+            BadgeUtils.attachBadgeDrawable(notificationBadge, toolbar, R.id.feed_open_menu);
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean ret = super.onPrepareOptionsMenu(menu);
+        // Badge
+        updateNotificationBadge();
+        // Return
+        return ret;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Fix Bug Where Badge Isn't Recreated When Dark Mode Is Enabled/Disabled
+        updateNotificationBadge();
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.feed_refresh) {
@@ -100,7 +154,6 @@ public abstract class FeedActivity extends HamburgerActivity {
         }
     }
 
-    private FeedAdapter<?> adapter = null;
     protected abstract FeedAdapter<?> createAdapter(RecyclerView feed);
 
     /**
@@ -149,6 +202,18 @@ public abstract class FeedActivity extends HamburgerActivity {
                 assert !connection.hasToken() || currentUser != null;
             }
         });
+        // Notification Badge
+        if (connection.hasToken()) {
+            prerequisites.add(new FeedPrerequisite.UnreadCount());
+            prerequisites.listen(prerequisite -> {
+                if (prerequisite instanceof FeedPrerequisite.UnreadCount) {
+                    GetUnreadCountResponse getUnreadCountResponse = ((FeedPrerequisite.UnreadCount) prerequisite).get();
+                    unreadNotifications = getUnreadCountResponse.replies + getUnreadCountResponse.mentions + getUnreadCountResponse.private_messages;
+                    System.out.println("Unread: " + unreadNotifications);
+                    invalidateOptionsMenu();
+                }
+            });
+        }
     }
 
     /**

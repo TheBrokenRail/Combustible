@@ -26,7 +26,9 @@ import java.util.Objects;
 public class UserFeedActivity extends TabbedFeedActivity {
     public static final String USER_ID_EXTRA = "com.thebrokenrail.combustible.USER_ID_EXTRA";
 
+    private PersonView infoPerson = null;
     private Boolean isBlocked = null;
+    private boolean canPrivateMessage = false;
 
     private int getUser() {
         Intent intent = getIntent();
@@ -96,19 +98,22 @@ public class UserFeedActivity extends TabbedFeedActivity {
                             }
                             invalidateOptionsMenu();
                         }
+
+                        // Enable Private Messaging
+                        canPrivateMessage = true;
+                        invalidateOptionsMenu();
                     }
                 }
             }
         });
     }
 
-    private PersonView infoPerson = null;
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean ret = super.onCreateOptionsMenu(menu);
         menu.findItem(R.id.feed_block_user).setVisible(connection.hasToken());
         menu.findItem(R.id.feed_private_message).setVisible(connection.hasToken());
+        menu.findItem(R.id.feed_private_message).setEnabled(canPrivateMessage);
         return ret;
     }
 
