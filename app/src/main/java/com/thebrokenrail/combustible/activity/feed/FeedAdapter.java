@@ -249,11 +249,17 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
                 }
             } else if (prerequisite == FeedPrerequisites.COMPLETED) {
                 // All Prerequisites Loaded
-                if (viewModel.loadingStatus == LoadingStatus.PENDING && viewModel.dataset.size() == 0 && viewModel.nextPage == ViewModel.FIRST_PAGE) {
-                    load();
-                }
+                startFirstPageLoadIfNeeded();
             }
         });
+    }
+
+    private void startFirstPageLoadIfNeeded() {
+        if (viewModel.loadingStatus == LoadingStatus.PENDING && viewModel.nextPage == ViewModel.FIRST_PAGE) {
+            assert viewModel.dataset.size() == 0;
+            // Trigger Page Load
+            load();
+        }
     }
 
     /**
@@ -508,6 +514,7 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
             // Hard Refresh
             viewModel.clear(this);
             callback.run();
+            startFirstPageLoadIfNeeded();
         } else {
             // Soft Refresh
             loadPage(ViewModel.FIRST_PAGE, data -> {
