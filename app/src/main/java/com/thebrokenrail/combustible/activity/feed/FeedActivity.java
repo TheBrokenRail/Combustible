@@ -2,6 +2,7 @@ package com.thebrokenrail.combustible.activity.feed;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -18,7 +19,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
@@ -31,6 +33,8 @@ import com.thebrokenrail.combustible.api.method.GetSiteResponse;
 import com.thebrokenrail.combustible.api.method.GetUnreadCountResponse;
 import com.thebrokenrail.combustible.util.EdgeToEdge;
 import com.thebrokenrail.combustible.util.Util;
+import com.thebrokenrail.combustible.util.glide.GlideApp;
+import com.thebrokenrail.combustible.util.glide.GlideUtil;
 
 /**
  * Activity with a single infinitely-scrolling feed.
@@ -187,11 +191,10 @@ public abstract class FeedActivity extends HamburgerActivity {
                     boolean showAvatars = getSiteResponse.my_user.local_user_view.local_user.show_avatars;
                     String avatar = getSiteResponse.my_user.local_user_view.person.avatar;
                     if (showAvatars && avatar != null) {
-                        Glide.with(FeedActivity.this)
-                                .load(Util.getThumbnailUrl(avatar))
-                                .circleCrop()
-                                .placeholder(viewProfileTarget.placeholder.newDrawable())
-                                .into(viewProfileTarget);
+                        RequestManager requestManager = GlideApp.with(FeedActivity.this);
+                        String thumbnailUrl = Util.getThumbnailUrl(avatar);
+                        Drawable placeholder = viewProfileTarget.placeholder.newDrawable();
+                        GlideUtil.load(requestManager, thumbnailUrl, new CircleCrop(), 0, false, false, placeholder, viewProfileTarget);
                     }
                 }
             } else if (prerequisite == FeedPrerequisites.COMPLETED) {
@@ -209,7 +212,6 @@ public abstract class FeedActivity extends HamburgerActivity {
                 if (prerequisite instanceof FeedPrerequisite.UnreadCount) {
                     GetUnreadCountResponse getUnreadCountResponse = ((FeedPrerequisite.UnreadCount) prerequisite).get();
                     unreadNotifications = getUnreadCountResponse.replies + getUnreadCountResponse.mentions + getUnreadCountResponse.private_messages;
-                    System.out.println("Unread: " + unreadNotifications);
                     invalidateOptionsMenu();
                 }
             });

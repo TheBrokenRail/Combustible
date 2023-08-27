@@ -10,13 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.feed.FeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.comment.BaseCommentFeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
+import com.thebrokenrail.combustible.util.glide.GlideApp;
 
 public class FeedUtil {
     public static void setupSwipeToRefresh(SwipeRefreshLayout swipeRefreshLayout, FeedAdapter<?> adapter) {
@@ -54,7 +54,7 @@ public class FeedUtil {
         recyclerView.setLayoutManager(layoutManager);
 
         // Track Scrolling
-        RequestManager requestManager = Glide.with(recyclerView.getContext());
+        RequestManager requestManager = GlideApp.with(recyclerView.getContext());
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

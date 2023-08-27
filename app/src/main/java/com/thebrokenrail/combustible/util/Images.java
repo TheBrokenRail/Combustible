@@ -3,7 +3,6 @@ package com.thebrokenrail.combustible.util;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -16,18 +15,11 @@ import androidx.annotation.ColorInt;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.load.Transformation;
 import com.thebrokenrail.combustible.R;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Pattern;
 
-import jp.wasabeef.glide.transformations.BlurTransformation;
-
 public class Images {
-    private static final int NSFW_BLUR = 36;
     // https://github.com/LemmyNet/lemmy-ui/blob/9c489680de48247cf85b1a4b33f3d0d1a8f88673/src/shared/utils/media/is-image.ts#L1
     private static final Pattern imagePattern = Pattern.compile("(http)?s?:?(//[^\"']*\\.(?:jpg|jpeg|gif|png|svg|webp))");
 
@@ -36,16 +28,6 @@ public class Images {
             return false;
         }
         return imagePattern.matcher(url).find();
-    }
-
-    @SafeVarargs
-    public static Transformation<Bitmap>[] addBlurTransformation(boolean blur, Transformation<Bitmap>... transformations) {
-        List<Transformation<Bitmap>> result = new ArrayList<>(Arrays.asList(transformations));
-        if (blur) {
-            result.add(0, new BlurTransformation(NSFW_BLUR));
-        }
-        //noinspection unchecked
-        return result.toArray(new Transformation[0]);
     }
 
     public static int getCornerRadius(Context context) {

@@ -9,7 +9,7 @@ java {
 
 dependencies {
     api 'com.squareup.moshi:moshi:1.14.0'
-    api 'com.squareup.okhttp3:okhttp:4.10.0'
+    api 'com.squareup.okhttp3:okhttp:4.11.0'
 }
 
 tasks.register('generateMethods', Exec) {

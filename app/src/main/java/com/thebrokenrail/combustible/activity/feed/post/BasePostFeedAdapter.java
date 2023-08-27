@@ -16,10 +16,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.ViewImageActivity;
 import com.thebrokenrail.combustible.activity.feed.SortableFeedAdapter;
@@ -28,10 +27,11 @@ import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CreatePostLike;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
 import com.thebrokenrail.combustible.api.method.PostView;
-import com.thebrokenrail.combustible.util.DrawableAlwaysCrossFadeFactory;
 import com.thebrokenrail.combustible.util.Images;
 import com.thebrokenrail.combustible.util.Links;
 import com.thebrokenrail.combustible.util.Permissions;
+import com.thebrokenrail.combustible.util.glide.GlideApp;
+import com.thebrokenrail.combustible.util.glide.GlideUtil;
 import com.thebrokenrail.combustible.util.markdown.Markdown;
 import com.thebrokenrail.combustible.widget.CommonIcons;
 import com.thebrokenrail.combustible.widget.Karma;
@@ -116,15 +116,13 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         }
         boolean blurBanner = bannerNsfw && blurNsfw;
         ImageView banner = root.findViewById(R.id.posts_banner);
+        RequestManager requestManager = GlideApp.with(root.getContext());
         if (bannerUrl != null) {
-            Glide.with(root.getContext())
-                    .load(bannerUrl)
-                    .transform(Images.addBlurTransformation(blurBanner))
-                    .into(banner);
+            GlideUtil.load(requestManager, bannerUrl, new FitCenter(), 0, blurBanner, false, null, banner);
             banner.setVisibility(View.VISIBLE);
         } else {
             banner.setVisibility(View.GONE);
-            Glide.with(root.getContext()).clear(banner);
+            requestManager.clear(banner);
         }
     }
 
@@ -235,21 +233,17 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         }
         FrameLayout thumbnailParent = (FrameLayout) thumbnail.getParent();
         FrameLayout otherThumbnailParent = (FrameLayout) otherThumbnail.getParent();
+        RequestManager requestManager = GlideApp.with(postViewHolder.itemView.getContext());
         if (showThumbnail) {
             thumbnailParent.setVisibility(View.VISIBLE);
             thumbnail.setAdjustViewBounds(false);
-            Glide.with(postViewHolder.itemView.getContext())
-                    .load(thumbnailUrl)
-                    .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
-                    .transform(Images.addBlurTransformation(blurThumbnail, new CenterCrop(), new RoundedCorners(postViewHolder.cornerRadius)))
-                    .placeholder(postViewHolder.placeholder)
-                    .into(thumbnail);
+            GlideUtil.load(requestManager, thumbnailUrl, new CenterCrop(), postViewHolder.cornerRadius, blurThumbnail, true, postViewHolder.placeholder, thumbnail);
         } else {
             thumbnailParent.setVisibility(View.GONE);
-            Glide.with(postViewHolder.itemView.getContext()).clear(thumbnail);
+            requestManager.clear(thumbnail);
         }
         otherThumbnailParent.setVisibility(View.GONE);
-        Glide.with(postViewHolder.itemView.getContext()).clear(otherThumbnail);
+        requestManager.clear(otherThumbnail);
 
         // Thumbnail Click Handler
         boolean finalUseBigThumbnail = useBigThumbnail;

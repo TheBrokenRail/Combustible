@@ -11,15 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.ViewImageActivity;
 import com.thebrokenrail.combustible.util.Images;
+import com.thebrokenrail.combustible.util.glide.GlideApp;
+import com.thebrokenrail.combustible.util.glide.GlideUtil;
 
 import org.commonmark.node.Image;
 
@@ -44,7 +44,7 @@ public class CustomImagePlugin extends AbstractMarkwonPlugin {
     private final GlideAsyncDrawableLoader glideAsyncDrawableLoader;
 
     public CustomImagePlugin(Context context) {
-        this.glideAsyncDrawableLoader = new GlideAsyncDrawableLoader(Glide.with(context), context);
+        this.glideAsyncDrawableLoader = new GlideAsyncDrawableLoader(GlideApp.with(context), context);
     }
 
     @Override
@@ -92,11 +92,9 @@ public class CustomImagePlugin extends AbstractMarkwonPlugin {
 
         @Override
         public void load(@NonNull AsyncDrawable drawable) {
-            final Target<Drawable> target = new AsyncDrawableTarget(drawable);
+            AsyncDrawableTarget target = new AsyncDrawableTarget(drawable);
             cache.put(drawable, target);
-            requestManager.load(drawable.getDestination())
-                    .transform(new RoundedCorners(cornerRadius))
-                    .into(target);
+            GlideUtil.load(requestManager, drawable.getDestination(), null, cornerRadius, false, false, null, target);
         }
 
         @Override

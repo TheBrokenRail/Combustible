@@ -53,4 +53,4 @@
 - [ ] Update `lemmy-js-client`
   - [ ] Extract API Version From `lemmy-js-client`
 - [x] Pinning/Distinguishing/Locking Posts/Comments
-- [ ] SVG Support
+- [x] SVG Support

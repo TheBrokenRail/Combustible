@@ -12,14 +12,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.thebrokenrail.combustible.R;
-import com.thebrokenrail.combustible.util.DrawableAlwaysCrossFadeFactory;
-import com.thebrokenrail.combustible.util.Images;
 import com.thebrokenrail.combustible.util.Util;
+import com.thebrokenrail.combustible.util.glide.GlideApp;
+import com.thebrokenrail.combustible.util.glide.GlideUtil;
 
 /**
  * Widget that displays a clickable link with a corresponding icon.
@@ -81,19 +81,16 @@ public class LinkWithIcon extends LinearLayout {
      */
     public void setup(String iconUrl, boolean blur, String newText, Runnable onClick) {
         // Icon
+        RequestManager requestManager = GlideApp.with(getContext());
         if (iconUrl != null) {
             icon.setVisibility(VISIBLE);
 
             // Load Image
-            Glide.with(getContext())
-                    .load(Util.getThumbnailUrl(iconUrl))
-                    .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
-                    .transform(Images.addBlurTransformation(blur, new CircleCrop()))
-                    .placeholder(R.drawable.baseline_image_24)
-                    .into(icon);
+            String thumbnailUrl = Util.getThumbnailUrl(iconUrl);
+            GlideUtil.load(requestManager, thumbnailUrl, new CircleCrop(), 0, blur, true, ContextCompat.getDrawable(getContext(), R.drawable.baseline_image_24), icon);
         } else {
             icon.setVisibility(GONE);
-            Glide.with(getContext()).clear(icon);
+            requestManager.clear(icon);
         }
 
         // Text

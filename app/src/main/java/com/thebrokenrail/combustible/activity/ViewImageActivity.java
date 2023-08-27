@@ -21,13 +21,15 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
+import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.ortiz.touchview.TouchImageView;
 import com.thebrokenrail.combustible.R;
-import com.thebrokenrail.combustible.util.DrawableAlwaysCrossFadeFactory;
 import com.thebrokenrail.combustible.util.EdgeToEdge;
+import com.thebrokenrail.combustible.util.glide.GlideApp;
+import com.thebrokenrail.combustible.util.glide.GlideUtil;
 
 import java.util.Objects;
 
@@ -56,12 +58,8 @@ public class ViewImageActivity extends AppCompatActivity {
         TouchImageView imageView = findViewById(R.id.view_image);
         imageView.setSuperZoomEnabled(false);
         imageView.setMaxZoom(4);
-        Glide.with(this)
-                .load(url)
-                .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
-                .placeholder(new ColorDrawable(Color.TRANSPARENT))
-                .fitCenter()
-                .into(imageView);
+        RequestManager requestManager = GlideApp.with(this);
+        GlideUtil.load(requestManager, url, new FitCenter(), 0, false, true, new ColorDrawable(Color.TRANSPARENT), new DrawableImageViewTarget(imageView));
 
         // Hide/Show UI
         windowInsetsController = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
