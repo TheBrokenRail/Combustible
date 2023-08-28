@@ -21,7 +21,7 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.LemmyActivity;
-import com.thebrokenrail.combustible.api.Connection;
+import com.thebrokenrail.combustible.api.util.Method;
 import com.thebrokenrail.combustible.util.EdgeToEdge;
 import com.thebrokenrail.combustible.util.Util;
 
@@ -84,7 +84,7 @@ public abstract class BaseCreateActivity<T, K> extends LemmyActivity {
 
         // Load Post If Editing
         if (isEditing && !loaded) {
-            Connection.Method<T> method = loadExisting();
+            Method<T> method = loadExisting();
             connection.send(method, obj -> {
                 // Set Fields
                 setFieldsFromExisting(obj);
@@ -107,7 +107,7 @@ public abstract class BaseCreateActivity<T, K> extends LemmyActivity {
 
     protected abstract @StringRes int getActionBarTitle();
 
-    protected abstract Connection.Method<T> loadExisting();
+    protected abstract Method<T> loadExisting();
     protected abstract void setFieldsFromExisting(T existing);
 
     @Override

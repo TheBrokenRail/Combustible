@@ -8,13 +8,13 @@ import androidx.annotation.Nullable;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.feed.post.PostFeedActivity;
-import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CreatePost;
 import com.thebrokenrail.combustible.api.method.EditPost;
 import com.thebrokenrail.combustible.api.method.GetPost;
 import com.thebrokenrail.combustible.api.method.GetPostResponse;
 import com.thebrokenrail.combustible.api.method.PostResponse;
 import com.thebrokenrail.combustible.api.method.PostView;
+import com.thebrokenrail.combustible.api.util.Method;
 import com.thebrokenrail.combustible.util.RequestCodes;
 import com.thebrokenrail.combustible.util.Uploader;
 import com.thebrokenrail.combustible.util.Util;
@@ -52,7 +52,7 @@ public class PostCreateActivity extends BaseCreateActivity<GetPostResponse, Post
     }
 
     @Override
-    protected Connection.Method<GetPostResponse> loadExisting() {
+    protected Method<GetPostResponse> loadExisting() {
         assert isEditing;
         GetPost method = new GetPost();
         method.id = editId;
@@ -101,7 +101,7 @@ public class PostCreateActivity extends BaseCreateActivity<GetPostResponse, Post
         }
 
         // Create Method
-        Connection.Method<PostResponse> obj;
+        Method<PostResponse> obj;
         if (isEditing) {
             EditPost method = new EditPost();
             method.name = titleStr;

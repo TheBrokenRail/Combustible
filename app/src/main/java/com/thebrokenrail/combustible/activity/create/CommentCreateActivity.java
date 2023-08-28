@@ -7,12 +7,12 @@ import androidx.annotation.Nullable;
 
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.feed.comment.CommentFeedActivity;
-import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CommentResponse;
 import com.thebrokenrail.combustible.api.method.CommentView;
 import com.thebrokenrail.combustible.api.method.CreateComment;
 import com.thebrokenrail.combustible.api.method.EditComment;
 import com.thebrokenrail.combustible.api.method.GetComment;
+import com.thebrokenrail.combustible.api.util.Method;
 import com.thebrokenrail.combustible.util.Util;
 
 public class CommentCreateActivity extends BaseCreateActivity<CommentResponse, CommentView> {
@@ -54,7 +54,7 @@ public class CommentCreateActivity extends BaseCreateActivity<CommentResponse, C
     }
 
     @Override
-    protected Connection.Method<CommentResponse> loadExisting() {
+    protected Method<CommentResponse> loadExisting() {
         assert isEditing;
         GetComment method = new GetComment();
         method.id = editId;
@@ -72,7 +72,7 @@ public class CommentCreateActivity extends BaseCreateActivity<CommentResponse, C
         String contentStr = String.valueOf(body.getText());
 
         // Create Method
-        Connection.Method<CommentResponse> obj;
+        Method<CommentResponse> obj;
         if (isEditing) {
             EditComment method = new EditComment();
             method.content = contentStr;

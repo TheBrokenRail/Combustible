@@ -13,7 +13,7 @@ dependencies {
 }
 
 tasks.register('generateMethods', Exec) {
-    workingDir projectDir
-    commandLine 'node', 'generate-methods.js'
+    workingDir new File(projectDir, 'method-generator')
+    commandLine 'npm', 'start'
 }
 compileJava.dependsOn generateMethods

@@ -18,6 +18,7 @@ import com.thebrokenrail.combustible.activity.feed.tabbed.user.UserFeedActivity;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.GetCommunity;
 import com.thebrokenrail.combustible.api.method.GetPersonDetails;
+import com.thebrokenrail.combustible.api.util.Method;
 
 import java.util.function.Consumer;
 
@@ -50,7 +51,7 @@ public class Links {
         }
     }
 
-    private static <T> void sendMethod(LemmyActivity activity, Connection.Method<T> method, Consumer<T> callback) {
+    private static <T> void sendMethod(LemmyActivity activity, Method<T> method, Consumer<T> callback) {
         Connection connection = activity.getConnection();
         connection.send(method, callback, () -> Util.unknownError(activity));
     }

@@ -51,6 +51,6 @@
 - [x] Fancy New Android Back Code
 - [x] Update `DepthGauge` When Previous Element Is Changed
 - [ ] Update `lemmy-js-client`
-  - [ ] Extract API Version From `lemmy-js-client`
+  - [x] Extract API Version From `lemmy-js-client`
 - [x] Pinning/Distinguishing/Locking Posts/Comments
 - [x] SVG Support

@@ -1,0 +1,13 @@
+{
+    "extends": [
+        "@tsconfig/strictest/tsconfig",
+        "@tsconfig/node-lts/tsconfig"
+    ],
+    "compilerOptions": {
+        "rootDir": "./src",
+        "outDir": "./build"
+    },
+    "include": [
+        "src"
+    ]
+}

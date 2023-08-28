@@ -15,7 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.LemmyActivity;
-import com.thebrokenrail.combustible.api.Connection;
+import com.thebrokenrail.combustible.api.util.Method;
 import com.thebrokenrail.combustible.util.Util;
 
 public abstract class ReportDialogFragment extends AppCompatDialogFragment {
@@ -55,7 +55,7 @@ public abstract class ReportDialogFragment extends AppCompatDialogFragment {
                 String reasonStr = String.valueOf(reason.getText());
 
                 // Create Method
-                Connection.Method<?> method = createReport(id, reasonStr);
+                Method<?> method = createReport(id, reasonStr);
 
                 // Dismiss
                 dialog.dismiss();
@@ -76,5 +76,5 @@ public abstract class ReportDialogFragment extends AppCompatDialogFragment {
         return dialog;
     }
 
-    protected abstract Connection.Method<?> createReport(int id, String reason);
+    protected abstract Method<?> createReport(int id, String reason);
 }

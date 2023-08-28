@@ -3,10 +3,13 @@ package com.thebrokenrail.combustible.api;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import com.squareup.moshi.Types;
+import com.thebrokenrail.combustible.api.method.Constants;
 import com.thebrokenrail.combustible.api.method.Login;
+import com.thebrokenrail.combustible.api.util.AuthenticatedMethod;
+import com.thebrokenrail.combustible.api.util.Method;
+import com.thebrokenrail.combustible.api.util.Verifiable;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -30,12 +33,6 @@ import okhttp3.ResponseBody;
  * This class handles communicating with a Lemmy instance.
  */
 public class Connection {
-    /**
-     * The current supported Lemmy API version.
-     * @see <a href="https://github.com/LemmyNet/lemmy-js-client/blob/main/src/types/others.ts#L1">Current API Version</a>
-     */
-    public static final String VERSION = "v3";
-
     final HttpUrl instance;
     final String token;
 
@@ -86,9 +83,14 @@ public class Connection {
             authenticatedMethod.auth = token;
         }
 
+        // Verify Method
+        if (method instanceof Verifiable) {
+            ((Verifiable) method).verify();
+        }
+
         // Build Target URL
         HttpUrl.Builder urlBuilder = instance.newBuilder();
-        urlBuilder = urlBuilder.addPathSegments("api/" + VERSION + "/" + method.getPath());
+        urlBuilder = urlBuilder.addPathSegments("api/" + Constants.VERSION + "/" + method.getPath());
 
         // Make Request
         OkHttpClient client = new OkHttpClient();
@@ -171,61 +173,6 @@ public class Connection {
         setCallbackHelper(runnable -> {});
     }
 
-    /**
-     * An API method.
-     * @param <T> The API method's response
-     */
-    public abstract static class Method<T> {
-        /**
-         * HTTP request type
-         */
-        public enum Type {
-            GET,
-            POST,
-            PUT
-        }
-
-        /**
-         * Retrieves the API method's URL path.
-         * @return The method's path after the API version (without a preceding slash), for instance "community/list"
-         */
-        public abstract String getPath();
-
-        /**
-         * Retrieves the API method's HTTP request type
-         * @return The HTTP request type
-         */
-        public Type getType() {
-            return Type.GET;
-        }
-
-        /**
-         * Retrieves the class representing this API method's response.
-         * @return The API method response's class
-         */
-        public abstract Class<T> getResponseClass();
-    }
-
-    /**
-     * An API method that may use an authentication token.
-     * @param <T> The API method's response
-     */
-    public abstract static class AuthenticatedMethod<T> extends Method<T> {
-        /**
-         * An authentication token.
-         */
-        @Nullable
-        public String auth;
-
-        /**
-         * Checks if this API method requires an authentication token.
-         * @return True if an authentication token is required, false otherwise
-         */
-        public boolean requiresToken() {
-            return false;
-        }
-    }
-
     class ResponseHandler<T> implements Callback {
         private final Class<T> responseClass;
         private final Consumer<T> successCallback;
@@ -292,6 +239,11 @@ public class Connection {
                     JsonAdapter<T> jsonAdapter = moshi.adapter(responseClass);
                     assert responseBody != null;
                     T obj = jsonAdapter.fromJson(responseBody.string());
+
+                    // Verify
+                    if (obj instanceof Verifiable) {
+                        ((Verifiable) obj).verify();
+                    }
 
                     // Run Callback
                     success(obj);

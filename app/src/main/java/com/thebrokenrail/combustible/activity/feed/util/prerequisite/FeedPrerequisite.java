@@ -1,6 +1,5 @@
 package com.thebrokenrail.combustible.activity.feed.util.prerequisite;
 
-import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CommentResponse;
 import com.thebrokenrail.combustible.api.method.GetComment;
 import com.thebrokenrail.combustible.api.method.GetCommunity;
@@ -13,6 +12,7 @@ import com.thebrokenrail.combustible.api.method.GetSite;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
 import com.thebrokenrail.combustible.api.method.GetUnreadCount;
 import com.thebrokenrail.combustible.api.method.GetUnreadCountResponse;
+import com.thebrokenrail.combustible.api.util.Method;
 
 /**
  * Utility class representing a single feed prerequisite.
@@ -35,7 +35,7 @@ public abstract class FeedPrerequisite<T> {
      * Select the API method used to load the data
      * @return The API method
      */
-    protected abstract Connection.Method<T> prepare();
+    protected abstract Method<T> prepare();
 
     /**
      * Retrieve general instance information.
@@ -46,7 +46,7 @@ public abstract class FeedPrerequisite<T> {
         }
 
         @Override
-        protected Connection.Method<GetSiteResponse> prepare() {
+        protected Method<GetSiteResponse> prepare() {
             return new GetSite();
         }
     }
@@ -63,7 +63,7 @@ public abstract class FeedPrerequisite<T> {
         }
 
         @Override
-        protected Connection.Method<GetPostResponse> prepare() {
+        protected Method<GetPostResponse> prepare() {
             GetPost method = new GetPost();
             method.id = id;
             return method;
@@ -82,7 +82,7 @@ public abstract class FeedPrerequisite<T> {
         }
 
         @Override
-        protected Connection.Method<CommentResponse> prepare() {
+        protected Method<CommentResponse> prepare() {
             GetComment method = new GetComment();
             method.id = id;
             return method;
@@ -101,7 +101,7 @@ public abstract class FeedPrerequisite<T> {
         }
 
         @Override
-        protected Connection.Method<GetCommunityResponse> prepare() {
+        protected Method<GetCommunityResponse> prepare() {
             GetCommunity method = new GetCommunity();
             method.id = id;
             return method;
@@ -120,7 +120,7 @@ public abstract class FeedPrerequisite<T> {
         }
 
         @Override
-        protected Connection.Method<GetPersonDetailsResponse> prepare() {
+        protected Method<GetPersonDetailsResponse> prepare() {
             GetPersonDetails method = new GetPersonDetails();
             method.person_id = id;
             method.limit = 1; // Limit Cannot Be 0
@@ -137,7 +137,7 @@ public abstract class FeedPrerequisite<T> {
         }
 
         @Override
-        protected Connection.Method<GetUnreadCountResponse> prepare() {
+        protected Method<GetUnreadCountResponse> prepare() {
             return new GetUnreadCount();
         }
     }

@@ -3,6 +3,7 @@ package com.thebrokenrail.combustible.activity.feed.util.prerequisite;
 import androidx.lifecycle.ViewModel;
 
 import com.thebrokenrail.combustible.api.Connection;
+import com.thebrokenrail.combustible.api.util.Method;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class FeedPrerequisites extends ViewModel {
      */
     public final static FeedPrerequisite<Object> COMPLETED = new FeedPrerequisite<Object>() {
         @Override
-        protected Connection.Method<Object> prepare() {
+        protected Method<Object> prepare() {
             throw new RuntimeException();
         }
     };
