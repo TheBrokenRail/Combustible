@@ -39,7 +39,7 @@
 - [x] Person/Community Blocking/Unblocking
 - [x] Glide Caching Configuration (Using Default)
 - [ ] [Fix Glide Warning](https://github.com/bumptech/glide/issues/5231)
-- [ ] App Icon!
+- [x] App Icon!
 - [x] Reconsider use of `scrimBackground`
 - [x] Blocking
   - [x] Community Blocking

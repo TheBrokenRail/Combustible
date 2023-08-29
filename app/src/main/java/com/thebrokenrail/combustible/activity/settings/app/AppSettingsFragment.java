@@ -11,6 +11,7 @@ import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.SubApplication;
 import com.thebrokenrail.combustible.activity.fullscreen.welcome.WelcomeActivity;
 import com.thebrokenrail.combustible.activity.settings.SettingsFragment;
+import com.thebrokenrail.combustible.util.Config;
 import com.thebrokenrail.combustible.util.SearchSuggestionProvider;
 
 import java.util.Objects;
@@ -28,6 +29,7 @@ public class AppSettingsFragment extends SettingsFragment implements SharedPrefe
             startActivity(intent);
             return true;
         });
+        changeInstance.setSummary(new Config(requireContext()).getInstance().toString());
 
         // Clear Search History
         Preference clearSearchHistory = findPreference("clear_search_history");
