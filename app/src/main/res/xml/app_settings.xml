@@ -37,4 +37,15 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/settings_about">
+
+        <Preference
+            app:key="version"
+            app:title="@string/app_settings_version"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

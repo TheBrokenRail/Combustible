@@ -7,6 +7,7 @@ import android.provider.SearchRecentSuggestions;
 
 import androidx.preference.Preference;
 
+import com.thebrokenrail.combustible.BuildConfig;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.SubApplication;
 import com.thebrokenrail.combustible.activity.fullscreen.welcome.WelcomeActivity;
@@ -39,6 +40,11 @@ public class AppSettingsFragment extends SettingsFragment implements SharedPrefe
             suggestions.clearHistory();
             return true;
         });
+
+        // App Version
+        Preference version = findPreference("version");
+        assert version != null;
+        version.setSummary(BuildConfig.VERSION_NAME);
     }
 
     @Override

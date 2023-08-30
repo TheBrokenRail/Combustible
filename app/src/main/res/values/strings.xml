@@ -78,12 +78,14 @@
     <string name="settings_advanced">Advanced</string>
     <string name="settings_media">Media</string>
     <string name="settings_security">Security</string>
+    <string name="settings_about">About</string>
 
     <!-- App Settings -->
     <string name="app_settings_dark_mode">Dark Mode</string>
     <string name="app_settings_disable_large_thumbnail">Disable Large Thumbnails</string>
     <string name="app_settings_change_instance">Change Lemmy Instance</string>
     <string name="app_settings_clear_search_history">Clear Search History</string>
+    <string name="app_settings_version">App Version</string>
 
     <!-- User Settings -->
     <string name="user_settings_display_name">Display Name</string>

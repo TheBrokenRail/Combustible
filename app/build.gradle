@@ -8,6 +8,7 @@ buildscript {
 
 plugins {
     id 'com.android.application'
+    id 'org.ajoberstar.grgit' version '5.2.0'
 }
 
 android {
@@ -18,8 +19,19 @@ android {
         applicationId 'com.thebrokenrail.combustible'
         minSdk 21
         targetSdk 33
-        versionCode 1
-        versionName '1.0'
+
+        // Version Code
+        def birthday = 1687752034L // The exact time the project was created!
+        def gitVersionCode = (int) (grgit.head().dateTime.toEpochSecond() - birthday)
+        versionCode gitVersionCode
+
+        // Version Name
+        def isDirty = !grgit.status().clean
+        def gitVersionName = grgit.describe(tags: true, longDescr: isDirty, always: true)
+        if (isDirty) {
+            gitVersionName += '-dirty'
+        }
+        versionName gitVersionName
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
