@@ -44,6 +44,7 @@ public class DeleteAccountDialogFragment extends AppCompatDialogFragment {
                 // Create Method
                 DeleteAccount method = new DeleteAccount();
                 method.password = String.valueOf(password.getText());
+                //TODO method.delete_content
 
                 // Dismiss
                 dialog.dismiss();

@@ -148,7 +148,7 @@ public abstract class FeedActivity extends HamburgerActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.feed_refresh) {
-            adapter.refresh(true, () -> {});
+            adapter.refresh(true, true, () -> {});
             return true;
         } else if (item.getItemId() == R.id.feed_share) {
             share();

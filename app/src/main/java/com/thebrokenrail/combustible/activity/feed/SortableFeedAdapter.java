@@ -34,7 +34,7 @@ public abstract class SortableFeedAdapter<T> extends FeedAdapter<T> {
     protected void bindHeader(View root) {
         // Bind Sorter
         Sorter sorter = root.findViewById(R.id.feed_sorter);
-        sorter.bind(sorting, connection.hasToken(), () -> refresh(true, () -> {}), this::isSortingTypeVisible);
+        sorter.bind(sorting, connection.hasToken(), () -> refresh(true, false, () -> {}), this::isSortingTypeVisible);
         sorter.setEnabled(arePrerequisitesLoaded());
     }
 
@@ -56,7 +56,7 @@ public abstract class SortableFeedAdapter<T> extends FeedAdapter<T> {
                 } else if (prerequisite instanceof FeedPrerequisite.Site) {
                     // Site Loaded
                     assert site != null;
-                    if (useDefaultSort()) {
+                    if (useDefaultSort() && !arePrerequisitesLoaded() /* Don't Change Sort If This Is A Refresh */) {
                         // Custom Sorting Defaults
                         if (site.my_user != null) {
                             sorting.set(site.my_user.local_user_view.local_user.default_sort_type);

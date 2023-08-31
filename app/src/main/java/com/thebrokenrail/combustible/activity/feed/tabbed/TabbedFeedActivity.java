@@ -118,9 +118,10 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
      * Refresh all tabs.
      */
     protected void refresh() {
+        Map.Entry<Integer, FeedAdapter<?>> visibleTab = visibleTabs.get(viewPager.getCurrentItem());
         for (Map.Entry<Integer, FeedAdapter<?>> tab : tabs) {
             FeedAdapter<?> adapter = tab.getValue();
-            adapter.refresh(true, () -> {});
+            adapter.refresh(true, visibleTab == tab /* Only Trigger One Prerequisite Refresh */, () -> {});
         }
     }
 
@@ -164,6 +165,12 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
      * @param name The tab's name
      */
     protected void showTab(@StringRes int name) {
+        for (Map.Entry<Integer, FeedAdapter<?>> tab : visibleTabs) {
+            if (tab.getKey().equals(name)) {
+                // Already Visible
+                return;
+            }
+        }
         for (Map.Entry<Integer, FeedAdapter<?>> tab : tabs) {
             if (tab.getKey().equals(name)) {
                 visibleTabs.add(tab);

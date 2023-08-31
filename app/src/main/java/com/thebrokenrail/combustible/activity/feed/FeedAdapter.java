@@ -20,7 +20,6 @@ import com.thebrokenrail.combustible.util.Util;
 import com.thebrokenrail.combustible.widget.NextPageLoader;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -123,10 +122,6 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         @Override
         public void insert(int position, int amount) {
             notifyItemRangeInserted(getFirstElementPosition() + position, amount);
-            if (!hasHeader() && position == 0) {
-                assert getFirstElementPosition() == 0;
-                notifyItemChanged(0);
-            }
         }
 
         @Override
@@ -216,6 +211,12 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
                 site = ((FeedPrerequisite.Site) prerequisite).get();
                 // Update Permissions
                 permissions.setSite(site);
+                // Update Dataset
+                notifier.change(viewModel.dataset.size());
+                // Update Header
+                if (hasHeader()) {
+                    notifyItemChanged(0);
+                }
             }
         });
     }
@@ -238,9 +239,9 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
 
         // Check If Everything Is Loaded
         prerequisites.listen(prerequisite -> {
-            if (prerequisite == null) {
+            if (prerequisite == FeedPrerequisites.ERROR) {
                 // Error
-                if (prerequisites.areLoaded()) {
+                if (arePrerequisitesLoaded()) {
                     // Don't Change State For Refresh Errors
                     Util.unknownError(parent.getContext());
                 } else {
@@ -250,6 +251,9 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
             } else if (prerequisite == FeedPrerequisites.COMPLETED) {
                 // All Prerequisites Loaded
                 startFirstPageLoadIfNeeded();
+            } else if (prerequisite == FeedPrerequisites.RETRY_STARTED) {
+                // Retry Started
+                updateLoadingStatus(LoadingStatus.PENDING);
             }
         });
     }
@@ -430,7 +434,7 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         if (!arePrerequisitesLoaded()) {
             if (viewModel.loadingStatus == LoadingStatus.ERROR) {
                 // Retry Failed Prerequisites
-                updateLoadingStatus(LoadingStatus.PENDING);
+                assert prerequisites.isError();
                 prerequisites.retry(connection);
             }
             return true;
@@ -485,19 +489,12 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     }
 
     /**
-     * Retrieve which prerequisites need to be refreshed.
-     * @return The prerequisites to refresh
-     */
-    protected List<Class<? extends FeedPrerequisite<?>>> getPrerequisitesToRefresh() {
-        return Collections.emptyList();
-    }
-
-    /**
      * Refresh the adapter.
      * @param hard True if currently loaded content should disappear during the refresh, false otherwise
+     * @param refreshPrerequisites True if prerequisites should also be refreshed, false otherwise
      * @param callback Callback that is executed on completion
      */
-    public void refresh(boolean hard, Runnable callback) {
+    public void refresh(boolean hard, boolean refreshPrerequisites, Runnable callback) {
         // Check If Prerequisites Are Loaded
         if (checkPrerequisites()) {
             callback.run();
@@ -505,8 +502,8 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         }
 
         // Refresh Prerequisites
-        for (Class<? extends FeedPrerequisite<?>> prerequisite : getPrerequisitesToRefresh()) {
-            prerequisites.refresh(connection, prerequisite);
+        if (refreshPrerequisites) {
+            prerequisites.refresh(connection);
         }
 
         // Different Refresh Types

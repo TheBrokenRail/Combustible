@@ -22,7 +22,7 @@ public class FeedUtil {
     public static void setupSwipeToRefresh(SwipeRefreshLayout swipeRefreshLayout, FeedAdapter<?> adapter) {
         // Connect Adapter To Layout
         swipeRefreshLayout.setRefreshing(false);
-        swipeRefreshLayout.setOnRefreshListener(() -> adapter.refresh(false, () -> swipeRefreshLayout.setRefreshing(false)));
+        swipeRefreshLayout.setOnRefreshListener(() -> adapter.refresh(false, true, () -> swipeRefreshLayout.setRefreshing(false)));
 
         // Theming
         Context context = swipeRefreshLayout.getContext();

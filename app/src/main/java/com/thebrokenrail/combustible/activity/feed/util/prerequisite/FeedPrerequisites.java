@@ -23,6 +23,26 @@ public class FeedPrerequisites extends ViewModel {
     };
 
     /**
+     * Special prerequisite triggered when a retry attempt has been started.
+     */
+    public final static FeedPrerequisite<Object> RETRY_STARTED = new FeedPrerequisite<Object>() {
+        @Override
+        protected Method<Object> prepare() {
+            throw new RuntimeException();
+        }
+    };
+
+    /**
+     * Special prerequisite triggered when an error has occurred.
+     */
+    public final static FeedPrerequisite<Object> ERROR = new FeedPrerequisite<Object>() {
+        @Override
+        protected Method<Object> prepare() {
+            throw new RuntimeException();
+        }
+    };
+
+    /**
      * Callback for listeners.
      */
     public interface Listener {
@@ -56,38 +76,33 @@ public class FeedPrerequisites extends ViewModel {
         }
     }
 
-    private final List<FeedPrerequisite<?>> pendingPrerequisites = new ArrayList<>();
-    private final List<FeedPrerequisite<?>> failedPrerequisites = new ArrayList<>();
-    private final List<FeedPrerequisite<?>> successfulPrerequisites = new ArrayList<>();
-    private final List<FeedPrerequisite<?>> refreshingPrerequisites = new ArrayList<>();
+    private final List<FeedPrerequisite<?>> pending = new ArrayList<>();
+    private final List<FeedPrerequisite<?>> failed = new ArrayList<>();
+    private final List<FeedPrerequisite<?>> successful = new ArrayList<>();
 
-    private <T> void load(Connection connection, FeedPrerequisite<T> prerequisite) {
+    private <T> void load(Connection connection, FeedPrerequisite<T> prerequisite, boolean isRefreshing) {
         connection.send(prerequisite.prepare(), t -> {
             prerequisite.value = t;
-            boolean refreshing = refreshingPrerequisites.contains(prerequisite);
-            if (refreshing) {
-                assert successfulPrerequisites.contains(prerequisite);
-                refreshingPrerequisites.remove(prerequisite);
+            if (isRefreshing) {
+                assert successful.contains(prerequisite);
             } else {
-                assert pendingPrerequisites.contains(prerequisite);
-                pendingPrerequisites.remove(prerequisite);
-                successfulPrerequisites.add(prerequisite);
+                assert pending.contains(prerequisite);
+                pending.remove(prerequisite);
+                successful.add(prerequisite);
             }
             onEvent(prerequisite);
-            if (!refreshing && areLoaded()) {
+            if (!isRefreshing && areLoaded()) {
                 onEvent(COMPLETED);
             }
         }, () -> {
-            boolean refreshing = refreshingPrerequisites.contains(prerequisite);
-            if (refreshing) {
+            if (isRefreshing) {
                 // Ignore Errors When Prerequisite Has Previously Loaded
-                assert successfulPrerequisites.contains(prerequisite);
-                refreshingPrerequisites.remove(prerequisite);
+                assert successful.contains(prerequisite);
             } else {
                 prerequisite.value = null;
-                failedPrerequisites.add(prerequisite);
+                failed.add(prerequisite);
             }
-            onEvent(null);
+            onEvent(ERROR);
         });
     }
 
@@ -97,7 +112,7 @@ public class FeedPrerequisites extends ViewModel {
      */
     public void add(FeedPrerequisite<?> prerequisite) {
         if (!isSetup) {
-            pendingPrerequisites.add(prerequisite);
+            pending.add(prerequisite);
         }
     }
 
@@ -106,10 +121,12 @@ public class FeedPrerequisites extends ViewModel {
      * @param connection The connection to Lemmy
      */
     public void retry(Connection connection) {
-        for (FeedPrerequisite<?> prerequisite : failedPrerequisites) {
-            load(connection, prerequisite);
+        assert !areLoaded() && isError();
+        for (FeedPrerequisite<?> prerequisite : failed) {
+            load(connection, prerequisite, false);
         }
-        failedPrerequisites.clear();
+        failed.clear();
+        onEvent(RETRY_STARTED);
     }
 
     /**
@@ -117,7 +134,7 @@ public class FeedPrerequisites extends ViewModel {
      * @return True if all prerequisites are loaded, false otherwise
      */
     public boolean areLoaded() {
-        return pendingPrerequisites.size() == 0;
+        return pending.size() == 0;
     }
 
     /**
@@ -126,8 +143,8 @@ public class FeedPrerequisites extends ViewModel {
      */
     public void require(Class<? extends FeedPrerequisite<?>> klass) {
         List<FeedPrerequisite<?>> allPrerequisites = new ArrayList<>();
-        allPrerequisites.addAll(pendingPrerequisites);
-        allPrerequisites.addAll(successfulPrerequisites);
+        allPrerequisites.addAll(pending);
+        allPrerequisites.addAll(successful);
         for (FeedPrerequisite<?> prerequisite : allPrerequisites) {
             if (prerequisite.getClass().equals(klass)) {
                 return;
@@ -142,7 +159,7 @@ public class FeedPrerequisites extends ViewModel {
      */
     public void start(Connection connection) {
         // Emit EVents For Already Loaded Prerequisites
-        for (FeedPrerequisite<?> prerequisite : successfulPrerequisites) {
+        for (FeedPrerequisite<?> prerequisite : successful) {
             onEvent(prerequisite);
         }
         // Check If All Prerequisites Are Loaded
@@ -151,14 +168,12 @@ public class FeedPrerequisites extends ViewModel {
             onEvent(COMPLETED);
         } else {
             // Restart Previous Prerequisites
-            for (FeedPrerequisite<?> prerequisite : pendingPrerequisites) {
-                if (!failedPrerequisites.contains(prerequisite)) {
-                    load(connection, prerequisite);
+            for (FeedPrerequisite<?> prerequisite : pending) {
+                if (!failed.contains(prerequisite)) {
+                    load(connection, prerequisite, false);
                 }
             }
         }
-        // Clear Refreshing Prerequisites
-        refreshingPrerequisites.clear();
     }
 
     private boolean isSetup = false;
@@ -175,39 +190,22 @@ public class FeedPrerequisites extends ViewModel {
      * @return True if an error has occurred, false otherwise
      */
     public boolean isError() {
-        return failedPrerequisites.size() > 0;
+        return failed.size() > 0;
     }
 
     /**
-     * Refresh prerequisite.
+     * Refresh prerequisites.
      * @param connection The connection to Lemmy
-     * @param klass The type of prerequisite to refresh
      */
-    public void refresh(Connection connection, Class<? extends FeedPrerequisite<?>> klass) {
+    public void refresh(Connection connection) {
         // Can't Refresh Anything If Loading Hasn't Finished
         if (!areLoaded()) {
             throw new RuntimeException();
         }
 
-        // Check If Prerequisite Is Already Refreshing
-        for (FeedPrerequisite<?> prerequisite : refreshingPrerequisites) {
-            if (prerequisite.getClass() == klass) {
-                // Already Refreshing
-                return;
-            }
-        }
-
         // Refresh
-        for (FeedPrerequisite<?> prerequisite : successfulPrerequisites) {
-            if (prerequisite.getClass() == klass) {
-                // Found
-                refreshingPrerequisites.add(prerequisite);
-                load(connection, prerequisite);
-                return;
-            }
+        for (FeedPrerequisite<?> prerequisite : successful) {
+            load(connection, prerequisite, true);
         }
-
-        // Couldn't Find Prerequisite
-        throw new RuntimeException();
     }
 }

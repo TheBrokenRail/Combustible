@@ -25,7 +25,6 @@ import com.thebrokenrail.combustible.util.RequestCodes;
 import com.thebrokenrail.combustible.util.Util;
 import com.thebrokenrail.combustible.widget.DepthGauge;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -202,14 +201,5 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
     @Override
     protected boolean isSortingTypeVisible(Class<? extends Enum<?>> type) {
         return type == CommentSortType.class;
-    }
-
-    @Override
-    protected List<Class<? extends FeedPrerequisite<?>>> getPrerequisitesToRefresh() {
-        if (parentType == CommentTreeDataset.ParentType.POST) {
-            return Collections.singletonList(FeedPrerequisite.Post.class);
-        } else {
-            return super.getPrerequisitesToRefresh();
-        }
     }
 }

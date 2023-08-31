@@ -73,7 +73,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
         // Reload Comments If Post Locked/Unlock
         boolean lockChanged = !post.post.locked.equals(oldPost.post.locked);
         if (lockChanged) {
-            notifyItemRangeChanged(getFirstElementPosition(), viewModel.dataset.size());
+            notifier.change(viewModel.dataset.size());
         }
     }
 
