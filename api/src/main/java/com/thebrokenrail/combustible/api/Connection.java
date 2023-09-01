@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -37,7 +36,7 @@ public class Connection {
     final String token;
 
     private Consumer<Runnable> callbackHelper = Runnable::run;
-    private final List<Call> currentCalls = Collections.synchronizedList(new ArrayList<>());
+    private final List<Call> currentCalls = new ArrayList<>();
 
     /**
      * Connect to an instance.
@@ -166,10 +165,12 @@ public class Connection {
      * Cancel all current requests and callbacks.
      */
     public void close() {
-        for (Call call : currentCalls) {
-            call.cancel();
+        synchronized (currentCalls) {
+            for (Call call : currentCalls) {
+                call.cancel();
+            }
+            currentCalls.clear();
         }
-        currentCalls.clear();
         setCallbackHelper(runnable -> {});
     }
 
@@ -182,7 +183,9 @@ public class Connection {
             this.responseClass = responseClass;
             this.successCallback = successCallback;
             this.errorCallback = errorCallback;
-            currentCalls.add(call);
+            synchronized (currentCalls) {
+                currentCalls.add(call);
+            }
             call.enqueue(this);
         }
 
@@ -205,13 +208,17 @@ public class Connection {
             e.printStackTrace();
 
             // Run Error Callback
-            currentCalls.remove(call);
+            synchronized (currentCalls) {
+                currentCalls.remove(call);
+            }
             error();
         }
 
         @Override
         public void onResponse(@NotNull Call call, @NotNull Response response) {
-            currentCalls.remove(call);
+            synchronized (currentCalls) {
+                currentCalls.remove(call);
+            }
             try {
                 try (ResponseBody responseBody = response.body()) {
                     // Check Response
