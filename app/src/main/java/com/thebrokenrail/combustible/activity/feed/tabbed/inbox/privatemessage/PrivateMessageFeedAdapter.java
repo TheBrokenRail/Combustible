@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class PrivateMessageFeedAdapter extends FeedAdapter<PrivateMessageView> {
-    protected static class PrivateMessageViewHolder extends RecyclerView.ViewHolder {
+    private static class PrivateMessageViewHolder extends RecyclerView.ViewHolder {
         private final CardView card;
         private final TextView text;
         private final Metadata metadata;

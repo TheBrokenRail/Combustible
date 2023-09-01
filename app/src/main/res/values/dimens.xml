@@ -11,7 +11,6 @@
     <dimen name="feed_item_margin">8dp</dimen>
 
     <!-- Post -->
-    <dimen name="post_padding">8dp</dimen>
     <dimen name="post_title_font_size">18sp</dimen>
     <dimen name="post_thumbnail_width">96dp</dimen>
     <dimen name="post_thumbnail_height">72dp</dimen>

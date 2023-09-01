@@ -50,7 +50,7 @@ public class Metadata extends TableLayout {
         spacer.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.link_with_icon_font_size));
         spacer.setMaxLines(1);
         layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
-        int margin = context.getResources().getDimensionPixelSize(R.dimen.post_padding);
+        int margin = context.getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
         layoutParams.setMarginEnd(margin);
         layoutParams.setMarginStart(margin);
         spacer.setLayoutParams(layoutParams);

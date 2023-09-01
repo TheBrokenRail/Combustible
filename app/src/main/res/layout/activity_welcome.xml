@@ -58,6 +58,12 @@
                     android:text="@string/welcome_instance_recommended" />
 
                 <RadioButton
+                    android:id="@+id/welcome_instance_testing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/welcome_instance_testing" />
+
+                <RadioButton
                     android:id="@+id/welcome_instance_custom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

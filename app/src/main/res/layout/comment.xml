@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/post_padding">
+            android:padding="@dimen/feed_item_margin">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -50,13 +50,13 @@
                 android:id="@+id/comment_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/post_padding" />
+                android:layout_marginTop="@dimen/feed_item_margin" />
 
             <LinearLayout
                 android:id="@+id/comment_bottom_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/post_padding"
+                android:layout_marginTop="@dimen/feed_item_margin"
                 android:orientation="horizontal">
 
                 <com.thebrokenrail.combustible.widget.Karma
@@ -73,7 +73,7 @@
                     android:id="@+id/comment_reply"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/post_padding"
+                    android:layout_marginStart="@dimen/feed_item_margin"
                     android:clickable="true"
                     android:focusable="true"
                     android:visibility="gone"
@@ -92,7 +92,9 @@
         android:id="@+id/comment_show_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/post_padding"
+        android:layout_marginTop="@dimen/feed_item_margin"
+        android:layout_marginStart="@dimen/feed_item_margin"
+        android:layout_marginEnd="@dimen/feed_item_margin"
         android:visibility="gone"
         android:text="@string/comment_show_more" />
 

@@ -151,11 +151,6 @@ public class InfoDialog {
             // Edge-To-Edge
             NestedScrollView scroll = root.findViewById(R.id.community_dialog_root);
             EdgeToEdge.setupScroll(scroll);
-            /*ViewCompat.setOnApplyWindowInsetsListener(root, (v, windowInsets) -> {
-                Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-                root.findViewById(R.id.community_dialog_root).setPadding(0, 0, 0, insets.bottom);
-                return windowInsets;
-            });*/
         }
 
         private void updateSubscriptionText(PossiblyOutlinedButton button) {

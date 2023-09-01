@@ -3,12 +3,14 @@ package com.thebrokenrail.combustible.activity.fullscreen.welcome;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.thebrokenrail.combustible.BuildConfig;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.feed.post.PostFeedActivity;
 import com.thebrokenrail.combustible.activity.fullscreen.FullscreenActivity;
@@ -36,6 +38,10 @@ public class WelcomeActivity extends FullscreenActivity {
         TextView explanation = findViewById(R.id.welcome_explanation);
         NiceLinkMovementMethod.setup(explanation);
 
+        // Testing Instance Option Is Debug-Only
+        RadioButton testingInstanceOption = findViewById(R.id.welcome_instance_testing);
+        testingInstanceOption.setVisibility(BuildConfig.DEBUG ? View.VISIBLE : View.GONE);
+
         // Handle Button Press
         Button go = findViewById(R.id.welcome_go);
         go.setOnClickListener(v -> {
@@ -48,8 +54,17 @@ public class WelcomeActivity extends FullscreenActivity {
                 // Check
                 checkAndSetInstance(url);
             } else {
-                // Custom Instance
-                new CustomInstanceDialogFragment().show(getSupportFragmentManager(), "custom_instance");
+                boolean isTestingInstance = BuildConfig.DEBUG && testingInstanceOption.isChecked();
+                if (isTestingInstance) {
+                    // Get Testing Instance URL
+                    HttpUrl url = HttpUrl.parse(getString(R.string.testing_instance));
+
+                    // Check
+                    checkAndSetInstance(url);
+                } else {
+                    // Custom Instance
+                    new CustomInstanceDialogFragment().show(getSupportFragmentManager(), "custom_instance");
+                }
             }
         });
     }

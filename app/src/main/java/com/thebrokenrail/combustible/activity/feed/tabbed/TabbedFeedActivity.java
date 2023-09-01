@@ -57,7 +57,7 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
 
         // Prepare View Pager
         viewPager = findViewById(R.id.tabbed_feed_view_pager);
-        // TODO WindowInsetsApplier.install(viewPager);
+        //TODO WindowInsetsApplier.install(viewPager);
 
         // Create Tabs
         visibleTabs.clear();
@@ -100,7 +100,7 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
 
         // Setup Tab Layout
         TabLayout tabLayout = findViewById(R.id.tabbed_feed_tabs);
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> tab.setText(tabs.get(position).getKey())).attach();
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> tab.setText(visibleTabs.get(position).getKey())).attach();
 
         // Edge-To-Edge
         CoordinatorLayout root = findViewById(R.id.tabbed_feed_root);
@@ -173,13 +173,24 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
         }
         for (Map.Entry<Integer, FeedAdapter<?>> tab : tabs) {
             if (tab.getKey().equals(name)) {
-                visibleTabs.add(tab);
+                // Found Tab
+
+                // Pick Tab Position
+                int position = tabs.indexOf(tab);
+                if (position < 0 || position > visibleTabs.size()) {
+                    position = visibleTabs.size();
+                }
+
+                // Add
+                visibleTabs.add(position, tab);
+
+                // Notify
+                RecyclerView.Adapter<?> adapter = viewPager.getAdapter();
+                if (adapter != null) {
+                    adapter.notifyItemInserted(position);
+                }
                 break;
             }
-        }
-        RecyclerView.Adapter<?> adapter = viewPager.getAdapter();
-        if (adapter != null) {
-            adapter.notifyItemInserted(visibleTabs.size() - 1);
         }
     }
 

@@ -7,11 +7,11 @@ import android.view.View;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.feed.util.overflow.BaseOverflow;
 import com.thebrokenrail.combustible.api.Connection;
-import com.thebrokenrail.combustible.api.method.CommunityView;
+import com.thebrokenrail.combustible.api.method.Community;
 import com.thebrokenrail.combustible.util.Sharing;
 
-abstract class CommunityOverflow extends BaseOverflow<CommunityView> {
-    public CommunityOverflow(View view, Connection connection, CommunityView obj) {
+abstract class CommunityOverflow extends BaseOverflow<Community> {
+    public CommunityOverflow(View view, Connection connection, Community obj) {
         super(view, connection, obj);
     }
 

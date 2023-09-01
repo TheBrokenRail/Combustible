@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="@dimen/post_padding">
+        android:padding="@dimen/feed_item_margin">
 
         <com.thebrokenrail.combustible.widget.LinkWithIcon
             android:id="@+id/simple_item"

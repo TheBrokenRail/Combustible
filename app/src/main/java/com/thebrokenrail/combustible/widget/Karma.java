@@ -65,7 +65,7 @@ public class Karma extends LinearLayout {
         setGravity(Gravity.CENTER_VERTICAL);
 
         // Margin
-        int margin = getResources().getDimensionPixelSize(R.dimen.post_padding);
+        int margin = getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
 
         // Upvote
         upvote = new MaterialCheckBox(getContext());

@@ -128,7 +128,7 @@ public class PostFeedActivity extends FeedActivity {
 
     @Override
     protected void share() {
-        Sharing.shareCommunity(this, community);
+        Sharing.shareCommunity(this, community.community);
     }
 
     @Override

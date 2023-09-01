@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/post_padding">
+    android:padding="@dimen/feed_item_margin">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/post_padding">
+        android:layout_marginTop="@dimen/feed_item_margin">
 
         <TextView
             android:id="@+id/post_title"
@@ -47,7 +47,7 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/post_padding"
+            android:layout_marginStart="@dimen/feed_item_margin"
             android:clickable="true"
             android:focusable="true">
 
@@ -76,7 +76,7 @@
     <com.thebrokenrail.combustible.widget.SquareView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/post_padding"
+        android:layout_marginTop="@dimen/feed_item_margin"
         android:clickable="true"
         android:focusable="true">
 
@@ -92,14 +92,14 @@
         android:id="@+id/post_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/post_padding" />
+        android:layout_marginTop="@dimen/feed_item_margin" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:layout_marginTop="@dimen/post_padding">
+        android:layout_marginTop="@dimen/feed_item_margin">
 
         <com.thebrokenrail.combustible.widget.Karma
             android:id="@+id/post_karma"
@@ -114,7 +114,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/post_padding"
+            android:layout_marginStart="@dimen/feed_item_margin"
             android:importantForAccessibility="no"
             app:srcCompat="@drawable/baseline_comment_24" />
 
@@ -122,7 +122,7 @@
             android:id="@+id/post_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/post_padding"
+            android:layout_marginStart="@dimen/feed_item_margin"
             android:textAlignment="center" />
 
     </LinearLayout>

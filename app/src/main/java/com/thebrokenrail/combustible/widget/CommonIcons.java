@@ -56,7 +56,7 @@ public class CommonIcons extends LinearLayout {
 
         // Layout
         LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        int margin = getContext().getResources().getDimensionPixelSize(R.dimen.post_padding);
+        int margin = getContext().getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
         layoutParams.setMarginStart(margin);
         view.setLayoutParams(layoutParams);
 

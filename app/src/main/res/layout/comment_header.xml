@@ -30,7 +30,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/post_padding"
+        android:layout_marginTop="@dimen/feed_item_margin"
+        android:layout_marginStart="@dimen/feed_item_margin"
+        android:layout_marginEnd="@dimen/feed_item_margin"
         android:visibility="gone" />
 
 </LinearLayout>

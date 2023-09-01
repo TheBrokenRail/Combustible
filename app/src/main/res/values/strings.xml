@@ -6,6 +6,7 @@
     <!-- Basic Information -->
     <string name="app_name">Combustible</string>
     <string name="recommended_instance" translatable="false">&recommended_instance;</string>
+    <string name="testing_instance" translatable="false">https://voyager.lemmy.ml</string>
     <string name="preference_file_key" translatable="false">com.thebrokenrail.combustible.PREFERENCE_FILE_KEY</string>
 
     <!-- Miscellaneous -->
@@ -39,6 +40,7 @@
     <string name="welcome_title">Welcome to Combustible!</string>
     <string name="welcome_explanation">Combustible is an app that allows you to interact with the <a href="https://join-lemmy.org/">Lemmy</a> link aggregation and discussion platform. Lemmy is completely free and open, and not controlled by any company.\n\nHowever, to interact to Lemmy you must select an instance to connect to. Don\'t worry, you can access most content on Lemmy from any instance and you can change this later.\n\nThe <a href="&recommended_instance;">&recommended_instance;</a> instance is recommended, but you can discover other instances on <a href="https://join-lemmy.org/instances">Lemmy\'s official website</a>.</string>
     <string name="welcome_instance_recommended">Recommended Instance</string>
+    <string name="welcome_instance_testing">Testing Instance</string>
     <string name="welcome_instance_custom">Custom Instance</string>
     <string name="welcome_go">Go!</string>
     <string name="welcome_error">Unable to connect to specified Lemmy instance!</string>
@@ -189,4 +191,17 @@
     <string name="private_message_hint">Message</string>
     <string name="private_message_success">Sent private message!</string>
     <string name="private_message_error">Unable to send private message!</string>
+
+    <!-- User -->
+    <string name="user_moderates_communities">Moderates</string>
+    <string name="user_subscribed_communities">Subscribed</string>
+    <string name="user_about">About</string>
+    <string name="user_about_biography">## Biography</string>
+    <string name="user_about_karma">## Karma</string>
+    <string name="user_about_karma_total">**Total:** %,d</string>
+    <string name="user_about_karma_post">**Post:** %,d</string>
+    <string name="user_about_karma_comment">**Comment:** %,d</string>
+    <string name="user_about_account">## Account</string>
+    <string name="user_about_account_matrix_user">**Matrix User:** [%1$s](https://matrix.to/#/%1$s)</string>
+    <string name="user_about_account_cake_day">**Cake Day:** %s</string>
 </resources>

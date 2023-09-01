@@ -43,7 +43,9 @@ public class UserFeedActivity extends TabbedFeedActivity {
         int user = getUser();
         addTab(R.string.posts, new UserPostFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
         addTab(R.string.comments, new UserCommentFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
-        addHiddenTab(R.string.communities, new UserCommunityFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
+        addTab(R.string.user_moderates_communities, new UserModeratesCommunitiesFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
+        addHiddenTab(R.string.user_subscribed_communities, new UserSubscribedCommunitiesFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
+        addTab(R.string.user_about, new UserAboutFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
     }
 
     @Override
@@ -73,10 +75,10 @@ public class UserFeedActivity extends TabbedFeedActivity {
             } else if (prerequisite instanceof FeedPrerequisite.Site) {
                 GetSiteResponse getSiteResponse = ((FeedPrerequisite.Site) prerequisite).get();
 
-                // Communities Tab
                 if (getSiteResponse.my_user != null) {
                     if (getSiteResponse.my_user.local_user_view.person.id == user) {
-                        showTab(R.string.communities);
+                        // Show Subscribed Tab
+                        showTab(R.string.user_subscribed_communities);
                     } else {
                         // Admins Can't Be Blocked
                         boolean isAdmin = false;

@@ -3,7 +3,7 @@ package com.thebrokenrail.combustible.util;
 import android.content.Context;
 import android.content.Intent;
 
-import com.thebrokenrail.combustible.api.method.CommunityView;
+import com.thebrokenrail.combustible.api.method.Community;
 import com.thebrokenrail.combustible.api.method.PersonView;
 
 public class Sharing {
@@ -29,8 +29,8 @@ public class Sharing {
         share(context, POST_PREFIX + "/" + id);
     }
 
-    public static void shareCommunity(Context context, CommunityView community) {
-        String name = Names.getCommunityName(community.community);
+    public static void shareCommunity(Context context, Community community) {
+        String name = Names.getCommunityName(community);
         share(context, COMMUNITY_PREFIX + "/" + name);
     }
 

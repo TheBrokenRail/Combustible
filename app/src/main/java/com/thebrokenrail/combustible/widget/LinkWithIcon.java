@@ -68,7 +68,7 @@ public class LinkWithIcon extends LinearLayout {
         // Icon
         float iconSize = getResources().getDimensionPixelSize(R.dimen.link_with_icon_size) * multiplier;
         LayoutParams layoutParams = new LayoutParams((int) iconSize, (int) iconSize);
-        layoutParams.setMarginEnd(getResources().getDimensionPixelSize(R.dimen.post_padding));
+        layoutParams.setMarginEnd(getResources().getDimensionPixelSize(R.dimen.feed_item_margin));
         icon.setLayoutParams(layoutParams);
     }
 

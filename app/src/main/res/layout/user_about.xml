@@ -1,30 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="UseCompoundDrawables">
 
     <ImageView
-        android:id="@+id/posts_banner"
+        android:id="@+id/user_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@null" />
 
-    <com.thebrokenrail.combustible.widget.Sorter
-        android:id="@+id/feed_sorter"
+    <TextView
+        android:id="@+id/user_biography"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        style="?attr/materialButtonOutlinedStyle"
-        android:id="@+id/posts_create"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/feed_item_margin"
         android:layout_marginStart="@dimen/feed_item_margin"
-        android:layout_marginEnd="@dimen/feed_item_margin"
-        android:text="@string/create_post"
-        android:visibility="gone" />
+        android:layout_marginEnd="@dimen/feed_item_margin" />
 
 </LinearLayout>

@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.thebrokenrail.combustible.activity.feed.util.simple.BaseCommunityFeedAdapter;
 import com.thebrokenrail.combustible.api.Connection;
+import com.thebrokenrail.combustible.api.method.Community;
 import com.thebrokenrail.combustible.api.method.CommunityBlockView;
-import com.thebrokenrail.combustible.api.method.CommunityView;
 import com.thebrokenrail.combustible.api.method.GetSite;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class BlockedCommunityFeedAdapter extends BaseCommunityFeedAdapter {
     }
 
     @Override
-    protected void loadPage(int page, Consumer<List<CommunityView>> successCallback, Runnable errorCallback) {
+    protected void loadPage(int page, Consumer<List<Community>> successCallback, Runnable errorCallback) {
         GetSite method = new GetSite();
         connection.send(method, getSiteResponse -> {
             // Check
@@ -30,12 +30,9 @@ public class BlockedCommunityFeedAdapter extends BaseCommunityFeedAdapter {
             }
 
             // Copy Into Dataset
-            List<CommunityView> communities = new ArrayList<>();
+            List<Community> communities = new ArrayList<>();
             for (CommunityBlockView communityBlockView : getSiteResponse.my_user.community_blocks) {
-                CommunityView community = new CommunityView();
-                community.blocked = true;
-                community.community = communityBlockView.community;
-                communities.add(community);
+                communities.add(communityBlockView.community);
             }
             successCallback.accept(communities);
         }, errorCallback);
