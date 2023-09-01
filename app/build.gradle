@@ -58,6 +58,23 @@ android {
     lintOptions {
         lintConfig = file("lint-config.xml")
     }
+
+    def keystoreFile = file('../keystore.jks')
+    if (keystoreFile.exists()) {
+        signingConfigs {
+            release {
+                keyAlias 'key0'
+                keyPassword 'password'
+                storeFile keystoreFile
+                storePassword 'password'
+            }
+        }
+        buildTypes {
+            release {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
 }
 
 configurations.configureEach {

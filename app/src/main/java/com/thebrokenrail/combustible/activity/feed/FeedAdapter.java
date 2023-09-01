@@ -3,6 +3,7 @@ package com.thebrokenrail.combustible.activity.feed;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -54,6 +55,7 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
      * Class containing feed data that should be persisted after a configuration change.
      */
     protected static class ViewModel<T> {
+        @Keep
         public ViewModel() {}
 
         /**
