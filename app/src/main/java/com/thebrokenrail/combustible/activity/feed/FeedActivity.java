@@ -26,11 +26,13 @@ import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
 import com.google.android.material.badge.ExperimentalBadgeUtils;
 import com.thebrokenrail.combustible.R;
+import com.thebrokenrail.combustible.activity.LemmyActivity;
 import com.thebrokenrail.combustible.activity.feed.util.FeedUtil;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
 import com.thebrokenrail.combustible.api.method.GetUnreadCountResponse;
+import com.thebrokenrail.combustible.util.Config;
 import com.thebrokenrail.combustible.util.EdgeToEdge;
 import com.thebrokenrail.combustible.util.Util;
 import com.thebrokenrail.combustible.util.glide.GlideApp;
@@ -200,12 +202,14 @@ public abstract class FeedActivity extends HamburgerActivity {
                         GlideUtil.load(requestManager, thumbnailUrl, new CircleCrop(), 0, false, false, placeholder, viewProfileTarget);
                     }
                 }
+
+                // Common Code
+                onSiteLoaded(FeedActivity.this, getSiteResponse);
             } else if (prerequisite == FeedPrerequisites.COMPLETED) {
                 // Sanity Check
                 assert infoCommunity.isSetup();
                 assert infoLegal.isSetup();
                 assert !canBlockCommunity || isCommunityBlocked != null;
-                assert !connection.hasToken() || currentUser != null;
             }
         });
         // Notification Badge
@@ -218,6 +222,20 @@ public abstract class FeedActivity extends HamburgerActivity {
                     invalidateOptionsMenu();
                 }
             });
+        }
+    }
+
+    /**
+     * Common code for when an activity receives a {@link GetSiteResponse} object.
+     * @param activity The activity
+     * @param site The Lemmy instance information
+     */
+    public static void onSiteLoaded(LemmyActivity activity, GetSiteResponse site) {
+        if (activity.getConnection().hasToken() && site.my_user == null) {
+            // Activity Has Token, But It's Invalid
+            Config config = new Config(activity);
+            config.setToken(null);
+            activity.fullRecreate();
         }
     }
 

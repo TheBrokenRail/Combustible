@@ -19,6 +19,7 @@ import com.thebrokenrail.combustible.activity.feed.FeedAdapter;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.GetPersonDetails;
 import com.thebrokenrail.combustible.api.method.PersonView;
+import com.thebrokenrail.combustible.util.Util;
 import com.thebrokenrail.combustible.util.glide.GlideApp;
 import com.thebrokenrail.combustible.util.glide.GlideUtil;
 import com.thebrokenrail.combustible.util.markdown.Markdown;
@@ -131,8 +132,7 @@ public class UserAboutFeedAdapter extends FeedAdapter<PersonView> {
     protected void loadPage(int page, Consumer<List<PersonView>> successCallback, Runnable errorCallback) {
         GetPersonDetails method = new GetPersonDetails();
         method.person_id = user;
-        method.limit = 1; // Limit Cannot Be 0
-        // Error
+        method.limit = Util.MIN_LIMIT;
         connection.send(method, getPersonDetailsResponse -> {
             // Success
             successCallback.accept(Collections.singletonList(getPersonDetailsResponse.person_view));

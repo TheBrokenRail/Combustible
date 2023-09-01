@@ -9,7 +9,6 @@ import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.Community;
 import com.thebrokenrail.combustible.api.method.CommunityModeratorView;
 import com.thebrokenrail.combustible.api.method.GetPersonDetails;
-import com.thebrokenrail.combustible.api.method.SortType;
 import com.thebrokenrail.combustible.util.Util;
 
 import java.util.ArrayList;
@@ -27,9 +26,7 @@ public class UserModeratesCommunitiesFeedAdapter extends BaseCommunityFeedAdapte
     @Override
     protected void loadPage(int page, Consumer<List<Community>> successCallback, Runnable errorCallback) {
         GetPersonDetails method = new GetPersonDetails();
-        method.page = page;
-        method.limit = Util.ELEMENTS_PER_PAGE;
-        method.sort = sorting.get(SortType.class);
+        method.limit = Util.MIN_LIMIT;
         method.person_id = user;
         connection.send(method, getPersonDetailsResponse -> {
             List<Community> communities = new ArrayList<>();
@@ -42,6 +39,16 @@ public class UserModeratesCommunitiesFeedAdapter extends BaseCommunityFeedAdapte
 
     @Override
     protected boolean isSortingTypeVisible(Class<? extends Enum<?>> type) {
-        return type == SortType.class;
+        return false;
+    }
+
+    @Override
+    protected boolean hasHeader() {
+        return false;
+    }
+
+    @Override
+    protected boolean isSinglePage() {
+        return true;
     }
 }

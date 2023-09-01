@@ -13,6 +13,7 @@ import com.thebrokenrail.combustible.api.method.GetSiteResponse;
 import com.thebrokenrail.combustible.api.method.GetUnreadCount;
 import com.thebrokenrail.combustible.api.method.GetUnreadCountResponse;
 import com.thebrokenrail.combustible.api.util.Method;
+import com.thebrokenrail.combustible.util.Util;
 
 /**
  * Utility class representing a single feed prerequisite.
@@ -123,7 +124,7 @@ public abstract class FeedPrerequisite<T> {
         protected Method<GetPersonDetailsResponse> prepare() {
             GetPersonDetails method = new GetPersonDetails();
             method.person_id = id;
-            method.limit = 1; // Limit Cannot Be 0
+            method.limit = Util.MIN_LIMIT;
             return method;
         }
     }

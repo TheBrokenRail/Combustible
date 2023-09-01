@@ -21,7 +21,7 @@
   - [x] Mentions
   - [x] Private Messages
 - [ ] ~~Push Notifications~~ (Not feasible without a separate server.)
-- [ ] Better Handling For Invalid Tokens
+- [x] Better Handling For Invalid Tokens
 - [ ] Resolve All `// TODO`s
 - [ ] Clean Up JavaDoc Comments
 - [x] Reporting

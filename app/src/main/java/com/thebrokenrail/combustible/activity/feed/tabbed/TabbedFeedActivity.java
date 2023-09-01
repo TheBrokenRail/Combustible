@@ -20,6 +20,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.LemmyActivity;
+import com.thebrokenrail.combustible.activity.feed.FeedActivity;
 import com.thebrokenrail.combustible.activity.feed.FeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
@@ -208,10 +209,14 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
         prerequisites.listen(prerequisite -> {
             if (prerequisite instanceof FeedPrerequisite.Site) {
                 GetSiteResponse getSiteResponse = ((FeedPrerequisite.Site) prerequisite).get();
+
                 // TODO Remove Hack
                 if (getSiteResponse.my_user != null) {
                     getSiteResponse.my_user.local_user_view.local_user.blur_nsfw = true;
                 }
+
+                // Common Code
+                FeedActivity.onSiteLoaded(TabbedFeedActivity.this, getSiteResponse);
             }
         });
     }

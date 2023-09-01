@@ -21,6 +21,7 @@ import com.thebrokenrail.combustible.R;
 public class Util {
     public static final int ELEMENTS_PER_PAGE = 40;
     public static final int MAX_DEPTH = 8;
+    public static final int MIN_LIMIT = 1; // Limit Cannot Be 0
 
     public static void unknownError(Context context) {
         Toast.makeText(context.getApplicationContext(), R.string.unknown_error, Toast.LENGTH_SHORT).show();

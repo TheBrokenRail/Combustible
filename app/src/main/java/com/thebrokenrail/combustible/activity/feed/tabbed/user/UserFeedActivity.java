@@ -44,7 +44,7 @@ public class UserFeedActivity extends TabbedFeedActivity {
         addTab(R.string.posts, new UserPostFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
         addTab(R.string.comments, new UserCommentFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
         addTab(R.string.user_moderates_communities, new UserModeratesCommunitiesFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
-        addHiddenTab(R.string.user_subscribed_communities, new UserSubscribedCommunitiesFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
+        addHiddenTab(R.string.user_subscribed_communities, new UserSubscribedCommunitiesFeedAdapter(viewPager, connection, new ViewModelProvider(this)));
         addTab(R.string.user_about, new UserAboutFeedAdapter(viewPager, connection, new ViewModelProvider(this), user));
     }
 
