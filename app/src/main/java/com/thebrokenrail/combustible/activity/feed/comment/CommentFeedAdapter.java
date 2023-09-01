@@ -202,4 +202,27 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
     protected boolean isSortingTypeVisible(Class<? extends Enum<?>> type) {
         return type == CommentSortType.class;
     }
+
+    @Override
+    protected void handleEditAdd(CommentView newComment) {
+        // Get Depth
+        CommentTreeDataset dataset = (CommentTreeDataset) viewModel.dataset;
+        int depth = dataset.getDepth(newComment);
+        if (depth >= Util.MAX_DEPTH) {
+            // Exceeds Maximum Depth
+            // Update Parent Comment To Show More Comments Button
+            String[] path = newComment.comment.path.split("\\.");
+            int parentCommentId = Integer.parseInt(path[path.length - 2]);
+            for (CommentView comment : dataset) {
+                if (comment.comment.id.equals(parentCommentId)) {
+                    // Found Comment
+                    comment.counts.child_count++;
+                    notifier.change(dataset.indexOf(comment));
+                    break;
+                }
+            }
+        }
+        // Call Original Method
+        super.handleEditAdd(newComment);
+    }
 }

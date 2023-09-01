@@ -259,11 +259,15 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
             // Update Dataset
             if (existingComment == null) {
                 // Add New Comment
-                viewModel.dataset.add(notifier, Collections.singletonList(newComment), true);
+                handleEditAdd(newComment);
             } else {
                 // Replace Existing Comment
                 viewModel.dataset.replace(notifier, existingComment, newComment);
             }
         }
+    }
+
+    protected void handleEditAdd(CommentView newComment) {
+        viewModel.dataset.add(notifier, Collections.singletonList(newComment), true);
     }
 }
