@@ -1,4 +1,4 @@
-package com.thebrokenrail.combustible.activity.feed.util.simple;
+package com.thebrokenrail.combustible.activity.feed.util.adapter.simple;
 
 import android.content.Context;
 import android.content.Intent;

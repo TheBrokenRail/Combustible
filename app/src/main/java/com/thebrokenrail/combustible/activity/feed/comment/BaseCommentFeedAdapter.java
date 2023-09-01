@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thebrokenrail.combustible.R;
-import com.thebrokenrail.combustible.activity.feed.SortableFeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.util.adapter.SortableFeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.post.BasePostFeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.post.PostContext;
 import com.thebrokenrail.combustible.api.Connection;

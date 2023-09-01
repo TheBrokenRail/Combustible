@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.thebrokenrail.combustible.R;
-import com.thebrokenrail.combustible.activity.feed.FeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.util.adapter.base.FeedAdapter;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.GetPersonDetails;
 import com.thebrokenrail.combustible.api.method.PersonView;

@@ -1,4 +1,4 @@
-package com.thebrokenrail.combustible.activity.feed.util.simple;
+package com.thebrokenrail.combustible.activity.feed.util.adapter.simple;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thebrokenrail.combustible.R;
-import com.thebrokenrail.combustible.activity.feed.SortableFeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.util.adapter.SortableFeedAdapter;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.widget.CommonIcons;
 import com.thebrokenrail.combustible.widget.LinkWithIcon;

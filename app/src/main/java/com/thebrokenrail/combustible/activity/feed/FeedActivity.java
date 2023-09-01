@@ -28,6 +28,7 @@ import com.google.android.material.badge.ExperimentalBadgeUtils;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.LemmyActivity;
 import com.thebrokenrail.combustible.activity.feed.util.FeedUtil;
+import com.thebrokenrail.combustible.activity.feed.util.adapter.base.FeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;

@@ -1,10 +1,11 @@
-package com.thebrokenrail.combustible.activity.feed;
+package com.thebrokenrail.combustible.activity.feed.util.adapter;
 
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProvider;
 
 import com.thebrokenrail.combustible.R;
+import com.thebrokenrail.combustible.activity.feed.util.adapter.base.FeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
 import com.thebrokenrail.combustible.api.Connection;

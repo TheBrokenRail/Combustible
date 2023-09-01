@@ -4,7 +4,7 @@ import android.view.View;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import com.thebrokenrail.combustible.activity.feed.util.simple.BaseCommunityFeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.util.adapter.simple.BaseCommunityFeedAdapter;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.Community;
 import com.thebrokenrail.combustible.api.method.CommunityBlockView;

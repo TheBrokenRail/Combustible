@@ -1,4 +1,4 @@
-package com.thebrokenrail.combustible.activity.feed;
+package com.thebrokenrail.combustible.activity.feed.util.adapter.base;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.thebrokenrail.combustible.activity.feed.util.dataset.FeedDataset;
 import com.thebrokenrail.combustible.activity.feed.util.dataset.SimpleFeedDataset;
-import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
-import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
 import com.thebrokenrail.combustible.api.Connection;
-import com.thebrokenrail.combustible.api.method.GetSiteResponse;
 import com.thebrokenrail.combustible.util.ExtendableViewModel;
-import com.thebrokenrail.combustible.util.Permissions;
 import com.thebrokenrail.combustible.util.Util;
 import com.thebrokenrail.combustible.widget.NextPageLoader;
 
@@ -28,14 +24,14 @@ import java.util.function.Consumer;
  * {@link RecyclerView} adapter for seamless scrolling of multi-page feeds.
  * @param <T> Type of element in list
  */
-public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+abstract class BaseFeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private enum ViewType {
         HEADER,
         ELEMENT,
         NEXT_PAGE
     }
 
-    private enum LoadingStatus {
+    enum LoadingStatus {
         // Pending user interaction or prerequisites
         PENDING(NextPageLoader.DisplayMode.PROGRESS),
         // Currently loading data
@@ -75,7 +71,7 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
             }
         }
 
-        private void clear(FeedAdapter<T> adapter) {
+        private void clear(BaseFeedAdapter<T> adapter) {
             // Disable Previous Callbacks
             adapter.feedVersion++;
             // Clear Dataset
@@ -103,19 +99,9 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     protected final Connection connection;
 
     /**
-     * General instance information.
-     */
-    protected GetSiteResponse site = null;
-
-    /**
      * A parent view.
      */
     protected final View parent;
-
-    /**
-     * Permission manager.
-     */
-    protected final Permissions permissions = new Permissions();
 
     /**
      * The bridge between {@link FeedDataset} and {@link RecyclerView.Adapter}.
@@ -138,7 +124,6 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     };
 
     private int feedVersion = 0;
-    private FeedPrerequisites prerequisites = null;
 
     // https://github.com/airbnb/epoxy/issues/224#issuecomment-305991898
     private static class ScrollingBugWorkaround extends RecyclerView.AdapterDataObserver {
@@ -166,8 +151,9 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
      * @param connection The connection to Lemmy
      * @param viewModelProvider View model provider
      */
-    public FeedAdapter(View parent, Connection connection, ViewModelProvider viewModelProvider) {
+    public BaseFeedAdapter(View parent, Connection connection, ViewModelProvider viewModelProvider) {
         this.connection = connection;
+        this.parent = parent;
 
         // View Model
         rootViewModel = viewModelProvider.get(getClass().toString(), ExtendableViewModel.class);
@@ -183,14 +169,6 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         if (!hasHeader()) {
             registerAdapterDataObserver(scrollingBugWorkaround);
         }
-
-        // Check
-        this.parent = parent;
-        parent.post(() -> {
-            if (prerequisites == null) {
-                throw new RuntimeException();
-            }
-        });
     }
 
     /**
@@ -201,66 +179,7 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         return new SimpleFeedDataset<>();
     }
 
-    /**
-     * Handle prerequisites. Override this to attach prerequisite listeners.
-     * @param prerequisites The new prerequisites
-     */
-    protected void handlePrerequisites(FeedPrerequisites prerequisites) {
-        // General Instance Information
-        prerequisites.require(FeedPrerequisite.Site.class);
-        prerequisites.listen(prerequisite -> {
-            if (prerequisite instanceof FeedPrerequisite.Site) {
-                site = ((FeedPrerequisite.Site) prerequisite).get();
-                // Update Permissions
-                permissions.setSite(site);
-                // Update Dataset
-                notifier.change(viewModel.dataset.size());
-                // Update Header
-                if (hasHeader()) {
-                    notifyItemChanged(0);
-                }
-            }
-        });
-    }
-
-    /**
-     * Add prerequisites.
-     * @param prerequisites The new prerequisites
-     */
-    public void setPrerequisites(FeedPrerequisites prerequisites) {
-        handlePrerequisites(prerequisites);
-
-        // Check Status
-        this.prerequisites = prerequisites;
-        if (viewModel.dataset.size() > 0 && !arePrerequisitesLoaded()) {
-            throw new RuntimeException();
-        }
-        if (prerequisites.isError()) {
-            updateLoadingStatus(LoadingStatus.ERROR);
-        }
-
-        // Check If Everything Is Loaded
-        prerequisites.listen(prerequisite -> {
-            if (prerequisite == FeedPrerequisites.ERROR) {
-                // Error
-                if (arePrerequisitesLoaded()) {
-                    // Don't Change State For Refresh Errors
-                    Util.unknownError(parent.getContext());
-                } else {
-                    // Update Feed
-                    updateLoadingStatus(LoadingStatus.ERROR);
-                }
-            } else if (prerequisite == FeedPrerequisites.COMPLETED) {
-                // All Prerequisites Loaded
-                startFirstPageLoadIfNeeded();
-            } else if (prerequisite == FeedPrerequisites.RETRY_STARTED) {
-                // Retry Started
-                updateLoadingStatus(LoadingStatus.PENDING);
-            }
-        });
-    }
-
-    private void startFirstPageLoadIfNeeded() {
+    void startFirstPageLoadIfNeeded() {
         if (viewModel.loadingStatus == LoadingStatus.PENDING && viewModel.nextPage == ViewModel.FIRST_PAGE) {
             assert viewModel.dataset.size() == 0;
             // Trigger Page Load
@@ -272,9 +191,7 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
      * Check if all prerequisites are loaded.
      * @return True if all prerequisites are loaded, false otherwise
      */
-    protected boolean arePrerequisitesLoaded() {
-        return prerequisites != null && prerequisites.areLoaded();
-    }
+    protected abstract boolean arePrerequisitesLoaded();
 
     /**
      * Checks if this adapter has a header.
@@ -331,7 +248,6 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
                 position--;
             }
             assert arePrerequisitesLoaded();
-            assert site != null;
             bindElement(holder, position);
         } else if (holder.getItemViewType() == ViewType.NEXT_PAGE.ordinal()) {
             NextPageLoader nextPageLoader = (NextPageLoader) holder.itemView;
@@ -356,7 +272,7 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public int getItemViewType(int position) {
+    public final int getItemViewType(int position) {
         if (position == 0 && hasHeader()) {
             return ViewType.HEADER.ordinal();
         } else if (position == getNextPageLoaderPosition()) {
@@ -375,7 +291,7 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         return position;
     }
 
-    private void updateLoadingStatus(LoadingStatus loadingStatus) {
+    void updateLoadingStatus(LoadingStatus loadingStatus) {
         // Set Status
         LoadingStatus oldLoadingStatus = viewModel.loadingStatus;
         viewModel.loadingStatus = loadingStatus;
@@ -431,29 +347,10 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         updateLoadingStatus(newStatus);
     }
 
-    private boolean checkPrerequisites() {
-        // Check If Prerequisites Are Loaded
-        if (!arePrerequisitesLoaded()) {
-            if (viewModel.loadingStatus == LoadingStatus.ERROR) {
-                // Retry Failed Prerequisites
-                assert prerequisites.isError();
-                prerequisites.retry(connection);
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     /**
      * Load more elements.
      */
     void load() {
-        // Check If Prerequisites Are Loaded
-        if (checkPrerequisites()) {
-            return;
-        }
-
         // Check Status
         if (viewModel.loadingStatus != LoadingStatus.PENDING && viewModel.loadingStatus != LoadingStatus.ERROR) {
             return;
@@ -497,17 +394,6 @@ public abstract class FeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
      * @param callback Callback that is executed on completion
      */
     public void refresh(boolean hard, boolean refreshPrerequisites, Runnable callback) {
-        // Check If Prerequisites Are Loaded
-        if (checkPrerequisites()) {
-            callback.run();
-            return;
-        }
-
-        // Refresh Prerequisites
-        if (refreshPrerequisites) {
-            prerequisites.refresh(connection);
-        }
-
         // Different Refresh Types
         if (hard) {
             // Hard Refresh

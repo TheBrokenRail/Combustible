@@ -4,7 +4,7 @@ import android.view.View;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import com.thebrokenrail.combustible.activity.feed.util.simple.BaseUserFeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.util.adapter.simple.BaseUserFeedAdapter;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.GetSite;
 import com.thebrokenrail.combustible.api.method.PersonBlockView;

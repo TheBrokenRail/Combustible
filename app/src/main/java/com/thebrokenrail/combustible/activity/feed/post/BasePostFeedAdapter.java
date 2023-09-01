@@ -21,7 +21,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.ViewImageActivity;
-import com.thebrokenrail.combustible.activity.feed.SortableFeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.util.adapter.SortableFeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.comment.CommentFeedActivity;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CreatePostLike;

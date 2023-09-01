@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thebrokenrail.combustible.R;
-import com.thebrokenrail.combustible.activity.feed.FeedAdapter;
+import com.thebrokenrail.combustible.activity.feed.util.adapter.base.FeedAdapter;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.GetPrivateMessages;
 import com.thebrokenrail.combustible.api.method.MarkPrivateMessageAsRead;
