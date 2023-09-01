@@ -46,6 +46,11 @@
             app:title="@string/app_settings_version"
             app:iconSpaceReserved="false" />
 
+        <Preference
+            app:key="licenses"
+            app:title="@string/app_settings_licenses"
+            app:iconSpaceReserved="false" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

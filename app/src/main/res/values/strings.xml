@@ -88,6 +88,7 @@
     <string name="app_settings_change_instance">Lemmy Instance</string>
     <string name="app_settings_clear_search_history">Clear Search History</string>
     <string name="app_settings_version">App Version</string>
+    <string name="app_settings_licenses">Open Source Licenses</string>
 
     <!-- User Settings -->
     <string name="user_settings_display_name">Display Name</string>

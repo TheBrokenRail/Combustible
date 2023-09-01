@@ -1,5 +1,6 @@
 package com.thebrokenrail.combustible.activity.settings.app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -45,6 +46,16 @@ public class AppSettingsFragment extends SettingsFragment implements SharedPrefe
         Preference version = findPreference("version");
         assert version != null;
         version.setSummary(BuildConfig.VERSION_NAME);
+
+        // Open Source Licenses
+        Preference licenses = findPreference("licenses");
+        assert licenses != null;
+        licenses.setOnPreferenceClickListener(preference -> {
+            Context context = requireContext();
+            Intent intent = new Intent(context, LicensesActivity.class);
+            context.startActivity(intent);
+            return true;
+        });
     }
 
     @Override

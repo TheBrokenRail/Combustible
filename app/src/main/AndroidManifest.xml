@@ -77,6 +77,10 @@
             android:theme="@style/Theme.Combustible.ViewImage" />
 
         <activity
+            android:name=".activity.settings.app.LicensesActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".activity.feed.tabbed.search.SearchFeedActivity"
             android:exported="false">
 

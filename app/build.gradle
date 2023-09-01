@@ -4,11 +4,16 @@ buildscript {
     dependencies {
         classpath 'io.github.classgraph:classgraph:4.8.162'
     }
+
+    ext {
+        aboutLibraries_version = '10.8.3'
+    }
 }
 
 plugins {
     id 'com.android.application'
     id 'org.ajoberstar.grgit' version '5.2.0'
+    id 'com.mikepenz.aboutlibraries.plugin' version "${aboutLibraries_version}"
 }
 
 android {
@@ -92,6 +97,11 @@ dependencies {
     implementation 'androidx.browser:browser:1.5.0'
     implementation 'com.caverock:androidsvg-aar:1.4'
     implementation project(':api')
+    implementation "com.mikepenz:aboutlibraries-core-android:${aboutLibraries_version}"
+    implementation("com.mikepenz:aboutlibraries:${aboutLibraries_version}") {
+        // https://github.com/mikepenz/AboutLibraries/issues/881#issuecomment-1604480293
+        exclude group: 'com.mikepenz', module: 'aboutlibraries-core'
+    }
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
     testImplementation 'junit:junit:4.13.2'
