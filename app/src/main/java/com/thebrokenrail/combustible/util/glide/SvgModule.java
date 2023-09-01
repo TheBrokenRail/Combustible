@@ -81,6 +81,11 @@ public class SvgModule extends AppGlideModule {
                     svg.setDocumentWidth("100%");
                     svg.setDocumentHeight("100%");
 
+                    // Density Scaling (https://github.com/noties/Markwon/blob/2ea148c30a07f91ffa37c0aa36af1cf2670441af/markwon-image/src/main/java/io/noties/markwon/image/svg/SvgMediaDecoder.java#L65-L68)
+                    float density = context.getResources().getDisplayMetrics().density;
+                    svgWidth = svgWidth * density;
+                    svgHeight = svgHeight * density;
+
                     // Scale Dimensions
                     if (width == Target.SIZE_ORIGINAL) {
                         width = (int) svgWidth;
