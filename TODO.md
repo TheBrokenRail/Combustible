@@ -54,3 +54,4 @@
   - [x] Extract API Version From `lemmy-js-client`
 - [x] Pinning/Distinguishing/Locking Posts/Comments
 - [x] SVG Support
+- [ ] Update Target Android SDK

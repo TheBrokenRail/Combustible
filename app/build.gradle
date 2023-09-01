@@ -92,6 +92,7 @@ dependencies {
     implementation 'androidx.browser:browser:1.5.0'
     implementation 'com.caverock:androidsvg-aar:1.4'
     implementation project(':api')
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
