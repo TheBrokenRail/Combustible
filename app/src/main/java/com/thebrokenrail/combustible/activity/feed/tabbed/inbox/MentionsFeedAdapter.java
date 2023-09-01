@@ -1,17 +1,17 @@
 package com.thebrokenrail.combustible.activity.feed.tabbed.inbox;
 
-import android.content.Intent;
+import android.content.Context;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProvider;
 
 import com.thebrokenrail.combustible.activity.feed.comment.BaseCommentFeedAdapter;
-import com.thebrokenrail.combustible.activity.feed.comment.CommentFeedActivity;
 import com.thebrokenrail.combustible.activity.feed.util.dataset.FeedDataset;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CommentSortType;
 import com.thebrokenrail.combustible.api.method.CommentView;
 import com.thebrokenrail.combustible.api.method.GetPersonMentions;
+import com.thebrokenrail.combustible.api.method.MarkPersonMentionAsRead;
 import com.thebrokenrail.combustible.api.method.PersonMentionView;
 import com.thebrokenrail.combustible.util.Util;
 
@@ -61,10 +61,20 @@ class MentionsFeedAdapter extends BaseCommentFeedAdapter {
     }
 
     @Override
-    protected void processIntent(Intent intent, CommentView obj) {
-        super.processIntent(intent, obj);
-        int id = ((NotificationCommentView) obj).notification_id;
-        intent.putExtra(CommentFeedActivity.MENTION_ID_EXTRA, id);
+    protected void click(Context context, CommentView obj) {
+        NotificationCommentView.click(context, obj, commentView -> {
+            // Click
+            MentionsFeedAdapter.super.click(context, commentView);
+        }, integer -> {
+            // Mark As Read
+            MarkPersonMentionAsRead method = new MarkPersonMentionAsRead();
+            method.person_mention_id = integer;
+            method.read = true;
+            return method;
+        }, connection, personMentionResponse -> {
+            // Wrap
+            return new NotificationCommentView(personMentionResponse.person_mention_view);
+        }, viewModel.dataset, notifier);
     }
 
     @Override

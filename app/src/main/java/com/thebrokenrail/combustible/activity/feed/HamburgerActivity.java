@@ -30,7 +30,7 @@ import com.thebrokenrail.combustible.util.Util;
 /**
  * Activity with a hamburger menu.
  */
-public class HamburgerActivity extends LemmyActivity implements NavigationView.OnNavigationItemSelectedListener {
+class HamburgerActivity extends LemmyActivity implements NavigationView.OnNavigationItemSelectedListener {
     // Drawer
     private static final int DRAWER_GRAVITY = GravityCompat.END;
     private DrawerLayout drawerLayout;

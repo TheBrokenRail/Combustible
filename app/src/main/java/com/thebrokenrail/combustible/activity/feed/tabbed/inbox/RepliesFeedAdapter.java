@@ -1,18 +1,18 @@
 package com.thebrokenrail.combustible.activity.feed.tabbed.inbox;
 
-import android.content.Intent;
+import android.content.Context;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProvider;
 
 import com.thebrokenrail.combustible.activity.feed.comment.BaseCommentFeedAdapter;
-import com.thebrokenrail.combustible.activity.feed.comment.CommentFeedActivity;
 import com.thebrokenrail.combustible.activity.feed.util.dataset.FeedDataset;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CommentReplyView;
 import com.thebrokenrail.combustible.api.method.CommentSortType;
 import com.thebrokenrail.combustible.api.method.CommentView;
 import com.thebrokenrail.combustible.api.method.GetReplies;
+import com.thebrokenrail.combustible.api.method.MarkCommentReplyAsRead;
 import com.thebrokenrail.combustible.util.Util;
 
 import java.util.ArrayList;
@@ -61,10 +61,20 @@ class RepliesFeedAdapter extends BaseCommentFeedAdapter {
     }
 
     @Override
-    protected void processIntent(Intent intent, CommentView obj) {
-        super.processIntent(intent, obj);
-        int id = ((NotificationCommentView) obj).notification_id;
-        intent.putExtra(CommentFeedActivity.REPLY_ID_EXTRA, id);
+    protected void click(Context context, CommentView obj) {
+        NotificationCommentView.click(context, obj, commentView -> {
+            // Click
+            RepliesFeedAdapter.super.click(context, commentView);
+        }, integer -> {
+            // Mark As Read
+            MarkCommentReplyAsRead method = new MarkCommentReplyAsRead();
+            method.comment_reply_id = integer;
+            method.read = true;
+            return method;
+        }, connection, commentReplyResponse -> {
+            // Wrap
+            return new NotificationCommentView(commentReplyResponse.comment_reply_view);
+        }, viewModel.dataset, notifier);
     }
 
     @Override

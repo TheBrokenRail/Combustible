@@ -112,6 +112,9 @@ public abstract class FeedActivity extends HamburgerActivity {
         getTheme().resolveAttribute(com.google.android.material.R.attr.colorPrimary, typedValue, true);
         @ColorInt int primaryColor = ContextCompat.getColor(this, typedValue.resourceId);
         notificationBadge.setBackgroundColor(primaryColor);
+        getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnPrimary, typedValue, true);
+        @ColorInt int onPrimaryColor = ContextCompat.getColor(this, typedValue.resourceId);
+        notificationBadge.setBadgeTextColor(onPrimaryColor);
     }
 
     @OptIn(markerClass = ExperimentalBadgeUtils.class)

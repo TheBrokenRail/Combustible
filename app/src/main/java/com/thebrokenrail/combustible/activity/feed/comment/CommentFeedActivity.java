@@ -20,8 +20,6 @@ import com.thebrokenrail.combustible.api.method.CommunityBlockView;
 import com.thebrokenrail.combustible.api.method.CommunityView;
 import com.thebrokenrail.combustible.api.method.GetPostResponse;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
-import com.thebrokenrail.combustible.api.method.MarkCommentReplyAsRead;
-import com.thebrokenrail.combustible.api.method.MarkPersonMentionAsRead;
 import com.thebrokenrail.combustible.api.method.MarkPostAsRead;
 import com.thebrokenrail.combustible.util.Sharing;
 import com.thebrokenrail.combustible.util.Util;
@@ -31,9 +29,6 @@ import java.util.Objects;
 public class CommentFeedActivity extends FeedActivity {
     public static final String POST_ID_EXTRA = "com.thebrokenrail.combustible.POST_ID_EXTRA";
     public static final String COMMENT_ID_EXTRA = "com.thebrokenrail.combustible.COMMENT_ID_EXTRA";
-
-    public static final String REPLY_ID_EXTRA = "com.thebrokenrail.combustible.REPLY_ID_EXTRA";
-    public static final String MENTION_ID_EXTRA = "com.thebrokenrail.combustible.MENTION_ID_EXTRA";
 
     private CommentTreeDataset.ParentType parentType = null;
     private int parent;
@@ -67,22 +62,6 @@ public class CommentFeedActivity extends FeedActivity {
                 method.post_id = parent;
                 method.read = true;
                 connection.send(method, postResponse -> {}, () -> Util.unknownError(CommentFeedActivity.this));
-            }
-
-            // Mark Reply As Read
-            if (getIntent().hasExtra(REPLY_ID_EXTRA)) {
-                MarkCommentReplyAsRead method = new MarkCommentReplyAsRead();
-                method.comment_reply_id = getIntent().getIntExtra(REPLY_ID_EXTRA, -1);
-                method.read = true;
-                connection.send(method, commentReplyResponse -> {}, () -> Util.unknownError(CommentFeedActivity.this));
-            }
-
-            // Mark Mention As Read
-            if (getIntent().hasExtra(MENTION_ID_EXTRA)) {
-                MarkPersonMentionAsRead method = new MarkPersonMentionAsRead();
-                method.person_mention_id = getIntent().getIntExtra(MENTION_ID_EXTRA, -1);
-                method.read = true;
-                connection.send(method, personMentionResponse -> {}, () -> Util.unknownError(CommentFeedActivity.this));
             }
         }
     }

@@ -154,7 +154,10 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
 
     protected abstract boolean showCommunity();
 
-    protected void processIntent(Intent intent, CommentView obj) {
+    protected void click(Context context, CommentView obj) {
+        Intent intent = new Intent(context, CommentFeedActivity.class);
+        intent.putExtra(CommentFeedActivity.COMMENT_ID_EXTRA, obj.comment.id);
+        context.startActivity(intent);
     }
 
     protected boolean isRead(CommentView obj) {
@@ -167,13 +170,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
         CommentViewHolder commentViewHolder = (CommentViewHolder) holder;
 
         // Card
-        commentViewHolder.card.setOnClickListener(v -> {
-            Context context = v.getContext();
-            Intent intent = new Intent(context, CommentFeedActivity.class);
-            intent.putExtra(CommentFeedActivity.COMMENT_ID_EXTRA, obj.comment.id);
-            processIntent(intent, obj);
-            context.startActivity(intent);
-        });
+        commentViewHolder.card.setOnClickListener(v -> click(v.getContext(), obj));
 
         // Text
         markdown.set(commentViewHolder.text, obj.comment.content.trim());

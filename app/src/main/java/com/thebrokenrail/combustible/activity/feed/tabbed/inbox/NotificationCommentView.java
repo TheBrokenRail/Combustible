@@ -1,14 +1,21 @@
 package com.thebrokenrail.combustible.activity.feed.tabbed.inbox;
 
+import android.content.Context;
+
 import androidx.annotation.Nullable;
 
 import com.thebrokenrail.combustible.activity.feed.util.dataset.FeedDataset;
 import com.thebrokenrail.combustible.activity.feed.util.dataset.SimpleFeedDataset;
+import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CommentReplyView;
 import com.thebrokenrail.combustible.api.method.CommentView;
 import com.thebrokenrail.combustible.api.method.PersonMentionView;
+import com.thebrokenrail.combustible.api.util.Method;
+import com.thebrokenrail.combustible.util.Util;
 
 import java.lang.reflect.Field;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 class NotificationCommentView extends CommentView {
     final int notification_id;
@@ -50,11 +57,31 @@ class NotificationCommentView extends CommentView {
             @Override
             public void replaceInternal(@Nullable Notifier notifier, CommentView oldElement, CommentView newElement) {
                 // Copy Notification ID
-                newElement = new NotificationCommentView(oldElement, newElement);
+                if (!(newElement instanceof NotificationCommentView)) {
+                    newElement = new NotificationCommentView(oldElement, newElement);
+                }
 
                 // Call Original Method
                 super.replaceInternal(notifier, oldElement, newElement);
             }
         };
+    }
+
+    static <T extends Method<J>, J> void click(Context context, CommentView comment, Consumer<CommentView> clickCallback, Function<Integer, T> createMethod, Connection connection, Function<J, NotificationCommentView> commentExtractor, FeedDataset<CommentView> dataset, FeedDataset.Notifier notifier) {
+        NotificationCommentView notification = (NotificationCommentView) comment;
+        boolean read = notification.read;
+        if (read) {
+            clickCallback.accept(comment);
+        } else {
+            // Mark As Read
+            Method<J> method = createMethod.apply(notification.notification_id);
+            connection.send(method, j -> {
+                // Update Dataset
+                NotificationCommentView newNotification = commentExtractor.apply(j);
+                dataset.replace(notifier, notification, newNotification);
+                // Click
+                clickCallback.accept(newNotification);
+            }, () -> Util.unknownError(context));
+        }
     }
 }
