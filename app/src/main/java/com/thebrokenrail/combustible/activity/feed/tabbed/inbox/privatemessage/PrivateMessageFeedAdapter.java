@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,26 +18,20 @@ import com.thebrokenrail.combustible.api.method.MarkPrivateMessageAsRead;
 import com.thebrokenrail.combustible.api.method.PrivateMessageView;
 import com.thebrokenrail.combustible.util.Util;
 import com.thebrokenrail.combustible.util.markdown.Markdown;
-import com.thebrokenrail.combustible.widget.CommonIcons;
-import com.thebrokenrail.combustible.widget.Metadata;
+import com.thebrokenrail.combustible.widget.PostOrCommentHeader;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public class PrivateMessageFeedAdapter extends FeedAdapter<PrivateMessageView> {
     private static class PrivateMessageViewHolder extends RecyclerView.ViewHolder {
-        private final CardView card;
         private final TextView text;
-        private final Metadata metadata;
-        private final CommonIcons icons;
+        private final PostOrCommentHeader header;
 
         private PrivateMessageViewHolder(@NonNull View itemView) {
             super(itemView);
-            card = itemView.findViewById(R.id.comment_card);
-            text = itemView.findViewById(R.id.comment_text);
-            metadata = itemView.findViewById(R.id.comment_metadata);
-            icons = itemView.findViewById(R.id.comment_icons);
-            itemView.findViewById(R.id.comment_bottom_bar).setVisibility(View.GONE);
+            text = itemView.findViewById(R.id.private_message_text);
+            header = itemView.findViewById(R.id.private_message_header);
         }
     }
 
@@ -63,7 +56,7 @@ public class PrivateMessageFeedAdapter extends FeedAdapter<PrivateMessageView> {
     public RecyclerView.ViewHolder createItem(ViewGroup parent) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View root = inflater.inflate(R.layout.comment, parent, false);
+        View root = inflater.inflate(R.layout.private_message, parent, false);
         return new PrivateMessageViewHolder(root);
     }
 
@@ -74,7 +67,7 @@ public class PrivateMessageFeedAdapter extends FeedAdapter<PrivateMessageView> {
 
         // Card
         boolean isUnread = !obj.private_message.read;
-        privateMessageViewHolder.card.setOnClickListener(v -> {
+        privateMessageViewHolder.itemView.setOnClickListener(v -> {
             // Mark As Read
             MarkPrivateMessageAsRead method = new MarkPrivateMessageAsRead();
             method.private_message_id = obj.private_message.id;
@@ -87,8 +80,8 @@ public class PrivateMessageFeedAdapter extends FeedAdapter<PrivateMessageView> {
                 Util.unknownError(holder.itemView.getContext());
             });
         });
-        privateMessageViewHolder.card.setClickable(isUnread);
-        privateMessageViewHolder.card.setFocusable(isUnread);
+        privateMessageViewHolder.itemView.setClickable(isUnread);
+        privateMessageViewHolder.itemView.setFocusable(isUnread);
 
         // Text
         markdown.set(privateMessageViewHolder.text, obj.private_message.content.trim());
@@ -103,13 +96,13 @@ public class PrivateMessageFeedAdapter extends FeedAdapter<PrivateMessageView> {
         if (site.my_user != null) {
             blurNsfw = site.my_user.local_user_view.local_user.blur_nsfw;
         }
-        privateMessageViewHolder.metadata.setup(obj.creator, null, isEdited ? obj.private_message.updated : obj.private_message.published, isEdited, blurNsfw, showAvatars);
+        privateMessageViewHolder.header.metadata.setup(obj.creator, null, isEdited ? obj.private_message.updated : obj.private_message.published, isEdited, blurNsfw, showAvatars);
 
         // Overflow
-        privateMessageViewHolder.icons.overflow.setOnClickListener(v -> new PrivateMessageOverflow(v, connection, obj));
+        privateMessageViewHolder.header.icons.overflow.setOnClickListener(v -> new PrivateMessageOverflow(v, connection, obj));
 
         // Icons
-        privateMessageViewHolder.icons.setup(obj.private_message.deleted, false, false, false, false, !obj.private_message.read);
+        privateMessageViewHolder.header.icons.setup(obj.private_message.deleted, false, false, false, false, !obj.private_message.read);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.thebrokenrail.combustible.widget;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -64,13 +65,9 @@ public class Karma extends LinearLayout {
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
 
-        // Margin
-        int margin = getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
-
         // Upvote
         upvote = new MaterialCheckBox(getContext());
         LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        layoutParams.setMarginEnd(margin);
         upvote.setLayoutParams(layoutParams);
         upvote.setContentDescription(context.getString(R.string.upvote));
         setupButton(upvote);
@@ -88,7 +85,6 @@ public class Karma extends LinearLayout {
         // Downvote
         downvote = new MaterialCheckBox(getContext());
         layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        layoutParams.setMarginStart(margin);
         downvote.setLayoutParams(layoutParams);
         downvote.setContentDescription(context.getString(R.string.downvote));
         setupButton(downvote);
@@ -96,6 +92,23 @@ public class Karma extends LinearLayout {
         downvoteColor = AppCompatResources.getColorStateList(context, R.color.downvote_color);
         downvote.setButtonTintList(downvoteColor);
         addView(downvote);
+    }
+
+    private void setEnabled(MaterialCheckBox checkBox, boolean isEnabled) {
+        // Mark
+        checkBox.setEnabled(isEnabled);
+        // Change Alpha
+        float alpha;
+        if (isEnabled) {
+            // Enabled
+            alpha = 1;
+        } else {
+            // Disabled
+            TypedValue typedValue = new TypedValue();
+            getContext().getResources().getValue(com.google.android.material.R.dimen.material_emphasis_disabled, typedValue, true);
+            alpha = typedValue.getFloat();
+        }
+        checkBox.setAlpha(alpha);
     }
 
     /**
@@ -108,8 +121,8 @@ public class Karma extends LinearLayout {
      */
     public void setup(int score, int existingVote, boolean canVote, boolean canDownvote, VoteCallback callback) {
         // Set Enabled/Disabled
-        upvote.setEnabled(canVote);
-        downvote.setEnabled(canVote && canDownvote);
+        setEnabled(upvote, canVote);
+        setEnabled(downvote, canVote && canDownvote);
         downvote.setVisibility(canDownvote ? View.VISIBLE : View.GONE);
 
         // Set Vote
@@ -129,14 +142,18 @@ public class Karma extends LinearLayout {
     }
 
     private void setupButton(MaterialCheckBox button) {
+        // Remove Checkbox Styling
         button.setButtonIconDrawable(null);
         button.setText(null);
         button.setCenterIfNoTextEnabled(true);
+        // Remove Minimum Size
         button.setMinHeight(0);
         button.setMinimumHeight(0);
         button.setMinWidth(0);
         button.setMinimumWidth(0);
+        // Tooltip
         TooltipCompat.setTooltipText(button, button.getContentDescription());
+        // On Change Callback
         button.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (!isUpdatingVote) {
                 vote = Vote.NEUTRAL;
@@ -153,10 +170,12 @@ public class Karma extends LinearLayout {
                 sendVote();
             }
         });
+        // Padding
+        int padding = getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
+        button.setPadding(padding, padding, padding, padding);
     }
 
     private boolean isUpdatingVote = false;
-
     private void updateVote() {
         isUpdatingVote = true;
         upvote.setChecked(vote == Vote.UPVOTE);

@@ -21,8 +21,8 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.ViewImageActivity;
-import com.thebrokenrail.combustible.activity.feed.util.adapter.SortableFeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.comment.CommentFeedActivity;
+import com.thebrokenrail.combustible.activity.feed.util.adapter.SortableFeedAdapter;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CreatePostLike;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
@@ -33,9 +33,8 @@ import com.thebrokenrail.combustible.util.Permissions;
 import com.thebrokenrail.combustible.util.glide.GlideApp;
 import com.thebrokenrail.combustible.util.glide.GlideUtil;
 import com.thebrokenrail.combustible.util.markdown.Markdown;
-import com.thebrokenrail.combustible.widget.CommonIcons;
 import com.thebrokenrail.combustible.widget.Karma;
-import com.thebrokenrail.combustible.widget.Metadata;
+import com.thebrokenrail.combustible.widget.PostOrCommentHeader;
 
 import okhttp3.HttpUrl;
 
@@ -51,8 +50,7 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         private final int cornerRadius;
         private final Drawable placeholder;
         private final AppCompatTextView text;
-        private final Metadata metadata;
-        private final CommonIcons icons;
+        private final PostOrCommentHeader header;
         private final AppCompatTextView commentCount;
 
         public PostViewHolder(@NonNull View itemView) {
@@ -63,8 +61,7 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
             thumbnailHint = itemView.findViewById(R.id.post_thumbnail_hint);
             bigThumbnail = itemView.findViewById(R.id.post_big_thumbnail);
             text = itemView.findViewById(R.id.post_text);
-            metadata = itemView.findViewById(R.id.post_metadata);
-            icons = itemView.findViewById(R.id.post_icons);
+            header = itemView.findViewById(R.id.post_header);
             commentCount = itemView.findViewById(R.id.post_comment_count);
 
             // Setup Thumbnails
@@ -276,10 +273,10 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
             showAvatars = site.my_user.local_user_view.local_user.show_avatars;
         }
         boolean isEdited = obj.post.updated != null;
-        postViewHolder.metadata.setup(postContext.showCreator() ? obj.creator : null, postContext.showCommunity() ? obj.community : null, isEdited ? obj.post.updated : obj.post.published, isEdited, blurNsfw, showAvatars);
+        postViewHolder.header.metadata.setup(postContext.showCreator() ? obj.creator : null, postContext.showCommunity() ? obj.community : null, isEdited ? obj.post.updated : obj.post.published, isEdited, blurNsfw, showAvatars);
 
         // Overflow
-        postViewHolder.icons.overflow.setOnClickListener(v -> new PostOverflow(v, connection, obj) {
+        postViewHolder.header.icons.overflow.setOnClickListener(v -> new PostOverflow(v, connection, obj) {
             @Override
             protected boolean showShare() {
                 return !postContext.showText();
@@ -317,7 +314,7 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         // Icons
         boolean isDeleted = obj.post.deleted || obj.post.removed;
         boolean isLocked = obj.post.locked;
-        postViewHolder.icons.setup(isDeleted, isNsfw, isLocked, isPinned, false, false);
+        postViewHolder.header.icons.setup(isDeleted, isNsfw, isLocked, isPinned, false, false);
 
         // Comment Count
         postViewHolder.commentCount.setText(String.valueOf(obj.counts.comments));

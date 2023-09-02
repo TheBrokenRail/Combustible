@@ -13,8 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="@dimen/feed_item_margin">
+        android:gravity="center_vertical">
 
         <com.thebrokenrail.combustible.widget.LinkWithIcon
             android:id="@+id/simple_item"

@@ -34,6 +34,10 @@ public class LinkWithIcon extends LinearLayout {
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
 
+        // Padding
+        int padding = context.getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
+        setPadding(padding, padding, padding, padding);
+
         // Icon
         this.icon = new AppCompatImageView(context);
         addView(icon);

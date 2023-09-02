@@ -35,12 +35,14 @@ public class Metadata extends TableLayout {
         // Inner Layout
         TableRow inner = new TableRow(context);
         inner.setGravity(Gravity.CENTER_VERTICAL);
-        inner.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+        LayoutParams tableLayoutParams = new LayoutParams(0, 0);
+        tableLayoutParams.weight = 1;
+        inner.setLayoutParams(tableLayoutParams);
         addView(inner);
 
         // Creator
         creator = new LinkWithIcon(context, null);
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
         creator.setLayoutParams(layoutParams);
         inner.addView(creator);
 
@@ -51,14 +53,14 @@ public class Metadata extends TableLayout {
         spacer.setMaxLines(1);
         layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
         int margin = context.getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
-        layoutParams.setMarginEnd(margin);
-        layoutParams.setMarginStart(margin);
+        layoutParams.setMargins(0, margin, 0, margin);
         spacer.setLayoutParams(layoutParams);
+        spacer.setGravity(Gravity.CENTER_VERTICAL);
         inner.addView(spacer);
 
         // Community
         community = new LinkWithIcon(context, null);
-        layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+        layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.MATCH_PARENT);
         community.setLayoutParams(layoutParams);
         inner.addView(community);
 
@@ -68,9 +70,9 @@ public class Metadata extends TableLayout {
         spacer2.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.link_with_icon_font_size));
         spacer2.setMaxLines(1);
         layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMarginEnd(margin);
-        layoutParams.setMarginStart(margin);
+        layoutParams.setMargins(0, margin, 0, margin);
         spacer2.setLayoutParams(layoutParams);
+        spacer2.setGravity(Gravity.CENTER_VERTICAL);
         inner.addView(spacer2);
 
         // Time
@@ -78,7 +80,10 @@ public class Metadata extends TableLayout {
         time.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.link_with_icon_font_size));
         time.setMaxLines(1);
         layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, margin, 0, margin);
+        layoutParams.setMarginStart(margin);
         time.setLayoutParams(layoutParams);
+        time.setGravity(Gravity.CENTER_VERTICAL);
         inner.addView(time);
 
         // Shrink Columns

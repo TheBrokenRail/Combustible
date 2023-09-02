@@ -15,9 +15,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thebrokenrail.combustible.R;
-import com.thebrokenrail.combustible.activity.feed.util.adapter.SortableFeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.post.BasePostFeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.post.PostContext;
+import com.thebrokenrail.combustible.activity.feed.util.adapter.SortableFeedAdapter;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CommentView;
 import com.thebrokenrail.combustible.api.method.CreateCommentLike;
@@ -26,9 +26,8 @@ import com.thebrokenrail.combustible.api.method.GetSiteResponse;
 import com.thebrokenrail.combustible.api.method.PostView;
 import com.thebrokenrail.combustible.util.Permissions;
 import com.thebrokenrail.combustible.util.markdown.Markdown;
-import com.thebrokenrail.combustible.widget.CommonIcons;
 import com.thebrokenrail.combustible.widget.Karma;
-import com.thebrokenrail.combustible.widget.Metadata;
+import com.thebrokenrail.combustible.widget.PostOrCommentHeader;
 
 import java.util.Collections;
 
@@ -37,8 +36,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
         protected final CardView card;
         private final TextView text;
         private final Karma karma;
-        private final Metadata metadata;
-        private final CommonIcons icons;
+        private final PostOrCommentHeader header;
         protected final Button showMore;
         protected final AppCompatImageView reply;
 
@@ -47,8 +45,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
             card = itemView.findViewById(R.id.comment_card);
             text = itemView.findViewById(R.id.comment_text);
             karma = itemView.findViewById(R.id.comment_karma);
-            metadata = itemView.findViewById(R.id.comment_metadata);
-            icons = itemView.findViewById(R.id.comment_icons);
+            header = itemView.findViewById(R.id.comment_header);
             showMore = itemView.findViewById(R.id.comment_show_more);
             reply = itemView.findViewById(R.id.comment_reply);
         }
@@ -200,10 +197,10 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
         if (site.my_user != null) {
             blurNsfw = site.my_user.local_user_view.local_user.blur_nsfw;
         }
-        commentViewHolder.metadata.setup(showCreator() ? obj.creator : null, showCommunity() ? obj.community : null, isEdited ? obj.comment.updated : obj.comment.published, isEdited, blurNsfw, showAvatars);
+        commentViewHolder.header.metadata.setup(showCreator() ? obj.creator : null, showCommunity() ? obj.community : null, isEdited ? obj.comment.updated : obj.comment.published, isEdited, blurNsfw, showAvatars);
 
         // Overflow
-        commentViewHolder.icons.overflow.setOnClickListener(v -> new CommentOverflow(v, connection, obj) {
+        commentViewHolder.header.icons.overflow.setOnClickListener(v -> new CommentOverflow(v, connection, obj) {
             @Override
             protected Integer getCurrentUser() {
                 return site.my_user != null ? site.my_user.local_user_view.person.id : null;
@@ -221,7 +218,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
         });
 
         // Icons
-        commentViewHolder.icons.setup(obj.comment.deleted || obj.comment.removed, false, false, false, obj.comment.distinguished, !isRead(obj));
+        commentViewHolder.header.icons.setup(obj.comment.deleted || obj.comment.removed, false, false, false, obj.comment.distinguished, !isRead(obj));
     }
 
     @Override

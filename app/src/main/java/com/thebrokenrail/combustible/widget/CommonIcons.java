@@ -46,7 +46,7 @@ public class CommonIcons extends LinearLayout {
         overflow.setClickable(true);
         overflow.setFocusable(true);
         TypedValue typedValue = new TypedValue();
-        getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, typedValue, true);
+        getContext().getTheme().resolveAttribute(androidx.appcompat.R.attr.controlBackground, typedValue, true);
         overflow.setBackgroundResource(typedValue.resourceId);
     }
 
@@ -56,9 +56,11 @@ public class CommonIcons extends LinearLayout {
 
         // Layout
         LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        int margin = getContext().getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
-        layoutParams.setMarginStart(margin);
         view.setLayoutParams(layoutParams);
+
+        // Padding
+        int padding = getContext().getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
+        view.setPadding(padding, padding, padding, padding);
 
         // Setup
         view.setImageResource(icon);

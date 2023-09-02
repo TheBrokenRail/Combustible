@@ -3,38 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/feed_item_margin">
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <com.thebrokenrail.combustible.widget.PostOrCommentHeader
+        android:id="@+id/post_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <com.thebrokenrail.combustible.widget.Metadata
-            android:id="@+id/post_metadata"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@id/post_icons" />
-
-        <com.thebrokenrail.combustible.widget.CommonIcons
-            android:id="@+id/post_icons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true" />
-
-    </RelativeLayout>
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/feed_item_margin">
+        android:layout_marginStart="@dimen/feed_item_margin"
+        android:layout_marginEnd="@dimen/feed_item_margin"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/post_title"
@@ -77,6 +58,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/feed_item_margin"
+        android:layout_marginStart="@dimen/feed_item_margin"
+        android:layout_marginEnd="@dimen/feed_item_margin"
         android:clickable="true"
         android:focusable="true">
 
@@ -92,14 +75,15 @@
         android:id="@+id/post_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/feed_item_margin" />
+        android:layout_marginTop="@dimen/feed_item_margin"
+        android:layout_marginStart="@dimen/feed_item_margin"
+        android:layout_marginEnd="@dimen/feed_item_margin" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/feed_item_margin">
+        android:orientation="horizontal">
 
         <com.thebrokenrail.combustible.widget.Karma
             android:id="@+id/post_karma"
@@ -114,7 +98,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/feed_item_margin"
+            android:layout_marginTop="@dimen/feed_item_margin"
+            android:layout_marginBottom="@dimen/feed_item_margin"
             android:importantForAccessibility="no"
             app:srcCompat="@drawable/baseline_comment_24" />
 
@@ -122,7 +107,7 @@
             android:id="@+id/post_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/feed_item_margin"
+            android:layout_margin="@dimen/feed_item_margin"
             android:textAlignment="center" />
 
     </LinearLayout>
