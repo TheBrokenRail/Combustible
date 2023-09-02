@@ -11,16 +11,89 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.text.HtmlCompat;
 import androidx.core.view.WindowCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.mikepenz.aboutlibraries.LibsBuilder;
+import com.mikepenz.aboutlibraries.LibsConfiguration;
+import com.mikepenz.aboutlibraries.entity.Library;
+import com.mikepenz.aboutlibraries.entity.License;
 import com.mikepenz.aboutlibraries.ui.LibsSupportFragment;
+import com.mikepenz.aboutlibraries.util.SpecialButton;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.util.EdgeToEdge;
+import com.thebrokenrail.combustible.util.Util;
 
 public class LicensesActivity extends AppCompatActivity {
+    private static class Listener implements LibsConfiguration.LibsListener {
+        @Override
+        public boolean onExtraClicked(@NonNull View view, @NonNull SpecialButton specialButton) {
+            return false;
+        }
+
+        @Override
+        public void onIconClicked(@NonNull View view) {
+        }
+
+        @Override
+        public boolean onIconLongClicked(@NonNull View view) {
+            return false;
+        }
+
+        @Override
+        public boolean onLibraryAuthorClicked(@NonNull View view, @NonNull Library library) {
+            return false;
+        }
+
+        @Override
+        public boolean onLibraryAuthorLongClicked(@NonNull View view, @NonNull Library library) {
+            return false;
+        }
+
+        @Override
+        public boolean onLibraryBottomClicked(@NonNull View view, @NonNull Library library) {
+            // Find License
+            if (library.getLicenses().size() > 0) {
+                License license = library.getLicenses().iterator().next();
+
+                // Get Dialog Text
+                CharSequence message = null;
+                String licenseText = license.getLicenseContent();
+                if (licenseText != null) {
+                    // Make HTML-Friendly
+                    licenseText = licenseText.replaceAll("\\n", "<br />");
+                    // Parse
+                    message = HtmlCompat.fromHtml(licenseText, HtmlCompat.FROM_HTML_MODE_LEGACY);
+                }
+
+                // Display Dialog
+                if (message != null) {
+                    Util.showTextDialog(Util.getActivityFromContext(view.getContext()), license.getName(), message);
+                }
+            }
+
+            // Consume Event
+            return true;
+        }
+
+        @Override
+        public boolean onLibraryBottomLongClicked(@NonNull View view, @NonNull Library library) {
+            return false;
+        }
+
+        @Override
+        public boolean onLibraryContentClicked(@NonNull View view, @NonNull Library library) {
+            return false;
+        }
+
+        @Override
+        public boolean onLibraryContentLongClicked(@NonNull View view, @NonNull Library library) {
+            return false;
+        }
+    }
+
     public static class CustomLibsSupportFragment extends LibsSupportFragment {
         @Nullable
         @Override
@@ -67,7 +140,7 @@ public class LicensesActivity extends AppCompatActivity {
     protected LibsSupportFragment createFragment() {
         LibsSupportFragment defaultFragment = new LibsBuilder()
                 .withAboutMinimalDesign(true)
-                .withLicenseDialog(true)
+                .withListener(new Listener())
                 .supportFragment();
         CustomLibsSupportFragment fragment = new CustomLibsSupportFragment();
         fragment.setArguments(defaultFragment.getArguments());

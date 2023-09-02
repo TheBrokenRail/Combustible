@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 import androidx.annotation.ColorInt;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
@@ -66,11 +67,18 @@ public class Links {
     }
 
     private static boolean openLemmy(Context context, String url) {
+        // Check Activity
+        AppCompatActivity baseActivity = Util.getActivityFromContext(context);
+        if (!(baseActivity instanceof LemmyActivity)) {
+            return false;
+        }
+
+        // Check URL
         String userPrefix = relativeToInstance(context, Sharing.USER_PREFIX + "/");
         String communityPrefix = relativeToInstance(context, Sharing.COMMUNITY_PREFIX + "/");
         String commentPrefix = relativeToInstance(context, Sharing.COMMENT_PREFIX + "/");
         String postPrefix = relativeToInstance(context, Sharing.POST_PREFIX + "/");
-        LemmyActivity activity = (LemmyActivity) Util.getActivityFromContext(context);
+        LemmyActivity activity = (LemmyActivity) baseActivity;
         if (url.startsWith(userPrefix)) {
             // User
             url = url.substring(userPrefix.length());

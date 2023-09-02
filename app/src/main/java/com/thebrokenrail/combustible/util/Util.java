@@ -40,11 +40,11 @@ public class Util {
     }
 
     public static class TextDialogFragment extends AppCompatDialogFragment {
-        private TextDialogFragment(@StringRes int title, @StringRes int text) {
+        private TextDialogFragment(CharSequence title, CharSequence text) {
             super();
             Bundle arguments = new Bundle();
-            arguments.putInt("title", title);
-            arguments.putInt("text", text);
+            arguments.putCharSequence("title", title);
+            arguments.putCharSequence("text", text);
             setArguments(arguments);
         }
 
@@ -55,19 +55,24 @@ public class Util {
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+            // Create Dialog
             Bundle arguments = getArguments();
             assert arguments != null;
             return new MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(arguments.getInt("title"))
-                    .setMessage(arguments.getInt("text"))
+                    .setTitle(arguments.getCharSequence("title"))
+                    .setMessage(arguments.getCharSequence("text"))
                     .setNeutralButton(R.string.ok, null)
                     .create();
         }
     }
 
-    public static void showTextDialog(AppCompatActivity context, @StringRes int title, @StringRes int text) {
+    public static void showTextDialog(AppCompatActivity context, CharSequence title, CharSequence text) {
         TextDialogFragment dialog = new TextDialogFragment(title, text);
-        dialog.show(context.getSupportFragmentManager(), "text_dialog_" + title + ":" + text);
+        dialog.show(context.getSupportFragmentManager(), "text_dialog_" + title.hashCode() + ":" + text.hashCode());
+    }
+
+    public static void showTextDialog(AppCompatActivity context, @StringRes int title, @StringRes int text) {
+        showTextDialog(context, context.getString(title), context.getString(text));
     }
 
     public static void updateAppBarLift(AppBarLayout appBarLayout, View target) {
