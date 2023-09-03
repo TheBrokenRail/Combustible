@@ -32,7 +32,7 @@
 - [x] Fix Lift On Scroll In `SettingsActivity` (For Screen Rotation)
 - [x] Make Links Opened By Keyboard Use Chrome Custom Tabs
 - [x] Better Overlay In `ViewImageActivity`
-- [ ] Fix Weird Ripples In `TabbedFeedActivity`
+- [x] Fix Weird Ripples In `TabbedFeedActivity`
   - Fixed In Material Components 1.10.0
 - [x] Way To Refresh Posts (Hard because it's loaded through `FeedPrerequistes`)
 - [x] Delete Account Button In `UserSettingsActivity`
@@ -54,5 +54,5 @@
   - [x] Extract API Version From `lemmy-js-client`
 - [x] Pinning/Distinguishing/Locking Posts/Comments
 - [x] SVG Support
-- [ ] Update Target Android SDK
+- [x] Update Target Android SDK
 - [ ] More Testing

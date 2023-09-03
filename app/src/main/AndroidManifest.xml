@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Combustible"
         android:enableOnBackInvokedCallback="true"
-        tools:targetApi="33">
+        tools:targetApi="34">
 
         <activity
             android:name=".activity.feed.post.PostFeedActivity"

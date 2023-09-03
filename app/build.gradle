@@ -18,12 +18,12 @@ plugins {
 
 android {
     namespace 'com.thebrokenrail.combustible'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId 'com.thebrokenrail.combustible'
         minSdk 21
-        targetSdk 33
+        targetSdk 34
 
         // Version Code
         def birthday = 1687752034L // The exact time the project was created!
@@ -89,12 +89,12 @@ configurations.configureEach {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.11.0-alpha02'
     implementation 'androidx.preference:preference:1.2.1'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01"
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
     implementation 'com.github.MikeOrtiz:TouchImageView:3.4'
-    implementation 'androidx.browser:browser:1.5.0'
+    implementation 'androidx.browser:browser:1.6.0'
     implementation 'com.caverock:androidsvg-aar:1.4'
     implementation project(':api')
     implementation "com.mikepenz:aboutlibraries-core-android:${aboutLibraries_version}"
