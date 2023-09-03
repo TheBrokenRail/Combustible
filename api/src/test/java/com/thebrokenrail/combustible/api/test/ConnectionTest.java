@@ -1,6 +1,7 @@
 package com.thebrokenrail.combustible.api.test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.thebrokenrail.combustible.api.Connection;
@@ -136,5 +137,37 @@ public class ConnectionTest {
 
         // Check Test Success
         assertTrue(isSuccess.get());
+    }
+
+    @Test
+    public void callbackHelperTest() throws InterruptedException {
+        // Connect
+        Connection connection = new Connection(TEST_INSTANCE, null);
+
+        // Should Be Logged Out
+        assertFalse(connection.hasToken());
+
+        // Setup Callback Helper
+        CountDownLatch latch = new CountDownLatch(1);
+        Runnable[] callback = new Runnable[1];
+        connection.setCallbackHelper(runnable -> {
+            latch.countDown();
+            callback[0] = runnable;
+        });
+
+        // Test GetSite
+        Boolean[] isSuccess = new Boolean[1];
+        GetSite method = new GetSite();
+        connection.send(method, getSiteResponse -> {
+            // Success
+            isSuccess[0] = true;
+        }, () -> {
+            // Error
+            isSuccess[0] = false;
+        });
+        latch.await();
+        assertNull(isSuccess[0]);
+        callback[0].run();
+        assertTrue(isSuccess[0]);
     }
 }
