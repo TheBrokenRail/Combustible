@@ -266,11 +266,6 @@ public class CommentTreeDataset extends FeedDataset<CommentView> {
             return true;
         }
 
-        // Blocked Creator
-        if (element.creator_blocked) {
-            return true;
-        }
-
         // Depth Check
         int depth = getDepth(element);
         return depth >= Util.MAX_DEPTH;
