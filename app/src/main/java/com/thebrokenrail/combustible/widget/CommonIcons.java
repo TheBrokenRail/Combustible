@@ -60,7 +60,8 @@ public class CommonIcons extends LinearLayout {
 
         // Padding
         int padding = getContext().getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
-        view.setPadding(padding, padding, padding, padding);
+        boolean includeEndPadding = contentDescription == R.string.overflow;
+        view.setPaddingRelative(padding, padding, includeEndPadding ? padding : 0, padding);
 
         // Setup
         view.setImageResource(icon);
