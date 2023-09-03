@@ -1,4 +1,4 @@
-package com.thebrokenrail.combustible.util;
+package com.thebrokenrail.combustible.util.config;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,23 +7,18 @@ import com.thebrokenrail.combustible.R;
 
 import okhttp3.HttpUrl;
 
-/**
- * Utility class to manage the configuration.
- */
-public class Config {
+class NormalConfig implements Config {
     private final Context context;
     private final SharedPreferences preferences;
-    public Config(Context context) {
+
+    NormalConfig(Context context) {
         this.context = context;
         preferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
     }
 
     private static final String INSTANCE_KEY = "lemmy_instance";
 
-    /**
-     * Sets a new URL as the current Lemmy instance.
-     * @param instance The new instance's URL
-     */
+    @Override
     public void setInstance(HttpUrl instance) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(INSTANCE_KEY, instance.toString());
@@ -32,10 +27,7 @@ public class Config {
         editor.apply();
     }
 
-    /**
-     * Get the current Lemmy instance's URL.
-     * @return The current URL
-     */
+    @Override
     public HttpUrl getInstance() {
         String defaultStr = context.getString(R.string.recommended_instance);
         HttpUrl defaultUrl = HttpUrl.parse(defaultStr);
@@ -53,17 +45,12 @@ public class Config {
 
     private static final String SETUP_KEY = "setup_completed";
 
-    /**
-     * Check if setup has been completed.
-     * @return True if setup has been completed, false otherwise
-     */
+    @Override
     public boolean isSetup() {
         return preferences.getBoolean(SETUP_KEY, false);
     }
 
-    /**
-     * Mark setup as completed.
-     */
+    @Override
     public void finishSetup() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(SETUP_KEY, true);
@@ -73,18 +60,12 @@ public class Config {
 
     private static final String TOKEN_KEY = "auth_token";
 
-    /**
-     * Get the current authentication token.
-     * @return An authentication token
-     */
+    @Override
     public String getToken() {
         return preferences.getString(TOKEN_KEY, null);
     }
 
-    /**
-     * Sets a new authentication token.
-     * @param token The new authentication token
-     */
+    @Override
     public void setToken(String token) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(TOKEN_KEY, token);
@@ -97,17 +78,12 @@ public class Config {
         editor.putLong(VERSION_KEY, System.currentTimeMillis());
     }
 
-    /**
-     * Get the current configuration's version.
-     * @return The current version
-     */
+    @Override
     public long getVersion() {
         return preferences.getLong(VERSION_KEY, 0);
     }
 
-    /**
-     * Trigger refresh of all {@link com.thebrokenrail.combustible.activity.LemmyActivity}s.
-     */
+    @Override
     public void triggerRefresh() {
         SharedPreferences.Editor editor = preferences.edit();
         updateVersion(editor);

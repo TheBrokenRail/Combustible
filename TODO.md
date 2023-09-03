@@ -55,4 +55,4 @@
 - [x] Pinning/Distinguishing/Locking Posts/Comments
 - [x] SVG Support
 - [x] Update Target Android SDK
-- [ ] More Testing
+- [x] More Testing

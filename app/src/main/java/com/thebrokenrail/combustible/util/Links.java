@@ -20,6 +20,7 @@ import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.GetCommunity;
 import com.thebrokenrail.combustible.api.method.GetPersonDetails;
 import com.thebrokenrail.combustible.api.util.Method;
+import com.thebrokenrail.combustible.util.config.Config;
 
 import java.util.function.Consumer;
 
@@ -27,7 +28,7 @@ import okhttp3.HttpUrl;
 
 public class Links {
     public static String relativeToInstance(Context context, String segment) {
-        Config config = new Config(context);
+        Config config = Config.create(context);
         HttpUrl url = config.getInstance();
         url = url.newBuilder().addPathSegments(segment).build();
         return url.toString();

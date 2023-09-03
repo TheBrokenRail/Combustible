@@ -33,7 +33,7 @@ import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequ
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
 import com.thebrokenrail.combustible.api.method.GetUnreadCountResponse;
-import com.thebrokenrail.combustible.util.Config;
+import com.thebrokenrail.combustible.util.config.Config;
 import com.thebrokenrail.combustible.util.EdgeToEdge;
 import com.thebrokenrail.combustible.util.Util;
 import com.thebrokenrail.combustible.util.glide.GlideApp;
@@ -234,7 +234,7 @@ public abstract class FeedActivity extends HamburgerActivity {
     public static void onSiteLoaded(LemmyActivity activity, GetSiteResponse site) {
         if (activity.getConnection().hasToken() && site.my_user == null) {
             // Activity Has Token, But It's Invalid
-            Config config = new Config(activity);
+            Config config = Config.create(activity);
             config.setToken(null);
             activity.fullRecreate();
         }

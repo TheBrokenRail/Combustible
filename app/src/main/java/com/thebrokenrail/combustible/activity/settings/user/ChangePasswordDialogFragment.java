@@ -15,7 +15,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.api.method.ChangePassword;
-import com.thebrokenrail.combustible.util.Config;
+import com.thebrokenrail.combustible.util.config.Config;
 import com.thebrokenrail.combustible.util.Util;
 
 import java.util.Objects;
@@ -66,7 +66,7 @@ public class ChangePasswordDialogFragment extends AppCompatDialogFragment {
                 // Do It
                 activity.getConnection().send(method, loginResponse -> {
                     // Change Token
-                    Config config = new Config(activity);
+                    Config config = Config.create(activity);
                     config.setToken(loginResponse.jwt);
 
                     // Reload Activity

@@ -14,7 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.api.method.DeleteAccount;
-import com.thebrokenrail.combustible.util.Config;
+import com.thebrokenrail.combustible.util.config.Config;
 import com.thebrokenrail.combustible.util.Util;
 
 public class DeleteAccountDialogFragment extends AppCompatDialogFragment {
@@ -52,7 +52,7 @@ public class DeleteAccountDialogFragment extends AppCompatDialogFragment {
                 // Do It
                 activity.getConnection().send(method, loginResponse -> {
                     // Logout
-                    Config config = new Config(activity);
+                    Config config = Config.create(activity);
                     config.setToken(null);
 
                     // Exit Activity

@@ -9,7 +9,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.fullscreen.FullscreenActivity;
 import com.thebrokenrail.combustible.api.method.Login;
-import com.thebrokenrail.combustible.util.Config;
+import com.thebrokenrail.combustible.util.config.Config;
 import com.thebrokenrail.combustible.util.Util;
 
 import java.util.Objects;
@@ -61,7 +61,7 @@ public class LoginActivity extends FullscreenActivity {
 
             // Success
             if (loginResponse.jwt != null) {
-                Config config = new Config(LoginActivity.this);
+                Config config = Config.create(LoginActivity.this);
                 config.setToken(loginResponse.jwt);
                 finish();
             } else {

@@ -15,7 +15,7 @@ import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.feed.post.PostFeedActivity;
 import com.thebrokenrail.combustible.activity.fullscreen.FullscreenActivity;
 import com.thebrokenrail.combustible.api.method.ListCommunities;
-import com.thebrokenrail.combustible.util.Config;
+import com.thebrokenrail.combustible.util.config.Config;
 import com.thebrokenrail.combustible.util.NiceLinkMovementMethod;
 import com.thebrokenrail.combustible.util.Util;
 
@@ -31,7 +31,7 @@ public class WelcomeActivity extends FullscreenActivity {
         setContentView(R.layout.activity_welcome);
 
         // Load Configuration
-        Config config = new Config(this);
+        Config config = Config.create(this);
         isFirstSetup = !config.isSetup();
 
         // Make Link Clickable
@@ -77,7 +77,7 @@ public class WelcomeActivity extends FullscreenActivity {
             // Success
 
             // Set Instance URL
-            Config config = new Config(WelcomeActivity.this);
+            Config config = Config.create(WelcomeActivity.this);
             config.setInstance(instance);
 
             // Finish Setup
@@ -90,7 +90,7 @@ public class WelcomeActivity extends FullscreenActivity {
 
     private void finishSetup() {
         // Mark Completed
-        Config config = new Config(this);
+        Config config = Config.create(this);
         config.finishSetup();
 
         // Replace Activity

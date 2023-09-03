@@ -23,7 +23,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.LemmyActivity;
-import com.thebrokenrail.combustible.util.Config;
+import com.thebrokenrail.combustible.util.config.Config;
 import com.thebrokenrail.combustible.util.EdgeToEdge;
 
 public abstract class SettingsActivity extends LemmyActivity implements PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
@@ -147,7 +147,7 @@ public abstract class SettingsActivity extends LemmyActivity implements Preferen
     }
 
     public void triggerRefresh() {
-        Config config = new Config(this);
+        Config config = Config.create(this);
         config.triggerRefresh();
         acknowledgeConfigChange();
     }

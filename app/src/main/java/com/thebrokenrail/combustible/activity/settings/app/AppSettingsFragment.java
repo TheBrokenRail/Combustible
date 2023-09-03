@@ -13,8 +13,8 @@ import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.SubApplication;
 import com.thebrokenrail.combustible.activity.fullscreen.welcome.WelcomeActivity;
 import com.thebrokenrail.combustible.activity.settings.SettingsFragment;
-import com.thebrokenrail.combustible.util.Config;
 import com.thebrokenrail.combustible.util.SearchSuggestionProvider;
+import com.thebrokenrail.combustible.util.config.Config;
 
 import java.util.Objects;
 
@@ -31,7 +31,7 @@ public class AppSettingsFragment extends SettingsFragment implements SharedPrefe
             startActivity(intent);
             return true;
         });
-        changeInstance.setSummary(new Config(requireContext()).getInstance().toString());
+        changeInstance.setSummary(Config.create(requireContext()).getInstance().toString());
 
         // Clear Search History
         Preference clearSearchHistory = findPreference("clear_search_history");
@@ -60,6 +60,7 @@ public class AppSettingsFragment extends SettingsFragment implements SharedPrefe
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        assert key != null;
         if (key.equals("dark_mode")) {
             SubApplication.setDarkMode(getContext());
         } else if (key.equals("disable_large_thumbnail")) {

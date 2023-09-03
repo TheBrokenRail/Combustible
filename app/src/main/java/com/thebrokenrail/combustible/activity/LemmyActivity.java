@@ -17,7 +17,7 @@ import com.thebrokenrail.combustible.activity.fullscreen.welcome.WelcomeActivity
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CommentView;
 import com.thebrokenrail.combustible.api.method.PostView;
-import com.thebrokenrail.combustible.util.Config;
+import com.thebrokenrail.combustible.util.config.Config;
 import com.thebrokenrail.combustible.util.RequestCodes;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class LemmyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // Load Configuration
-        Config config = new Config(this);
+        Config config = Config.create(this);
         acknowledgeConfigChange();
 
         // Check If Setup Has Been Completed
@@ -84,7 +84,7 @@ public class LemmyActivity extends AppCompatActivity {
         super.onResume();
 
         // Check Configuration Version
-        Config config = new Config(this);
+        Config config = Config.create(this);
         if (config.getVersion() != lastConfigVersion) {
             // Restart
             fullRecreate();
@@ -100,7 +100,7 @@ public class LemmyActivity extends AppCompatActivity {
     }
 
     protected void acknowledgeConfigChange() {
-        Config config = new Config(this);
+        Config config = Config.create(this);
         lastConfigVersion = config.getVersion();
     }
 

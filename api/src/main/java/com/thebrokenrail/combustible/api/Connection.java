@@ -37,6 +37,7 @@ public class Connection {
 
     private Consumer<Runnable> callbackHelper = Runnable::run;
     private final List<Call> currentCalls = new ArrayList<>();
+    private final OkHttpClient client = new OkHttpClient();
 
     /**
      * Connect to an instance.
@@ -92,7 +93,6 @@ public class Connection {
         urlBuilder = urlBuilder.addPathSegments("api/" + Constants.VERSION + "/" + method.getPath());
 
         // Make Request
-        OkHttpClient client = new OkHttpClient();
         Request.Builder requestBuilder = new Request.Builder();
 
         // Create POST Request If Needed
@@ -172,6 +172,14 @@ public class Connection {
             currentCalls.clear();
         }
         setCallbackHelper(runnable -> {});
+    }
+
+    /**
+     * Get {@link OkHttpClient}.
+     * @return The client used for API calls
+     */
+    public OkHttpClient getClient() {
+        return client;
     }
 
     class ResponseHandler<T> implements Callback {

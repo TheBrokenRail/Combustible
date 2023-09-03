@@ -438,4 +438,12 @@ abstract class BaseFeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.View
      */
     public void handleEdit(Object element) {
     }
+
+    /**
+     * Check if the first page of data has been loaded without errors.
+     * @return True if it has been loaded, false otherwise
+     */
+    public boolean isFirstPageLoaded() {
+        return arePrerequisitesLoaded() && viewModel.loadingStatus != LoadingStatus.ERROR && viewModel.nextPage != ViewModel.FIRST_PAGE;
+    }
 }

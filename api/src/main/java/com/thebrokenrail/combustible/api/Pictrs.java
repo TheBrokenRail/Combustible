@@ -14,6 +14,7 @@ import okhttp3.RequestBody;
  * This class handles communicating with a Lemmy Pictrs instance.
  */
 public class Pictrs {
+    @SuppressWarnings("unused")
     private static class Response {
         private static class Image {
             private static class Details {
@@ -51,7 +52,7 @@ public class Pictrs {
         urlBuilder = urlBuilder.addPathSegments("pictrs/image");
 
         // Make Request
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = connection.getClient();
         Request.Builder requestBuilder = new Request.Builder();
 
         // Set URL
@@ -65,6 +66,9 @@ public class Pictrs {
         requestBuilder = requestBuilder.post(requestBody);
 
         // Add Token
+        if (!connection.hasToken()) {
+            throw new RuntimeException();
+        }
         requestBuilder = requestBuilder.addHeader("Cookie", "jwt=" + connection.token);
 
         // Finalize Request

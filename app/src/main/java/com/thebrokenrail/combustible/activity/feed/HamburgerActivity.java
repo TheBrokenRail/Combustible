@@ -21,7 +21,7 @@ import com.thebrokenrail.combustible.activity.fullscreen.login.LoginActivity;
 import com.thebrokenrail.combustible.activity.settings.app.AppSettingsActivity;
 import com.thebrokenrail.combustible.activity.settings.user.UserSettingsActivity;
 import com.thebrokenrail.combustible.api.method.BlockCommunity;
-import com.thebrokenrail.combustible.util.Config;
+import com.thebrokenrail.combustible.util.config.Config;
 import com.thebrokenrail.combustible.util.InfoDialog;
 import com.thebrokenrail.combustible.util.Links;
 import com.thebrokenrail.combustible.util.MenuItemTarget;
@@ -127,7 +127,7 @@ class HamburgerActivity extends LemmyActivity implements NavigationView.OnNaviga
             Links.open(this, url);
             return true;
         } else if (item.getItemId() == R.id.feed_menu_logout) {
-            Config config = new Config(this);
+            Config config = Config.create(this);
             config.setToken(null);
             fullRecreate();
             return true;
