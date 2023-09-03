@@ -40,7 +40,7 @@ class PostFeedAdapter extends BasePostFeedAdapter {
         if (showBanner() && communityId != null) {
             prerequisites.require(FeedPrerequisite.Community.class);
         }
-        prerequisites.listen(prerequisite -> {
+        prerequisites.listen((prerequisite, isRefreshing) -> {
             boolean reloadHeader = false;
             if (prerequisite instanceof FeedPrerequisite.Site) {
                 // Site Loaded

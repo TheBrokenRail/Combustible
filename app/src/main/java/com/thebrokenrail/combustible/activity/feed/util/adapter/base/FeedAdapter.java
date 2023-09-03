@@ -34,7 +34,7 @@ public abstract class FeedAdapter<T> extends BaseFeedAdapterWithPrerequisites<T>
         super.handlePrerequisites(prerequisites);
         // General Instance Information
         prerequisites.require(FeedPrerequisite.Site.class);
-        prerequisites.listen(prerequisite -> {
+        prerequisites.listen((prerequisite, isRefreshing) -> {
             if (prerequisite instanceof FeedPrerequisite.Site) {
                 site = ((FeedPrerequisite.Site) prerequisite).get();
                 // Update Permissions

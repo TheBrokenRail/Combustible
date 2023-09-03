@@ -73,7 +73,7 @@ public class PostFeedActivity extends FeedActivity {
         if (communityId != null) {
             prerequisites.add(new FeedPrerequisite.Community(communityId));
         }
-        prerequisites.listen(prerequisite -> {
+        prerequisites.listen((prerequisite, isRefreshing) -> {
             if (communityId != null && prerequisite instanceof FeedPrerequisite.Community) {
                 GetCommunityResponse getCommunityResponse = ((FeedPrerequisite.Community) prerequisite).get();
 

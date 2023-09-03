@@ -125,7 +125,7 @@ public class CommentFeedActivity extends FeedActivity {
         }
 
         // Info Dialog
-        prerequisites.listen(prerequisite -> {
+        prerequisites.listen((prerequisite, isRefreshing) -> {
             if (isPost && prerequisite instanceof FeedPrerequisite.Post) {
                 GetPostResponse getPostResponse = ((FeedPrerequisite.Post) prerequisite).get();
                 infoCommunity.set(getPostResponse.community_view, subscribedType -> getPostResponse.community_view.subscribed = subscribedType);

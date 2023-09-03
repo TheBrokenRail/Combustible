@@ -56,7 +56,7 @@ public class UserFeedActivity extends TabbedFeedActivity {
         int user = getUser();
         ActionBar actionBar = Objects.requireNonNull(getSupportActionBar());
         prerequisites.add(new FeedPrerequisite.User(user));
-        prerequisites.listen(prerequisite -> {
+        prerequisites.listen((prerequisite, isRefreshing) -> {
             if (prerequisite instanceof FeedPrerequisite.User) {
                 GetPersonDetailsResponse getPersonDetailsResponse = ((FeedPrerequisite.User) prerequisite).get();
 

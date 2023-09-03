@@ -68,8 +68,8 @@
     <!-- Posts -->
     <string name="posts">Posts</string>
     <string name="posts_home">Home</string>
-    <string name="posts_sort_by">Sort By:</string>
-    <string name="posts_listing_type">Show:</string>
+    <string name="posts_sort_by">Sort By</string>
+    <string name="posts_listing_type">Show</string>
     <string name="post_creator_community_spacer">on</string>
     <string name="post_community_time_spacer">•</string>
     <string name="post_block_user">Block User</string>
@@ -115,6 +115,7 @@
     <string name="user_settings_totp_disable">Disable 2FA</string>
     <string name="user_settings_totp_url">Open 2FA Setup URL</string>
     <string name="user_settings_delete_account">Delete Account</string>
+    <string name="user_settings_saved">Saved!</string>
 
     <!-- Login -->
     <string name="login_username">Email Or Username</string>

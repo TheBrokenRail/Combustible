@@ -49,8 +49,9 @@ public class FeedPrerequisites extends ViewModel {
         /**
          * Callback that is executed on prerequisite event.
          * @param prerequisite The loaded prerequisite (or null if there was an error)
+         * @param isRefreshing True if this event is the result of a refresh, false otherwise
          */
-        void onEvent(FeedPrerequisite<?> prerequisite);
+        void onEvent(FeedPrerequisite<?> prerequisite, boolean isRefreshing);
     }
 
     private final List<Listener> listeners = new ArrayList<>();
@@ -70,9 +71,9 @@ public class FeedPrerequisites extends ViewModel {
         listeners.clear();
     }
 
-    private void onEvent(FeedPrerequisite<?> prerequisite) {
+    private void onEvent(FeedPrerequisite<?> prerequisite, boolean isRefreshing) {
         for (Listener listener : listeners) {
-            listener.onEvent(prerequisite);
+            listener.onEvent(prerequisite, isRefreshing);
         }
     }
 
@@ -90,9 +91,9 @@ public class FeedPrerequisites extends ViewModel {
                 pending.remove(prerequisite);
                 successful.add(prerequisite);
             }
-            onEvent(prerequisite);
+            onEvent(prerequisite, isRefreshing);
             if (!isRefreshing && areLoaded()) {
-                onEvent(COMPLETED);
+                onEvent(COMPLETED, false);
             }
         }, () -> {
             if (isRefreshing) {
@@ -102,7 +103,7 @@ public class FeedPrerequisites extends ViewModel {
                 prerequisite.value = null;
                 failed.add(prerequisite);
             }
-            onEvent(ERROR);
+            onEvent(ERROR, isRefreshing);
         });
     }
 
@@ -126,7 +127,7 @@ public class FeedPrerequisites extends ViewModel {
             load(connection, prerequisite, false);
         }
         failed.clear();
-        onEvent(RETRY_STARTED);
+        onEvent(RETRY_STARTED, false);
     }
 
     /**
@@ -160,12 +161,12 @@ public class FeedPrerequisites extends ViewModel {
     public void start(Connection connection) {
         // Emit EVents For Already Loaded Prerequisites
         for (FeedPrerequisite<?> prerequisite : successful) {
-            onEvent(prerequisite);
+            onEvent(prerequisite, false);
         }
         // Check If All Prerequisites Are Loaded
         if (areLoaded()) {
             // Prerequisites Are Already Loaded, Send Completion Event
-            onEvent(COMPLETED);
+            onEvent(COMPLETED, false);
         } else {
             // Restart Previous Prerequisites
             for (FeedPrerequisite<?> prerequisite : pending) {

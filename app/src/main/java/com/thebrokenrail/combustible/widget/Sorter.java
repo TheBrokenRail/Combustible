@@ -1,28 +1,24 @@
 package com.thebrokenrail.combustible.widget;
 
 import android.content.Context;
+import android.text.InputType;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 
 import androidx.annotation.ArrayRes;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.appcompat.widget.AppCompatTextView;
 
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+import com.google.android.material.textfield.TextInputLayout;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.api.method.CommentSortType;
 import com.thebrokenrail.combustible.api.method.ListingType;
 import com.thebrokenrail.combustible.api.method.SortType;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -60,8 +56,15 @@ public class Sorter extends LinearLayout {
          * @param value The new value
          * @param <T> The value's type
          */
-        @SuppressWarnings({"unchecked"})
         public <T extends Enum<?>> void set(T value) {
+            if (isSetup) {
+                return;
+            }
+            setForce(value);
+        }
+
+        @SuppressWarnings({"unchecked"})
+        private <T extends Enum<?>> void setForce(T value) {
             data.put((Class<? extends Enum<?>>) value.getClass(), value);
         }
 
@@ -76,17 +79,32 @@ public class Sorter extends LinearLayout {
                 throw new RuntimeException();
             }
         }
+
+        private boolean isSetup = false;
+
+        /**
+         * Mark as setup.
+         */
+        public void setup() {
+            isSetup = true;
+        }
     }
 
     private ViewModel viewModel = new ViewModel();
     private boolean hasToken = false;
     private Runnable refresh = () -> {};
 
-    private final Map<Class<? extends Enum<?>>, AppCompatSpinner> spinners = new HashMap<>();
+    private final Map<Class<? extends Enum<?>>, TextInputLayout> spinners = new HashMap<>();
+
+    private final int margin;
 
     public Sorter(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setOrientation(VERTICAL);
+
+        // Margin
+        margin = getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
+        setPaddingRelative(margin, 0, margin, 0);
 
         // Add Enums
         add(SortType.class, R.string.posts_sort_by, R.array.sort_types);
@@ -100,11 +118,29 @@ public class Sorter extends LinearLayout {
         CharSequence[] valuesArray = getResources().getTextArray(values);
         assert valuesArray.length == Objects.requireNonNull(type.getEnumConstants()).length;
 
+        // Create Text Input Layout
+        TextInputLayout textInputLayout = new TextInputLayout(getContext(), null, com.google.android.material.R.attr.textInputOutlinedExposedDropdownMenuStyle);
+        textInputLayout.setHint(label);
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(0, margin, 0, 0);
+        textInputLayout.setLayoutParams(layoutParams);
+        addView(textInputLayout);
+        spinners.put(type, textInputLayout);
+
         // Create Spinner
-        @LayoutRes int textViewResId = android.R.layout.simple_spinner_item;
-        @LayoutRes int dropDownViewResource = android.R.layout.simple_spinner_dropdown_item;
-        AppCompatSpinner spinner = new AppCompatSpinner(getContext());
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(), textViewResId, 0, Arrays.asList(valuesArray)) {
+        MaterialAutoCompleteTextView spinner = new MaterialAutoCompleteTextView(textInputLayout.getContext());
+        spinner.setInputType(InputType.TYPE_NULL);
+        TextInputLayout.LayoutParams spinnerLayoutParams = new TextInputLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        spinner.setLayoutParams(spinnerLayoutParams);
+        textInputLayout.addView(spinner);
+
+        // Create Adapter
+        String[] simpleItems = new String[valuesArray.length];
+        for (int i = 0; i < valuesArray.length; i++) {
+            simpleItems[i] = String.valueOf(valuesArray[i]);
+        }
+        spinner.setSimpleItems(simpleItems);
+        WrappedListAdapter adapter = new WrappedListAdapter((ArrayAdapter<?>) spinner.getAdapter()) {
             @Override
             public boolean isEnabled(int position) {
                 if (type == ListingType.class && position == ListingType.Subscribed.ordinal()) {
@@ -115,60 +151,23 @@ public class Sorter extends LinearLayout {
             }
 
             @Override
-            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
                 view.setEnabled(isEnabled(position));
                 return view;
             }
         };
-        adapter.setDropDownViewResource(dropDownViewResource);
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Enum<?> newValue = Objects.requireNonNull(type.getEnumConstants())[position];
-                Enum<?> value = viewModel.get(type);
-                if (newValue != value) {
-                    viewModel.set(newValue);
-                    refresh.run();
-                }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+        // Handle Item Selection
+        spinner.setOnItemClickListener((parent, view, position, id) -> {
+            Enum<?> newValue = Objects.requireNonNull(type.getEnumConstants())[position];
+            Enum<?> value = viewModel.get(type);
+            if (newValue != value) {
+                viewModel.setForce(newValue);
+                refresh.run();
             }
         });
-        int spinnerId = View.generateViewId();
-        spinner.setId(spinnerId);
-        spinners.put(type, spinner);
-
-        // Create Label
-        AppCompatTextView labelView = new AppCompatTextView(getContext());
-        labelView.setText(label);
-        labelView.setLabelFor(spinnerId);
-
-        // Inner Layout
-        LinearLayout layout = new LinearLayout(getContext());
-        layout.setOrientation(HORIZONTAL);
-        layout.setGravity(Gravity.CENTER_VERTICAL);
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        int margin = getResources().getDimensionPixelSize(R.dimen.feed_item_margin);
-        layoutParams.setMargins(margin, margin, margin, 0);
-        layout.setLayoutParams(layoutParams);
-
-        // Layout Label
-        layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        labelView.setLayoutParams(layoutParams);
-        layout.addView(labelView);
-
-        // Layout Spinner
-        layoutParams = new LayoutParams(0, LayoutParams.WRAP_CONTENT);
-        layoutParams.weight = 1;
-        spinner.setLayoutParams(layoutParams);
-        layout.addView(spinner);
-
-        // Finish
-        addView(layout);
     }
 
     /**
@@ -183,22 +182,25 @@ public class Sorter extends LinearLayout {
         this.hasToken = hasToken;
         this.refresh = refresh;
         int visibleCount = 0;
-        for (Map.Entry<Class<? extends Enum<?>>, AppCompatSpinner> entry : spinners.entrySet()) {
+        for (Map.Entry<Class<? extends Enum<?>>, TextInputLayout> entry : spinners.entrySet()) {
             // Set Visibility
             boolean visible = isVisible.apply(entry.getKey());
-            AppCompatSpinner spinner = entry.getValue();
-            LinearLayout parent = (LinearLayout) spinner.getParent();
-            parent.setVisibility(visible ? VISIBLE : GONE);
+            TextInputLayout textInputLayout = entry.getValue();
+            textInputLayout.setVisibility(visible ? VISIBLE : GONE);
             if (visible) {
                 visibleCount++;
             }
 
             // Set Value
             if (visible) {
+                MaterialAutoCompleteTextView spinner = (MaterialAutoCompleteTextView) textInputLayout.getEditText();
+                assert spinner != null;
                 Enum<?> value = viewModel.get(entry.getKey());
-                spinner.setSelection(value.ordinal());
+                CharSequence valueStr = (CharSequence) spinner.getAdapter().getItem(value.ordinal());
+                spinner.setText(valueStr, false);
             }
         }
+        setEnabled(viewModel.isSetup);
         if (visibleCount == 0) {
             // 0-height Sorters can cause issues: https://stackoverflow.com/q/40787577/16198887
             throw new RuntimeException();
@@ -210,8 +212,8 @@ public class Sorter extends LinearLayout {
      * @param enabled If the widget should be enabled
      */
     public void setEnabled(boolean enabled) {
-        for (AppCompatSpinner spinner : spinners.values()) {
-            spinner.setEnabled(enabled);
+        for (TextInputLayout textInputLayout : spinners.values()) {
+            textInputLayout.setEnabled(enabled);
         }
     }
 }

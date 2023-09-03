@@ -206,7 +206,7 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
      */
     protected void addPrerequisites(FeedPrerequisites prerequisites) {
         prerequisites.add(new FeedPrerequisite.Site());
-        prerequisites.listen(prerequisite -> {
+        prerequisites.listen((prerequisite, isRefreshing) -> {
             if (prerequisite instanceof FeedPrerequisite.Site) {
                 GetSiteResponse getSiteResponse = ((FeedPrerequisite.Site) prerequisite).get();
 

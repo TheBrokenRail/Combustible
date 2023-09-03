@@ -81,7 +81,7 @@ public class FeedUtil {
     }
 
     public static void setupPrerequisites(RecyclerView recyclerView, FeedPrerequisites prerequisites) {
-        prerequisites.listen(prerequisite -> {
+        prerequisites.listen((prerequisite, isRefreshing) -> {
             if (prerequisite == FeedPrerequisites.COMPLETED) {
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 if (layoutManager != null) {

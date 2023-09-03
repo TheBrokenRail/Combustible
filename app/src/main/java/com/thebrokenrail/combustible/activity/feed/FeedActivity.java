@@ -172,7 +172,7 @@ public abstract class FeedActivity extends HamburgerActivity {
      */
     protected void addPrerequisites(FeedPrerequisites prerequisites) {
         prerequisites.add(new FeedPrerequisite.Site());
-        prerequisites.listen(prerequisite -> {
+        prerequisites.listen((prerequisite, isRefreshing) -> {
             if (prerequisite instanceof FeedPrerequisite.Site) {
                 GetSiteResponse getSiteResponse = ((FeedPrerequisite.Site) prerequisite).get();
 
@@ -216,7 +216,7 @@ public abstract class FeedActivity extends HamburgerActivity {
         // Notification Badge
         if (connection.hasToken()) {
             prerequisites.add(new FeedPrerequisite.UnreadCount());
-            prerequisites.listen(prerequisite -> {
+            prerequisites.listen((prerequisite, isRefreshing) -> {
                 if (prerequisite instanceof FeedPrerequisite.UnreadCount) {
                     GetUnreadCountResponse getUnreadCountResponse = ((FeedPrerequisite.UnreadCount) prerequisite).get();
                     unreadNotifications = getUnreadCountResponse.replies + getUnreadCountResponse.mentions + getUnreadCountResponse.private_messages;

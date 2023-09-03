@@ -162,7 +162,7 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
         } else {
             prerequisites.require(FeedPrerequisite.Comment.class);
         }
-        prerequisites.listen(prerequisite -> {
+        prerequisites.listen((prerequisite, isRefreshing) -> {
             if (prerequisite instanceof FeedPrerequisite.Site) {
                 // Reload Header
                 notifyItemChanged(0);

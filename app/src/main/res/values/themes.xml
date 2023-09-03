@@ -77,6 +77,9 @@
         <item name="android:navigationBarColor">@color/navigation_bar_color</item>
         <item name="android:statusBarColor">@color/status_bar_color</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.Combustible.BottomSheetDialog</item>
+
+        <!-- Dense Spinners -->
+        <item name="textInputOutlinedExposedDropdownMenuStyle">@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu</item>
     </style>
 
     <!-- Bottom Sheet Theme -->

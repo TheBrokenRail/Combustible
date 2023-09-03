@@ -1,5 +1,7 @@
 package com.thebrokenrail.combustible.activity.settings.user;
 
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.preference.PreferenceDataStore;
 
@@ -112,6 +114,9 @@ public class UserSettingsDataStore extends PreferenceDataStore {
             connection.send(method, loginResponse -> {
                 // Make Other Activities Refresh
                 activity.triggerRefresh();
+
+                // Notify User
+                Toast.makeText(activity.getApplicationContext(), R.string.user_settings_saved, Toast.LENGTH_SHORT).show();
 
                 // 2FA
                 boolean isTotp = key.equals("generate_totp_2fa");

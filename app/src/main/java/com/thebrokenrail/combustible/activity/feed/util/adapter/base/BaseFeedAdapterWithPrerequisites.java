@@ -50,10 +50,10 @@ abstract class BaseFeedAdapterWithPrerequisites<T> extends BaseFeedAdapter<T> {
         }
 
         // Check If Everything Is Loaded
-        prerequisites.listen(prerequisite -> {
+        prerequisites.listen((prerequisite, isRefreshing) -> {
             if (prerequisite == FeedPrerequisites.ERROR) {
                 // Error
-                if (arePrerequisitesLoaded()) {
+                if (isRefreshing) {
                     // Don't Change State For Refresh Errors
                     Util.unknownError(parent.getContext());
                 } else {
