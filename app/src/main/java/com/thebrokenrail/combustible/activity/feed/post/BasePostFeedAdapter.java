@@ -303,11 +303,14 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         // Pinned Post
         boolean isPinned;
         PostContext.PinMode pinMode = postContext.getPinMode();
-        if (pinMode == PostContext.PinMode.HOME) {
+        if (pinMode == PostContext.PinMode.INSTANCE) {
             isPinned = obj.post.featured_local;
         } else if (pinMode == PostContext.PinMode.COMMUNITY) {
             isPinned = obj.post.featured_community;
+        } else if (pinMode == PostContext.PinMode.INSTANCE_OR_COMMUNITY) {
+            isPinned = obj.post.featured_local || obj.post.featured_community;
         } else {
+            assert pinMode == PostContext.PinMode.NONE;
             isPinned = false;
         }
 

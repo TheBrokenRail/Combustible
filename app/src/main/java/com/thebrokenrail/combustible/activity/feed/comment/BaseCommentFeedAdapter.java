@@ -114,7 +114,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
 
                 @Override
                 public PinMode getPinMode() {
-                    return PostContext.PinMode.COMMUNITY;
+                    return PinMode.INSTANCE_OR_COMMUNITY;
                 }
 
                 @Override

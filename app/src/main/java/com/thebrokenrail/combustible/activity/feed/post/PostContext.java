@@ -7,8 +7,9 @@ import com.thebrokenrail.combustible.util.markdown.Markdown;
 
 public interface PostContext {
     enum PinMode {
-        HOME,
+        INSTANCE,
         COMMUNITY,
+        INSTANCE_OR_COMMUNITY,
         NONE
     }
 

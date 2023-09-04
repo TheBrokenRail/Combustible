@@ -91,7 +91,7 @@ class PostFeedAdapter extends BasePostFeedAdapter {
         if (communityId != null) {
             return PostContext.PinMode.COMMUNITY;
         } else {
-            return PostContext.PinMode.HOME;
+            return PostContext.PinMode.INSTANCE;
         }
     }
 
