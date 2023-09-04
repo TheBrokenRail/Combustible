@@ -31,7 +31,7 @@
     <item
         android:id="@+id/feed_block_user"
         android:icon="@drawable/baseline_block_24"
-        android:title="@string/post_block_user"
+        android:title="@string/user_block"
         android:visible="false"
         app:showAsAction="ifRoom" />
 

@@ -1,6 +1,8 @@
 package com.thebrokenrail.combustible.util;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.Configuration;
@@ -93,5 +95,12 @@ public class Util {
             }
         }
         throw new RuntimeException();
+    }
+
+    public static void copyText(Context context, CharSequence text) {
+        assert text != null;
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(context.getString(R.string.app_name), text);
+        clipboard.setPrimaryClip(clip);
     }
 }

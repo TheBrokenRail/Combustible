@@ -152,4 +152,9 @@ abstract class PostOverflow extends PostOrCommentOverflow<PostView> {
         method.removed = !restore;
         connection.send(method, postResponse -> update(postResponse.post_view), () -> Util.unknownError(context));
     }
+
+    @Override
+    protected CharSequence getText() {
+        return BasePostFeedAdapter.getTextFromPost(obj, true, true);
+    }
 }

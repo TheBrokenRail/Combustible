@@ -128,4 +128,9 @@ abstract class CommentOverflow extends PostOrCommentOverflow<CommentView> {
         method.removed = !restore;
         connection.send(method, commentResponse -> update(commentResponse.comment_view), () -> Util.unknownError(context));
     }
+
+    @Override
+    protected CharSequence getText() {
+        return obj.comment.content;
+    }
 }

@@ -125,7 +125,7 @@ public class UserFeedActivity extends TabbedFeedActivity {
         menu.findItem(R.id.feed_share).setEnabled(infoPerson != null);
         MenuItem blockUser = menu.findItem(R.id.feed_block_user);
         blockUser.setEnabled(isBlocked != null);
-        blockUser.setTitle((isBlocked != null && isBlocked) ? R.string.post_unblock_user : R.string.post_block_user);
+        blockUser.setTitle((isBlocked != null && isBlocked) ? R.string.user_unblock : R.string.user_block);
         return ret;
     }
 

@@ -12,6 +12,11 @@
         android:title="@string/save" />
 
     <item
+        android:id="@+id/post_copy_text"
+        android:icon="@drawable/baseline_content_copy_24"
+        android:title="@string/copy_text" />
+
+    <item
         android:id="@+id/post_edit"
         android:icon="@drawable/baseline_edit_24"
         android:title="@string/edit" />

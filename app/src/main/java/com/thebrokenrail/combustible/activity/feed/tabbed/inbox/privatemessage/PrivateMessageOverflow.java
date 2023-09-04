@@ -46,6 +46,10 @@ public class PrivateMessageOverflow extends BaseOverflow<PrivateMessageView> {
             dialog.setId(obj.private_message.id);
             dialog.show(fragmentManager, "report_" + dialog.getClass().getName());
             return true;
+        } else if (item.getItemId() == R.id.post_copy_text) {
+            // Copy Text
+            Util.copyText(context, obj.private_message.content);
+            return true;
         } else {
             return false;
         }

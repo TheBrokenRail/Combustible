@@ -35,6 +35,7 @@
     <string name="unpin_instance">Unpin From Instance</string>
     <string name="lock">Lock</string>
     <string name="unlock">Unlock</string>
+    <string name="copy_text">Copy Text</string>
 
     <!-- Welcome Screen -->
     <string name="welcome_title">Welcome to Combustible!</string>
@@ -72,8 +73,6 @@
     <string name="posts_listing_type">Show</string>
     <string name="post_creator_community_spacer">on</string>
     <string name="post_community_time_spacer">•</string>
-    <string name="post_block_user">Block User</string>
-    <string name="post_unblock_user">Unblock User</string>
 
     <!-- Settings -->
     <string name="settings_general">General</string>
@@ -195,6 +194,8 @@
     <string name="private_message_error">Unable to send private message!</string>
 
     <!-- User -->
+    <string name="user_block">Block User</string>
+    <string name="user_unblock">Unblock User</string>
     <string name="user_moderates_communities">Moderates</string>
     <string name="user_subscribed_communities">Subscribed</string>
     <string name="user_about">About</string>

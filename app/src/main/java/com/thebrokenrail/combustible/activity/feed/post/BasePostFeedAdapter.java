@@ -319,23 +319,38 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         // Comment Count
         postViewHolder.commentCount.setText(String.valueOf(obj.counts.comments));
 
-        // Build Text
-        String text = obj.post.body;
-        if (text == null) {
-            text = "";
-        }
-        if (!useBigThumbnail && obj.post.url != null) {
-            text = obj.post.url + "\n\n" + text;
-        }
-        text = text.trim();
-
         // Text
+        String text = getTextFromPost(obj, !useBigThumbnail, false);
         if (postContext.showText() && text.length() > 0) {
             postViewHolder.text.setVisibility(View.VISIBLE);
             postContext.getMarkdown().set(postViewHolder.text, text);
         } else {
             postViewHolder.text.setVisibility(View.GONE);
         }
+    }
+
+    static String getTextFromPost(PostView obj, boolean includeUrl, boolean includeTitle) {
+        // Body
+        String text = obj.post.body;
+        if (text == null) {
+            text = "";
+        }
+        text = text.trim();
+
+        // URL
+        if (includeUrl && obj.post.url != null) {
+            text = obj.post.url + "\n\n" + text;
+            text = text.trim();
+        }
+
+        // Title
+        if (includeTitle) {
+            text = obj.post.name + "\n\n" + text;
+            text = text.trim();
+        }
+
+        // Return
+        return text;
     }
 
     @Override

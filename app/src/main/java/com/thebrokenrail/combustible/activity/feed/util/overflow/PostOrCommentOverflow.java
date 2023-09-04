@@ -46,6 +46,10 @@ public abstract class PostOrCommentOverflow<T> extends BaseOverflow<T> {
         } else if (item.getItemId() == R.id.post_remove) {
             remove(isRemoved());
             return true;
+        } else if (item.getItemId() == R.id.post_copy_text) {
+            // Copy Text
+            Util.copyText(context, getText());
+            return true;
         } else {
             return false;
         }
@@ -110,4 +114,6 @@ public abstract class PostOrCommentOverflow<T> extends BaseOverflow<T> {
 
     protected abstract void delete(boolean restore);
     protected abstract void remove(boolean restore);
+
+    protected abstract CharSequence getText();
 }
