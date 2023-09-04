@@ -20,7 +20,7 @@ class APIClassField {
         const declaration = `public ${this.type} ${this.name};`;
         return INDENT + annotation + '\n' + INDENT + declaration + '\n';
     }
-    
+
     // Convert TS Type To Java Type
     private static fixType(type: string) {
         type = type.replace(/number/g, NUMBER_TYPE);
@@ -61,7 +61,7 @@ class APIClassInfo implements ClassInfo {
         this.usesToken = false;
         this.requiresToken = false;
     }
-    
+
     getParent() {
         if (this.isMethod) {
             let parent = null;
@@ -82,13 +82,13 @@ class APIClassInfo implements ClassInfo {
 
     toString() {
         let data = '';
-        
+
         // Package
         data += `package ${PACKAGE};\n\n`;
-        
+
         // Imports
         data += this.generateImports();
-        
+
         // Suppress Warning If Needed
         data += '@SuppressWarnings("NotNullFieldNotInitialized")\n';
 
@@ -156,7 +156,7 @@ class APIClassInfo implements ClassInfo {
                 data += INDENT + '}\n';
             }
         }
-        
+
         // Verification
         data += INDENT + '@SuppressWarnings("ConstantConditions")\n';
         data += INDENT + '@Override\n';
@@ -193,7 +193,7 @@ class APIClassInfo implements ClassInfo {
                     data += INDENT + INDENT + '}\n';
                 }
             }
-            
+
             // Recursive Verification
             const fieldTypeInfo = classes[field.type];
             if (fieldTypeInfo && fieldTypeInfo instanceof APIClassInfo) {
@@ -209,7 +209,7 @@ class APIClassInfo implements ClassInfo {
             }
         }
         data += INDENT + '}\n';
-        
+
         // Return
         return data;
     }
@@ -266,7 +266,7 @@ export function load(definitions: string) {
         if (str === null) {
             break;
         }
-        
+
         // Find Types
         let piece = finder.next('>');
         if (piece === null) {
@@ -283,18 +283,18 @@ export function load(definitions: string) {
         if (!classes[responseClassType]) {
             responseClassType = 'Object';
         }
-        
+
         // Find HTTP Type
         finder.next('HttpType.');
         const httpType = finder.next(',')?.toUpperCase();
         if (httpType === undefined) {
             break;
         }
-        
+
         // Find Path
         finder.next('"/');
         const path = finder.next('"');
-        
+
         // Add Information To Class
         const data = classes[requestClassType];
         if (data instanceof APIClassInfo) {

@@ -9,10 +9,10 @@ class EnumInfo implements ClassInfo {
         this.name = name;
         this.values = [];
     }
-    
+
     toString() {
         let data = '';
-        
+
         // Package
         data += `package ${PACKAGE};\n\n`;
 
@@ -45,26 +45,26 @@ export function load(definitions: string) {
         if (str === null) {
             break;
         }
-        
+
         // Find Name
         const name = finder.next(' =');
         if (name === null) {
             break;
         }
         const enumInfo = new EnumInfo(name);
-        
+
         // Extract Statement
         const statement = finder.next(';');
         if (statement === null) {
             break;
         }
-        
+
         // Check Statement
         if (!statement.includes('| "') && !statement.includes('" |')) {
             // Not An Enum
             continue;
         }
-        
+
         // Write Java Enum
         for (let piece of statement.split('|')) {
             piece = piece.trim();
@@ -73,7 +73,7 @@ export function load(definitions: string) {
                 enumInfo.values.push(value);
             }
         }
-        
+
         // Store Enum
         classes[enumInfo.name] = enumInfo;
     }

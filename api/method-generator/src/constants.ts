@@ -9,7 +9,7 @@ class ConstantsInfo implements ClassInfo {
 
     toString() {
         let data = '';
-        
+
         // Package
         data += `package ${PACKAGE};\n\n`;
 
