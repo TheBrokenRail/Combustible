@@ -1,19 +1,15 @@
 # Frequently Asked Questions
-
 **Disclaimer:** This document was written before release, and as such, none of these questions have actually been frequently asked.
 
 ## Why is this app called "Combustible"?
-
 The name "Lemmy" makes me think of lemons. Lemons remind me of the famous ["combustible lemons" rant](https://www.youtube.com/watch?v=Dt6iTwVIiMM) from the game [Portal 2](https://en.wikipedia.org/wiki/Portal_2?useskin=vector). Thus, I named the app "Combustible."
 
 This is also why the app's icon is a lemon slice and its primary color is yellow (the color of lemons!).
 
 ## Why is [Lemmy.world](https://lemmy.world) the recommended instance?
-
 Quite simply, it's the largest Lemmy instance as of writing, and seems to have mostly sane moderation.
 
 ## Why are push notifications not supported?
-
 As far as I am aware, push notifications can be implemented in one of three ways:
 
 1. The app periodically checks Lemmy for any notifications.

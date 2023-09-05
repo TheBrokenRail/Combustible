@@ -1,5 +1,4 @@
 # Todo
-
 - [x] 2FA Support
   - [x] `LoginActivity`
   - [x] `UserSettingsActivity`
