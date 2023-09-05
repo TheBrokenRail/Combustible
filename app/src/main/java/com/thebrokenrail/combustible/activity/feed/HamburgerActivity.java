@@ -51,6 +51,9 @@ class HamburgerActivity extends LemmyActivity implements NavigationView.OnNaviga
     // View Profile Icon
     protected MenuItemTarget viewProfileTarget = null;
 
+    // Back Button Handling
+    private OnBackPressedCallback backCallback = null;
+
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
@@ -68,7 +71,7 @@ class HamburgerActivity extends LemmyActivity implements NavigationView.OnNaviga
         viewProfileTarget = new MenuItemTarget(navigationView.getMenu().findItem(R.id.feed_menu_view_profile));
 
         // Handle Back
-        OnBackPressedCallback backCallback = new OnBackPressedCallback(false) {
+        backCallback = new OnBackPressedCallback(false) {
             @Override
             public void handleOnBackPressed() {
                 // Close Drawer
@@ -91,6 +94,7 @@ class HamburgerActivity extends LemmyActivity implements NavigationView.OnNaviga
                 backCallback.setEnabled(false);
             }
         });
+        updateBackCallback();
     }
 
     /**
@@ -184,5 +188,15 @@ class HamburgerActivity extends LemmyActivity implements NavigationView.OnNaviga
      */
     protected BlockCommunity blockCommunity(boolean shouldBlock) {
         throw new RuntimeException();
+    }
+
+    private void updateBackCallback() {
+        backCallback.setEnabled(drawerLayout.isDrawerOpen(DRAWER_GRAVITY));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateBackCallback();
     }
 }
