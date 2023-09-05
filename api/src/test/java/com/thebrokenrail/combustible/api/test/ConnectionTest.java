@@ -1,6 +1,7 @@
 package com.thebrokenrail.combustible.api.test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -167,6 +168,7 @@ public class ConnectionTest {
         });
         latch.await();
         assertNull(isSuccess[0]);
+        assertNotNull(callback[0]);
         callback[0].run();
         assertTrue(isSuccess[0]);
     }
