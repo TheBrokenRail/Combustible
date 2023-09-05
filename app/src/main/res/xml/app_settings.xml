@@ -17,7 +17,26 @@
             app:key="disable_large_thumbnail"
             app:title="@string/app_settings_disable_large_thumbnail"
             app:iconSpaceReserved="false"
-            app:defaultValue="false" />
+            app:defaultValue="@bool/app_settings_disable_large_thumbnail_default" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/settings_links">
+
+        <CheckBoxPreference
+            app:key="use_custom_tabs"
+            app:title="@string/app_settings_use_custom_tabs"
+            app:iconSpaceReserved="false"
+            app:defaultValue="@bool/app_settings_use_custom_tabs_default" />
+
+        <CheckBoxPreference
+            app:key="use_incognito_mode"
+            app:title="@string/app_settings_use_incognito_mode"
+            app:summary="@string/app_settings_use_incognito_mode_description"
+            app:iconSpaceReserved="false"
+            app:defaultValue="@bool/app_settings_use_incognito_mode_default" />
 
     </PreferenceCategory>
 

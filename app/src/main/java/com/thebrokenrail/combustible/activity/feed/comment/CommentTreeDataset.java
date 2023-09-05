@@ -21,7 +21,7 @@ public class CommentTreeDataset extends FeedDataset<CommentView> {
         private final Integer parent;
         private final List<Integer> realChildren = new ArrayList<>();
 
-        private CommentData(CommentTreeDataset dataset, CommentView view) {
+        private CommentData(CommentTreeDataset dataset, CommentView view, CommentData oldData) {
             this.view = view;
             depth = dataset.getDepth(view);
 
@@ -31,6 +31,11 @@ public class CommentTreeDataset extends FeedDataset<CommentView> {
                 parent = Integer.parseInt(path[path.length - 2]);
             } else {
                 parent = null;
+            }
+
+            // Copy Children From Previous Data
+            if (oldData != null) {
+                realChildren.addAll(oldData.realChildren);
             }
         }
 
@@ -98,7 +103,8 @@ public class CommentTreeDataset extends FeedDataset<CommentView> {
 
         // Add To Tree
         for (CommentView comment : elements) {
-            CommentData data = new CommentData(this, comment);
+            CommentData oldData = commentTree.get(comment.comment.id);
+            CommentData data = new CommentData(this, comment, oldData);
             commentTree.put(comment.comment.id, data);
         }
 
@@ -189,7 +195,7 @@ public class CommentTreeDataset extends FeedDataset<CommentView> {
 
                     // Insert After All Parent's Children
                     if (!addToStart) {
-                        insertPosition += data.getTotalRealChildren(this);
+                        insertPosition += commentParentData.getTotalRealChildren(this);
                     }
 
                     // Add Child To Parent
@@ -222,7 +228,8 @@ public class CommentTreeDataset extends FeedDataset<CommentView> {
         for (Map.Entry<Integer, CommentData> entry : commentTree.entrySet()) {
             if (entry.getValue().view == oldElement) {
                 assert Objects.equals(entry.getKey(), newElement.comment.id);
-                commentTree.put(entry.getKey(), new CommentData(this, newElement));
+                CommentData data = new CommentData(this, newElement, entry.getValue());
+                commentTree.put(entry.getKey(), data);
                 break;
             }
         }
@@ -241,10 +248,17 @@ public class CommentTreeDataset extends FeedDataset<CommentView> {
         // Remove Children
         CommentData data = commentTree.get(element.comment.id);
         if (data != null) {
-            for (int child : data.realChildren) {
+            List<Integer> realChildrenCopy = new ArrayList<>(data.realChildren);
+            for (int child : realChildrenCopy) {
                 CommentData childData = commentTree.get(child);
                 assert childData != null;
                 remove(notifier, childData.view);
+            }
+            assert data.realChildren.size() == 0;
+            // Remove From Parent
+            CommentData commentParentData = commentTree.get(data.parent);
+            if (commentParentData != null) {
+                commentParentData.realChildren.remove(element.comment.id);
             }
         }
 

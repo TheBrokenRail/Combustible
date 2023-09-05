@@ -79,11 +79,15 @@
     <string name="settings_advanced">Advanced</string>
     <string name="settings_media">Media</string>
     <string name="settings_security">Security</string>
+    <string name="settings_links">Links</string>
     <string name="settings_about">About</string>
 
     <!-- App Settings -->
     <string name="app_settings_dark_mode">Dark Mode</string>
     <string name="app_settings_disable_large_thumbnail">Disable Large Thumbnails</string>
+    <string name="app_settings_use_custom_tabs">Use Custom Tabs</string>
+    <string name="app_settings_use_incognito_mode">Use Incognito Mode</string>
+    <string name="app_settings_use_incognito_mode_description">This is not supported by all browsers.</string>
     <string name="app_settings_change_instance">Lemmy Instance</string>
     <string name="app_settings_clear_search_history">Clear Search History</string>
     <string name="app_settings_version">App Version</string>

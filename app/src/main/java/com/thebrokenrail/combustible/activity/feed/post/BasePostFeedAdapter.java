@@ -213,7 +213,7 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         String thumbnailUrl = obj.post.thumbnail_url;
         boolean showThumbnail = obj.post.url != null;
         boolean useBigThumbnail = false;
-        boolean disableLargeThumbnail = PreferenceManager.getDefaultSharedPreferences(postViewHolder.itemView.getContext()).getBoolean("disable_large_thumbnail", false);
+        boolean disableLargeThumbnail = PreferenceManager.getDefaultSharedPreferences(postViewHolder.itemView.getContext()).getBoolean("disable_large_thumbnail", postViewHolder.itemView.getResources().getBoolean(R.bool.app_settings_disable_large_thumbnail_default));
         if (Images.isImage(obj.post.url) && !disableLargeThumbnail) {
             thumbnailUrl = obj.post.url;
             useBigThumbnail = true;

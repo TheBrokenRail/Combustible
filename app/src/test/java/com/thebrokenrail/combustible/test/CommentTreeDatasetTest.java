@@ -127,4 +127,51 @@ public class CommentTreeDatasetTest {
             }
         });
     }
+
+    @Test
+    public void testRemove() {
+        forEveryTestPost(getCommentsResponses -> {
+            CommentTreeDataset adapter = new CommentTreeDataset();
+            for (GetCommentsResponse getCommentsResponse : getCommentsResponses) {
+                adapter.add(null, getCommentsResponse.comments, false);
+            }
+
+            while (true) {
+                CommentView commentWithChildren = null;
+                for (CommentView comment : adapter) {
+                    boolean hasChildren = comment.counts.child_count > 0;
+                    boolean isTopLevel = comment.comment.path.equals("0." + comment.comment.id);
+                    if (hasChildren && isTopLevel) {
+                        commentWithChildren = comment;
+                        break;
+                    }
+                }
+                if (commentWithChildren == null) {
+                    break;
+                }
+
+                int children = 0;
+                for (CommentView comment : adapter) {
+                    if (comment.comment.path.contains("." + commentWithChildren.comment.id + ".")) {
+                        children++;
+                    }
+                }
+                assertTrue(children > 0);
+
+                int expectedSize = adapter.size() - children - 1;
+                adapter.remove(null, commentWithChildren);
+                assertEquals(expectedSize, adapter.size());
+            }
+
+            boolean allTopLevel = true;
+            for (CommentView comment : adapter) {
+                boolean isTopLevel = comment.comment.path.equals("0." + comment.comment.id);
+                if (!isTopLevel) {
+                    allTopLevel = false;
+                    break;
+                }
+            }
+            assertTrue(allTopLevel);
+        });
+    }
 }

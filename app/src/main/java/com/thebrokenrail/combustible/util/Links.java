@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.LemmyActivity;
@@ -132,26 +133,53 @@ public class Links {
             return;
         }
 
-        // Chrome Custom Tab
-        @ColorInt int colorPrimaryLight = ContextCompat.getColor(context, R.color.md_theme_light_primary);
-        @ColorInt int colorPrimaryDark = ContextCompat.getColor(context, R.color.md_theme_dark_primary);
-        CustomTabsIntent intent = new CustomTabsIntent.Builder()
-                .setDefaultColorSchemeParams(new CustomTabColorSchemeParams.Builder()
-                        .setToolbarColor(colorPrimaryLight)
-                        .build())
-                .setColorSchemeParams(CustomTabsIntent.COLOR_SCHEME_DARK, new CustomTabColorSchemeParams.Builder()
-                        .setToolbarColor(colorPrimaryDark)
-                        .build())
-                .setShowTitle(true)
-                .setShareState(CustomTabsIntent.SHARE_STATE_ON)
-                .build();
+        // Incognito Mode
+        Intent extras = new Intent();
+        boolean useIncognitoMode = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("use_incognito_mode", context.getResources().getBoolean(R.bool.app_settings_use_incognito_mode_default));
+        if (useIncognitoMode) {
+            extras.putExtra("com.google.android.apps.chrome.EXTRA_OPEN_NEW_INCOGNITO_TAB", true);
+            extras.putExtra("private_browsing_mode", true);
+        }
 
-        // Launch
-        try {
-            intent.launchUrl(context, Uri.parse(url));
-        } catch (ActivityNotFoundException e) {
-            e.printStackTrace();
-            Util.unknownError(context);
+        // Select Mode
+        boolean useCustomTabs = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("use_custom_tabs", context.getResources().getBoolean(R.bool.app_settings_use_custom_tabs_default));
+        if (useCustomTabs) {
+            // Chrome Custom Tab
+            @ColorInt int colorPrimaryLight = ContextCompat.getColor(context, R.color.md_theme_light_primary);
+            @ColorInt int colorPrimaryDark = ContextCompat.getColor(context, R.color.md_theme_dark_primary);
+            CustomTabsIntent intent = new CustomTabsIntent.Builder()
+                    .setDefaultColorSchemeParams(new CustomTabColorSchemeParams.Builder()
+                            .setToolbarColor(colorPrimaryLight)
+                            .build())
+                    .setColorSchemeParams(CustomTabsIntent.COLOR_SCHEME_DARK, new CustomTabColorSchemeParams.Builder()
+                            .setToolbarColor(colorPrimaryDark)
+                            .build())
+                    .setShowTitle(true)
+                    .setShareState(CustomTabsIntent.SHARE_STATE_ON)
+                    .build();
+
+            // Add Extras
+            intent.intent.putExtras(extras);
+
+            // Launch
+            try {
+                intent.launchUrl(context, Uri.parse(url));
+            } catch (ActivityNotFoundException e) {
+                e.printStackTrace();
+                Util.unknownError(context);
+            }
+        } else {
+            // Open In Browser
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            // Add Extras
+            intent.putExtras(extras);
+            // Launch
+            try {
+                context.startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                e.printStackTrace();
+                Util.unknownError(context);
+            }
         }
     }
 }
