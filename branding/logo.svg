@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100"
+   height="100"
+   viewBox="0 0 26.458333 26.458333"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer1">
+    <g
+       id="g2"
+       transform="rotate(45,15.709641,14.256612)">
+      <path
+         style="fill:none;stroke:#ffffff;stroke-width:1.32292;stroke-dasharray:none;stroke-opacity:1"
+         id="path1"
+         d="m 22.489584,13.229167 a 9.260417,9.260417 0 0 1 -4.630209,8.019756 9.260417,9.260417 0 0 1 -9.2604168,0 A 9.260417,9.260417 0 0 1 3.96875,13.229167" />
+      <path
+         id="path1-7"
+         style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.79375;stroke-dasharray:none;stroke-opacity:1"
+         d="m 5.9929159,13.890625 a 7.2760415,7.2760415 0 0 0 1.6541626,3.985286 l 3.9852865,-3.985286 z m 8.8330521,0 3.994072,3.994071 a 7.2760415,7.2760415 0 0 0 1.646928,-3.994071 z m -2.25826,0.935343 -3.9852861,3.985287 a 7.2760415,7.2760415 0 0 0 1.0087239,0.719336 7.2760415,7.2760415 0 0 0 2.9765622,0.931209 z m 1.322917,0 V 20.4618 a 7.2760415,7.2760415 0 0 0 2.976562,-0.931209 7.2760415,7.2760415 0 0 0 1.017509,-0.710551 z" />
+    </g>
+  </g>
+</svg>
