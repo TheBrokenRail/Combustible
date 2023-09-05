@@ -16,6 +16,7 @@ import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.GetPrivateMessages;
 import com.thebrokenrail.combustible.api.method.MarkPrivateMessageAsRead;
 import com.thebrokenrail.combustible.api.method.PrivateMessageView;
+import com.thebrokenrail.combustible.util.Images;
 import com.thebrokenrail.combustible.util.Util;
 import com.thebrokenrail.combustible.util.markdown.Markdown;
 import com.thebrokenrail.combustible.widget.PostOrCommentHeader;
@@ -92,10 +93,7 @@ public class PrivateMessageFeedAdapter extends FeedAdapter<PrivateMessageView> {
             showAvatars = site.my_user.local_user_view.local_user.show_avatars;
         }
         boolean isEdited = obj.private_message.updated != null;
-        boolean blurNsfw = true;
-        if (site.my_user != null) {
-            blurNsfw = site.my_user.local_user_view.local_user.blur_nsfw;
-        }
+        boolean blurNsfw = Images.shouldBlurNsfw(site);
         privateMessageViewHolder.header.metadata.setup(obj.creator, null, isEdited ? obj.private_message.updated : obj.private_message.published, isEdited, blurNsfw, showAvatars);
 
         // Overflow

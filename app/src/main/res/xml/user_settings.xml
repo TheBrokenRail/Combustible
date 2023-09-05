@@ -48,10 +48,10 @@
             app:title="@string/user_settings_show_nsfw"
             app:iconSpaceReserved="false" />
 
-        <CheckBoxPreference
+        <!-- <CheckBoxPreference
             app:key="blur_nsfw"
             app:title="@string/user_settings_blur_nsfw"
-            app:iconSpaceReserved="false" />
+            app:iconSpaceReserved="false" /> -->
 
         <CheckBoxPreference
             app:key="show_scores"

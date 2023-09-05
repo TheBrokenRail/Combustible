@@ -107,10 +107,7 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         super.bindHeader(root);
 
         // Banner
-        boolean blurNsfw = true;
-        if (site != null && site.my_user != null) {
-            blurNsfw = site.my_user.local_user_view.local_user.blur_nsfw;
-        }
+        boolean blurNsfw = Images.shouldBlurNsfw(site);
         boolean blurBanner = bannerNsfw && blurNsfw;
         ImageView banner = root.findViewById(R.id.posts_banner);
         RequestManager requestManager = GlideApp.with(root.getContext());
@@ -203,10 +200,7 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
 
         // Thumbnail Blurring
         boolean isNsfw = obj.post.nsfw || obj.community.nsfw;
-        boolean blurNsfw = true;
-        if (site.my_user != null) {
-            blurNsfw = site.my_user.local_user_view.local_user.blur_nsfw;
-        }
+        boolean blurNsfw = Images.shouldBlurNsfw(site);
         boolean blurThumbnail = isNsfw && blurNsfw;
 
         // Pick Thumbnail Size

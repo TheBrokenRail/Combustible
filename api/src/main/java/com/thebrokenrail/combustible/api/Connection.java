@@ -257,7 +257,7 @@ public class Connection {
 
                     // Verify
                     if (obj instanceof Verifiable) {
-                        //TODO ((Verifiable) obj).verify();
+                        ((Verifiable) obj).verify();
                     }
 
                     // Run Callback

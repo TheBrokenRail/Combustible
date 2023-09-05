@@ -3,6 +3,13 @@ import * as fs from 'node:fs';
 
 import { PACKAGE, INDENT, NUMBER_TYPE, ClassInfo, classes, TokenFinder, srcPath } from './common';
 
+// Mislabeled Fields
+const MISLABELED_FIELDS = [
+    'Person.inbox_url',
+    'Community.followers_url',
+    'Community.inbox_url'
+];
+
 // Class Information
 class APIClassField {
     readonly type: string;
@@ -234,7 +241,7 @@ export function load(definitions: string) {
             classInfo = new APIClassInfo(name);
         } else if (classInfo !== null && !line.startsWith('/**') && !line.startsWith('*') && !line.startsWith('*/')) {
             // Read Class Property
-            const nullable = line.indexOf('?:') !== -1;
+            let nullable = line.indexOf('?:') !== -1;
             line = line.replace(/;/g, '');
             line = line.replace(/\?/g, '');
             const parts = line.split(': ');
@@ -250,6 +257,12 @@ export function load(definitions: string) {
                     classInfo.requiresToken = true;
                 }
             } else {
+                // Some Fields Are Mislabeled As Non-Null
+                if (MISLABELED_FIELDS.includes(classInfo.name + '.' + name)) {
+                    nullable = true;
+                }
+
+                // Add Field
                 classInfo.fields.push(new APIClassField(type, name, nullable));
             }
         }

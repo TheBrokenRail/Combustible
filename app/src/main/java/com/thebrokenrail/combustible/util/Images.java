@@ -16,6 +16,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 
 import com.thebrokenrail.combustible.R;
+import com.thebrokenrail.combustible.api.method.GetSiteResponse;
 
 import java.util.regex.Pattern;
 
@@ -83,5 +84,12 @@ public class Images {
         float[] corners = {0, 0, 0, 0, cornerRadius, cornerRadius, cornerRadius, cornerRadius};
         background.setCornerRadii(corners);
         return background;
+    }
+
+    public static boolean shouldBlurNsfw(GetSiteResponse site) {
+        /*if (site.my_user != null) {
+            blurNsfw = site.my_user.local_user_view.local_user.blur_nsfw;
+        }*/
+        return true;
     }
 }

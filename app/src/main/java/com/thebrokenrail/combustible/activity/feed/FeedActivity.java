@@ -176,11 +176,6 @@ public abstract class FeedActivity extends HamburgerActivity {
             if (prerequisite instanceof FeedPrerequisite.Site) {
                 GetSiteResponse getSiteResponse = ((FeedPrerequisite.Site) prerequisite).get();
 
-                // TODO Remove Hack
-                if (getSiteResponse.my_user != null) {
-                    getSiteResponse.my_user.local_user_view.local_user.blur_nsfw = true;
-                }
-
                 // Get Current User ID
                 if (connection.hasToken() && getSiteResponse.my_user != null) {
                     currentUser = getSiteResponse.my_user.local_user_view.person.id;
