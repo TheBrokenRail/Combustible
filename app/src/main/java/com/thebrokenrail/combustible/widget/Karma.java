@@ -17,6 +17,8 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.util.Util;
 
+import java.text.NumberFormat;
+
 /**
  * Utility class for managing upvotes and downvotes.
  */
@@ -138,7 +140,7 @@ public class Karma extends LinearLayout {
         this.callback = callback;
 
         // Set Score
-        scoreText.setText(String.valueOf(score));
+        scoreText.setText(NumberFormat.getIntegerInstance().format(score));
     }
 
     private void setupButton(MaterialCheckBox button) {

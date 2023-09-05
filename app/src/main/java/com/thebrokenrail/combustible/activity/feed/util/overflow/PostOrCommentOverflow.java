@@ -84,6 +84,8 @@ public abstract class PostOrCommentOverflow<T> extends BaseOverflow<T> {
             menu.findItem(R.id.post_remove).setTitle(R.string.restore);
             menu.findItem(R.id.post_remove).setIcon(R.drawable.baseline_restore_from_trash_24);
         }
+        // Report
+        menu.findItem(R.id.post_report).setVisible(connection.hasToken());
     }
 
     protected abstract void save(boolean shouldSave);
