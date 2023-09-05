@@ -33,11 +33,12 @@ jobs:
           - name: Build APK
             run: |
                 chmod +x gradlew
-                ./gradlew build
+                ./gradlew build bundle
           - name: Upload APK
             uses: actions/upload-artifact@v3
             with:
                 name: apk
                 path: |
                     app/build/outputs/apk
+                    app/build/outputs/bundle
                     app/build/outputs/mapping
