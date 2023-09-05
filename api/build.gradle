@@ -22,8 +22,27 @@ test {
     }
 }
 
-tasks.register('generateMethods', Exec) {
-    workingDir new File(projectDir, 'method-generator')
-    commandLine 'npm', 'start'
+tasks.register('generateMethods') {
+    // Task Info
+    group 'build'
+    def dir = new File(projectDir, 'method-generator')
+    def inputFiles = fileTree(dir) {
+        exclude 'node_modules'
+        exclude 'build'
+    }
+    inputs.files inputFiles
+    def outputDir = new File(projectDir, 'src/main/java/com/thebrokenrail/combustible/api/method')
+    outputs.dir outputDir
+    // Commands To Run
+    doLast {
+        exec {
+            workingDir dir
+            commandLine 'npm', 'install'
+        }
+        exec {
+            workingDir dir
+            commandLine 'npm', 'start'
+        }
+    }
 }
 compileJava.dependsOn generateMethods
