@@ -171,7 +171,7 @@ public class CommentTreeDataset extends FeedDataset<CommentView> {
                         dataset.set(i, comment);
                         if (notifier != null) {
                             // Notify RecyclerView
-                            notifier.change(i);
+                            notifier.change(i, 1);
                         }
                         break;
                     }
@@ -238,7 +238,7 @@ public class CommentTreeDataset extends FeedDataset<CommentView> {
         if (index != -1) {
             dataset.set(index, newElement);
             if (notifier != null) {
-                notifier.change(index);
+                notifier.change(index, 1);
             }
         }
     }

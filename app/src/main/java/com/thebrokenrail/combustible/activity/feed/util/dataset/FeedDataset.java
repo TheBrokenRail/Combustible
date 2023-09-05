@@ -15,7 +15,7 @@ public abstract class FeedDataset<T> implements Iterable<T> {
     public interface Notifier {
         void insert(int position, int amount);
         void remove(int position, int amount);
-        void change(int position);
+        void change(int position, int amount);
     }
 
     /**

@@ -217,7 +217,7 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
                 if (comment.comment.id.equals(parentCommentId)) {
                     // Found Comment
                     comment.counts.child_count++;
-                    notifier.change(dataset.indexOf(comment));
+                    notifier.change(dataset.indexOf(comment), 1);
                     break;
                 }
             }

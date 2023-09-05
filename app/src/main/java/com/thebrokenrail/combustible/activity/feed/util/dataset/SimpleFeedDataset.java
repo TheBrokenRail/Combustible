@@ -42,7 +42,7 @@ public class SimpleFeedDataset<T> extends FeedDataset<T> {
         if (index != -1) {
             dataset.set(index, newElement);
             if (notifier != null) {
-                notifier.change(index);
+                notifier.change(index, 1);
             }
         }
     }

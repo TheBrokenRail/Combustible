@@ -40,7 +40,7 @@ public abstract class FeedAdapter<T> extends BaseFeedAdapterWithPrerequisites<T>
                 // Update Permissions
                 permissions.setSite(site);
                 // Update Dataset
-                notifier.change(viewModel.dataset.size());
+                notifier.change(0, viewModel.dataset.size());
                 // Update Header
                 if (hasHeader()) {
                     notifyItemChanged(0);

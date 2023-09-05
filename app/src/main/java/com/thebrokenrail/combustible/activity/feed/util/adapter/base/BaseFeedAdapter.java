@@ -118,8 +118,8 @@ abstract class BaseFeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.View
         }
 
         @Override
-        public void change(int position) {
-            notifyItemChanged(getFirstElementPosition() + position);
+        public void change(int position, int amount) {
+            notifyItemRangeChanged(getFirstElementPosition() + position, amount);
         }
     };
 
