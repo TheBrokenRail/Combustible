@@ -42,9 +42,7 @@ public abstract class FeedAdapter<T> extends BaseFeedAdapterWithPrerequisites<T>
                 // Update Dataset
                 notifier.change(0, viewModel.dataset.size());
                 // Update Header
-                if (hasHeader()) {
-                    notifyItemChanged(0);
-                }
+                reloadHeader();
             }
         });
     }

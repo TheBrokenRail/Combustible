@@ -36,6 +36,8 @@ import com.thebrokenrail.combustible.util.markdown.Markdown;
 import com.thebrokenrail.combustible.widget.Karma;
 import com.thebrokenrail.combustible.widget.PostOrCommentHeader;
 
+import java.util.Objects;
+
 import okhttp3.HttpUrl;
 
 public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> {
@@ -98,8 +100,11 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
     protected abstract boolean showBanner();
 
     protected void setBannerUrl(String bannerUrl, boolean bannerNsfw) {
-        this.bannerUrl = bannerUrl;
-        this.bannerNsfw = bannerNsfw;
+        if (!Objects.equals(this.bannerUrl, bannerUrl) || this.bannerNsfw != bannerNsfw) {
+            this.bannerUrl = bannerUrl;
+            this.bannerNsfw = bannerNsfw;
+            reloadHeader();
+        }
     }
 
     @Override

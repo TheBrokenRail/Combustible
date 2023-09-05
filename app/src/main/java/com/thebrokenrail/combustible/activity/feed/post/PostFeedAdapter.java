@@ -41,11 +41,9 @@ class PostFeedAdapter extends BasePostFeedAdapter {
             prerequisites.require(FeedPrerequisite.Community.class);
         }
         prerequisites.listen((prerequisite, isRefreshing) -> {
-            boolean reloadHeader = false;
             if (prerequisite instanceof FeedPrerequisite.Site) {
                 // Site Loaded
                 assert site != null;
-                reloadHeader = true;
 
                 // Banner
                 if (showBanner() && communityId == null) {
@@ -53,7 +51,6 @@ class PostFeedAdapter extends BasePostFeedAdapter {
                 }
             } else if (communityId != null && prerequisite instanceof FeedPrerequisite.Community) {
                 // Community Loaded
-                reloadHeader = true;
 
                 // Banner
                 GetCommunityResponse getCommunityResponse = ((FeedPrerequisite.Community) prerequisite).get();
@@ -63,10 +60,7 @@ class PostFeedAdapter extends BasePostFeedAdapter {
 
                 // Store For Permissions
                 community = getCommunityResponse.community_view.community;
-            }
-            if (reloadHeader) {
-                // Reload Header
-                notifyItemChanged(0);
+                reloadHeader();
             }
         });
     }

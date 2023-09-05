@@ -62,12 +62,12 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
     }
 
     private void updatePost(PostView post) {
-        assert this.post != null && site != null;
+        assert this.post != null && site != null && hasHeader();
         // Set Post
         PostView oldPost = this.post.post_view;
         this.post.post_view = post;
         // Reload Header
-        notifyItemChanged(0);
+        reloadHeader();
         // Reload Comments If Post Locked/Unlock
         boolean lockChanged = !post.post.locked.equals(oldPost.post.locked);
         if (lockChanged) {

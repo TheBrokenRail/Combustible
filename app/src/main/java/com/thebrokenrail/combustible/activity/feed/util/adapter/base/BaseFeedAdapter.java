@@ -446,4 +446,13 @@ abstract class BaseFeedAdapter<T> extends RecyclerView.Adapter<RecyclerView.View
     public boolean isFirstPageLoaded() {
         return arePrerequisitesLoaded() && viewModel.loadingStatus != LoadingStatus.ERROR && viewModel.nextPage != ViewModel.FIRST_PAGE;
     }
+
+    /**
+     * Reload the header. This will trigger {@link #bindHeader(View)}.
+     */
+    protected void reloadHeader() {
+        if (hasHeader()) {
+            notifyItemChanged(0);
+        }
+    }
 }

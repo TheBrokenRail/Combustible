@@ -54,7 +54,7 @@ public abstract class SortableFeedAdapter<T> extends FeedAdapter<T> {
                     // Mark As Setup
                     sorting.setup();
                     // Reload Header
-                    notifyItemChanged(0);
+                    reloadHeader();
                 } else if (prerequisite instanceof FeedPrerequisite.Site) {
                     // Site Loaded
                     assert site != null;
@@ -66,7 +66,7 @@ public abstract class SortableFeedAdapter<T> extends FeedAdapter<T> {
                         } else {
                             sorting.set(site.site_view.local_site.default_post_listing_type);
                         }
-                        notifyItemChanged(0);
+                        reloadHeader();
                     }
                 }
             });

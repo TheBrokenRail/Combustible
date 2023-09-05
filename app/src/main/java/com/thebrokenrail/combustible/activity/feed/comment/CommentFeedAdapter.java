@@ -165,20 +165,20 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
         prerequisites.listen((prerequisite, isRefreshing) -> {
             if (prerequisite instanceof FeedPrerequisite.Site) {
                 // Reload Header
-                notifyItemChanged(0);
+                reloadHeader();
             } else if (isPost && prerequisite instanceof FeedPrerequisite.Post) {
                 // Show The Post Itself
                 post = ((FeedPrerequisite.Post) prerequisite).get();
                 // Wait Until Site Has Loaded
                 if (site != null) {
                     // Reload Header
-                    notifyItemChanged(0);
+                    reloadHeader();
                 }
             } else if (!isPost && prerequisite instanceof FeedPrerequisite.Comment) {
                 // View All Button
                 postId = ((FeedPrerequisite.Comment) prerequisite).get().comment_view.post.id;
                 // Reload Header
-                notifyItemChanged(0);
+                reloadHeader();
             }
         });
     }
