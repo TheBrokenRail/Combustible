@@ -1,34 +1,36 @@
 name: Android CI
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    push:
+        branches:
+          - master
+    pull_request:
+        branches:
+          - master
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    env:
-      RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup JDK
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        cache: gradle
-    - name: Access Release Keystore
-      if: ${{ env.RELEASE_KEYSTORE != '' }}
-      run: |
-        echo "${RELEASE_KEYSTORE}" | base64 -d > keystore.jks
-    - name: Build APK
-      run: |
-        chmod +x gradlew
-        ./gradlew build
-    - name: Upload APK
-      uses: actions/upload-artifact@v3
-      with:
-        name: apk
-        path: app/build/outputs/apk/
+    build:
+        runs-on: ubuntu-latest
+        env:
+            RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
+        steps:
+          - uses: actions/checkout@v3
+          - name: Setup JDK
+            uses: actions/setup-java@v3
+            with:
+                java-version: '17'
+                distribution: 'temurin'
+                cache: gradle
+          - name: Access Release Keystore
+            if: ${{ env.RELEASE_KEYSTORE != '' }}
+            run: |
+                echo "${RELEASE_KEYSTORE}" | base64 -d > keystore.jks
+          - name: Build APK
+            run: |
+                chmod +x gradlew
+                ./gradlew build
+          - name: Upload APK
+            uses: actions/upload-artifact@v3
+            with:
+                name: apk
+                path: app/build/outputs/apk/
