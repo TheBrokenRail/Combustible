@@ -14,7 +14,12 @@ jobs:
         env:
             RELEASE_KEYSTORE: ${{ secrets.RELEASE_KEYSTORE }}
         steps:
-          - uses: actions/checkout@v3
+          - name: Checkout Repository
+            uses: actions/checkout@v3
+            with:
+                fetch-depth: 0
+                fetch-tags: true
+                submodules: 'recursive'
           - name: Setup JDK
             uses: actions/setup-java@v3
             with:
