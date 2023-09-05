@@ -152,8 +152,8 @@ public class ConnectionTest {
         CountDownLatch latch = new CountDownLatch(1);
         Runnable[] callback = new Runnable[1];
         connection.setCallbackHelper(runnable -> {
-            latch.countDown();
             callback[0] = runnable;
+            latch.countDown();
         });
 
         // Test GetSite
