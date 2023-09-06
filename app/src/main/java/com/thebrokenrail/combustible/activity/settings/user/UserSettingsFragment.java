@@ -76,7 +76,7 @@ public class UserSettingsFragment extends SettingsFragment {
         biography.setOnBindEditTextListener(editText -> {
             // Configure Biography EditText
             editText.setMaxLines(Integer.MAX_VALUE);
-            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
         });
 
         // Email

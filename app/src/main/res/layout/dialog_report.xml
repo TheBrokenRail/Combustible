@@ -20,7 +20,7 @@
                 android:id="@+id/dialog_report_reason_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:inputType="text|textCapSentences|textAutoCorrect"
                 android:maxLines="1" />
 
         </com.google.android.material.textfield.TextInputLayout>

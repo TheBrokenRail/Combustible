@@ -45,7 +45,7 @@
                     android:id="@+id/create_post_title_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="text|textCapSentences|textAutoCorrect"
                     android:maxLines="1" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -80,7 +80,7 @@
                     android:id="@+id/create_post_body_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textMultiLine" />
+                    android:inputType="textMultiLine|textCapSentences|textAutoCorrect" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
