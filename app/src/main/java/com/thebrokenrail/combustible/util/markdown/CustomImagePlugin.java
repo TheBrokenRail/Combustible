@@ -122,16 +122,20 @@ public class CustomImagePlugin extends AbstractMarkwonPlugin {
 
             @Override
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                if (cache.remove(drawable) != null) {
-                    if (drawable.isAttached()) {
-                        setResourceInternal(resource);
-                    }
+                if (cache.remove(drawable) != null && drawable.isAttached()) {
+                    setResourceInternal(resource);
                 }
             }
 
             @Override
             public void onLoadFailed(@Nullable Drawable unused) {
                 cache.remove(drawable);
+                onLoadCleared(unused);
+            }
+
+            @Override
+            public void onLoadStarted(@Nullable Drawable unused) {
+                onLoadCleared(unused);
             }
 
             @Override
@@ -139,8 +143,8 @@ public class CustomImagePlugin extends AbstractMarkwonPlugin {
                 if (animatable != null) {
                     animatable.stop();
                 }
-                drawable.clearResult();
                 if (drawable.isAttached()) {
+                    drawable.clearResult();
                     Drawable placeholderDrawable = placeholder(drawable);
                     assert placeholderDrawable != null;
                     setResourceInternal(placeholderDrawable);
