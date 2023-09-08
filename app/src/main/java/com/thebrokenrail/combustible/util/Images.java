@@ -60,6 +60,7 @@ public class Images {
 
         // Get Mask
         Drawable mask = createThumbnailBackground(context);
+        ((GradientDrawable) mask).setColor(Color.WHITE);
 
         // Create
         return new RippleDrawable(ColorStateList.valueOf(color), null, mask);
