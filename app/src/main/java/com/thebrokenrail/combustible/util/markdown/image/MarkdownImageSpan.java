@@ -1,30 +1,20 @@
 package com.thebrokenrail.combustible.util.markdown.image;
 
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.text.style.ImageSpan;
 import android.widget.TextView;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
-
-import java.lang.ref.WeakReference;
+import androidx.annotation.Nullable;
 
 import io.noties.markwon.image.DrawableUtils;
 import io.noties.markwon.image.ImageSize;
-import io.noties.markwon.image.ImageSizeResolverDef;
 
 class MarkdownImageSpan extends ImageSpan {
-    private static class CustomImageSizeResolver extends ImageSizeResolverDef {
-        private Rect resolveImageSize(Drawable drawable, TextView textView, ImageSize size) {
-            int width = textView.getWidth() - textView.getPaddingLeft() - textView.getPaddingRight();
-            float textSize = textView.getPaint().getTextSize();
-            return resolveImageSize(size, drawable.getBounds(), width, textSize);
-        }
-    }
-
-    private WeakReference<TextView> textView;
-    private final ImageSize size;
+    @Nullable
+    final ImageSize size;
+    @NonNull
     final String url;
 
     /**
@@ -34,48 +24,44 @@ class MarkdownImageSpan extends ImageSpan {
     @Keep
     private MarkdownDrawableCallback callback = null;
 
+    @Nullable
     private MarkdownImageTarget target = null;
 
-    MarkdownImageSpan(@NonNull Drawable drawable, TextView textView, ImageSize size, String url) {
-        super(resizeDrawable(drawable, textView, size));
-        this.textView = new WeakReference<>(textView);
+    MarkdownImageSpan(@NonNull Drawable drawable, TextView textView, @Nullable ImageSize size, @NonNull String url) {
+        super(resizeDrawable(drawable));
         this.size = size;
         this.url = url;
         // Attach Callback
-        attachCallback();
+        attachCallback(textView);
     }
 
-    MarkdownImageSpan(MarkdownImageSpan oldSpan, Drawable drawable) {
-        this(drawable, oldSpan.textView.get(), oldSpan.size, oldSpan.url);
+    MarkdownImageSpan(MarkdownImageSpan oldSpan, TextView textView, Drawable drawable) {
+        this(drawable, textView, oldSpan.size, oldSpan.url);
     }
 
-    private static Drawable resizeDrawable(Drawable drawable, TextView textView, ImageSize size) {
+    private static Drawable resizeDrawable(Drawable drawable) {
         // Intrinsic Bounds
         DrawableUtils.applyIntrinsicBoundsIfEmpty(drawable);
-        // Resolve Size
-        if (textView != null) {
-            drawable.setBounds(new CustomImageSizeResolver().resolveImageSize(drawable, textView, size));
-        }
+
         // Return
         return drawable;
     }
 
     void attach(TextView textView) {
-        // Store TextView Reference
-        this.textView = new WeakReference<>(textView);
         // Attach Callback
-        attachCallback();
+        attachCallback(textView);
         // Create Target
         target = new MarkdownImageTarget(textView, this);
     }
 
-    private void attachCallback() {
+    private void attachCallback(TextView textView) {
         // Create
-        callback = textView.get() != null ? new MarkdownDrawableCallback(textView.get()) : null;
+        callback = textView != null ? new MarkdownDrawableCallback(textView) : null;
         // Attach
         getDrawable().setCallback(callback);
     }
 
+    @Nullable
     MarkdownImageTarget getTarget() {
         return target;
     }

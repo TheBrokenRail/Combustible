@@ -14,13 +14,15 @@ import com.bumptech.glide.request.transition.Transition;
 import java.lang.ref.WeakReference;
 
 class MarkdownImageTarget extends CustomTarget<Drawable> {
+    @NonNull
     private final WeakReference<TextView> textView;
+    @NonNull
     private MarkdownImageSpan span;
 
     @Nullable
     private Animatable animatable = null;
 
-    MarkdownImageTarget(TextView textView, MarkdownImageSpan span) {
+    MarkdownImageTarget(TextView textView, @NonNull MarkdownImageSpan span) {
         this.textView = new WeakReference<>(textView);
         this.span = span;
     }
@@ -44,7 +46,7 @@ class MarkdownImageTarget extends CustomTarget<Drawable> {
                 int flags = spannable.getSpanFlags(span);
 
                 // Create New Span
-                MarkdownImageSpan newSpan = new MarkdownImageSpan(span, drawable);
+                MarkdownImageSpan newSpan = new MarkdownImageSpan(span, textView.get(), drawable);
                 // Replace Span
                 spannable.removeSpan(span);
                 spannable.setSpan(newSpan, start, end, flags);

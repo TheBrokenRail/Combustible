@@ -92,7 +92,7 @@ public class CustomImagePlugin extends AbstractMarkwonPlugin {
                 // Wait Until Layout
                 textView.post(() -> {
                     // Load Image
-                    GlideUtil.load(requestManager, span.url, null, cornerRadius, false, false, null, span.getTarget());
+                    GlideUtil.load(requestManager, span.url, new MarkdownImageScaling(span.size, textView), cornerRadius, false, false, null, span.getTarget());
                 });
             }
         }
