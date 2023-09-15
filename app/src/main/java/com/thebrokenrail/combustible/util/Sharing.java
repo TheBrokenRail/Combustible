@@ -7,10 +7,10 @@ import com.thebrokenrail.combustible.api.method.Community;
 import com.thebrokenrail.combustible.api.method.PersonView;
 
 public class Sharing {
-    public static String POST_PREFIX = "post";
-    public static String COMMUNITY_PREFIX = "c";
-    public static String COMMENT_PREFIX = "comment";
-    public static String USER_PREFIX = "u";
+    public static final String POST_PREFIX = "post";
+    public static final String COMMUNITY_PREFIX = "c";
+    public static final String COMMENT_PREFIX = "comment";
+    public static final String USER_PREFIX = "u";
 
     private static void share(Context context, String segment) {
         // Build URL

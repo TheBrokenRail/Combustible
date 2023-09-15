@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.thebrokenrail.combustible.util.Links;
 import com.thebrokenrail.combustible.util.NiceLinkMovementMethod;
 import com.thebrokenrail.combustible.util.Util;
+import com.thebrokenrail.combustible.util.markdown.image.CustomImagePlugin;
 
 import io.noties.markwon.AbstractMarkwonPlugin;
 import io.noties.markwon.Markwon;

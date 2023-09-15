@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class UserSettingsDataStore extends PreferenceDataStore {
     public static class ViewModel extends androidx.lifecycle.ViewModel {
-        UserSettingsDataStore dataStore = new UserSettingsDataStore();
+        final UserSettingsDataStore dataStore = new UserSettingsDataStore();
     }
 
     private LocalUserView user = null;
