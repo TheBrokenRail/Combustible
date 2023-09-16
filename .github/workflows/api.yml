@@ -16,6 +16,8 @@ jobs:
         permissions:
             contents: read
             packages: write
+            pages: write
+            id-token: write
         steps:
           - name: Checkout Repository
             uses: actions/checkout@v3
@@ -32,6 +34,12 @@ jobs:
           - name: Publish
             run: |
                 chmod +x gradlew
-                ./gradlew publish
+                ./gradlew publish javadoc
             env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          - name: Upload JavaDoc
+            uses: actions/upload-pages-artifact@v2
+            with:
+                path: api/build/docs/javadoc
+          - name: Deploy JavaDoc
+            uses: actions/deploy-pages@v2
