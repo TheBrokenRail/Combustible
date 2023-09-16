@@ -357,7 +357,7 @@ export function load(definitions: string) {
                     // Handle Empty Lines
                     line = line.trim();
                     if (line.length === 0) {
-                        line = '<p>';
+                        line = '<br>';
                     }
 
                     // Convert Code Block

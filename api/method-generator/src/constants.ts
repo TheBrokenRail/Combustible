@@ -13,6 +13,9 @@ class ConstantsInfo implements ClassInfo {
         // Package
         data += `package ${PACKAGE};\n\n`;
 
+        // JavaDoc
+        data += '/**\n * API constants.\n */';
+
         // Open Class
         data += `public class ${this.name} {\n`;
 
@@ -28,6 +31,9 @@ class ConstantsInfo implements ClassInfo {
                     break;
                 }
                 // Write
+                data += INDENT + '/**\n';
+                data += INDENT + ' * API version.\n';
+                data += INDENT + ' */\n';
                 data += INDENT + `public static final String VERSION = ${version}\n`;
             }
         }

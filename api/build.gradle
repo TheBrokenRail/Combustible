@@ -46,3 +46,9 @@ tasks.register('generateMethods') {
     }
 }
 compileJava.dependsOn generateMethods
+
+javadoc {
+    options {
+        addBooleanOption 'Xdoclint:all,-missing', true
+    }
+}
