@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
-import { classes, NUMBER_TYPE } from './common';
+import * as child_process from 'node:child_process';
+import { classes, NUMBER_TYPE, srcPath } from './common';
 import { APIClassInfo } from './api-classes';
 import { EnumInfo } from './enums';
 import { apiVersion } from './constants';
@@ -10,7 +11,7 @@ const document: OpenAPIV3.Document = {
     openapi: '3.0.0',
     info: {
         title: 'Lemmy API',
-        version: ''
+        version: child_process.execFileSync('git', ['describe', '--tags', '--dirty'], {cwd: srcPath}).toString().trim()
     },
     components: {
         schemas: {}

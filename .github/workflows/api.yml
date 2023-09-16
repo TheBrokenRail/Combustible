@@ -35,11 +35,12 @@ jobs:
             run: |
                 chmod +x gradlew
                 ./gradlew publish javadoc
+                cp api/method-generator/openapi.json api/build/docs/javadoc
             env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          - name: Upload JavaDoc
+          - name: Upload GitHub Pages
             uses: actions/upload-pages-artifact@v2
             with:
                 path: api/build/docs/javadoc
-          - name: Deploy JavaDoc
+          - name: Deploy GitHub Pages
             uses: actions/deploy-pages@v2

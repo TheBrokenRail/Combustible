@@ -29,3 +29,6 @@ connection.setCallbackHelper(action -> {
     activity.runOnUiThread(action);
 });
 ```
+
+## OpenAPI
+Combustible also generates an [OpenAPI](https://www.openapis.org/) document that can be downloaded [here](https://thebrokenrail.github.io/Combustible/openapi.json). This document can be viewed in [Swagger UI](https://github.com/swagger-api/swagger-ui) [here](https://petstore.swagger.io/?url=https%3A%2F%2Fthebrokenrail.github.io%2FCombustible%2Fopenapi.json).
