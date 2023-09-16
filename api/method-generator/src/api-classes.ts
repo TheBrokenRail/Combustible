@@ -49,6 +49,7 @@ class APIClassField {
 class APIClassInfo implements ClassInfo {
     readonly name: string;
     readonly fields: APIClassField[];
+    javadoc: string | null;
     isMethod: boolean;
     responseClassType: string | null;
     path: string | null;
@@ -59,6 +60,7 @@ class APIClassInfo implements ClassInfo {
     constructor(name: string) {
         this.name = name;
         this.fields = [];
+        this.javadoc = null;
         // Method
         this.isMethod = false;
         this.responseClassType = null;
@@ -89,6 +91,16 @@ class APIClassInfo implements ClassInfo {
 
     toString() {
         let data = '';
+
+        // JavaDoc
+        if (this.javadoc != null) {
+            data += '/**\n';
+            const lines = this.javadoc.split('\n');
+            for (const line of lines) {
+                data += ` * ${line}\n`;
+            }
+            data += ' */\n';
+        }
 
         // Suppress Warning If Needed
         data += '@SuppressWarnings({"NotNullFieldNotInitialized", "unused", "RedundantSuppression"})\n';
@@ -321,6 +333,46 @@ export function load(definitions: string) {
             data.responseClassType = responseClassType;
             data.path = path;
             data.httpType = httpType;
+
+            // JavaDoc
+            const openingTag = '/**';
+            const closingTag = '*/';
+            const openPosition = str.lastIndexOf(openingTag);
+            const closePosition = str.lastIndexOf(closingTag);
+            if (openPosition !== -1 && closePosition !== -1) {
+                // Process JavaDoc
+                const rawJavadoc = str.substring(openPosition + openingTag.length, closePosition);
+                const javadoc = [];
+                const lines = rawJavadoc.split('\n');
+                lines.shift();
+                lines.pop();
+                for (let line of lines) {
+                    // Remove Beginning Tag
+                    line = line.trim();
+                    const middleTag = '*';
+                    if (line.startsWith(middleTag)) {
+                        line = line.substring(middleTag.length);
+                    }
+
+                    // Handle Empty Lines
+                    line = line.trim();
+                    if (line.length === 0) {
+                        line = '<p>';
+                    }
+
+                    // Convert Code Block
+                    const codeTag = '`';
+                    if (line.startsWith(codeTag) && line.endsWith(codeTag)) {
+                        line = line.substring(codeTag.length, line.length - codeTag.length);
+                        line = `<pre>${line}</pre>`;
+                    }
+
+                    // Add To Final JavaDoc
+                    javadoc.push(line);
+                }
+                // Add JavaDoc To Class
+                data.javadoc = javadoc.join('\n');
+            }
         }
     }
 }
