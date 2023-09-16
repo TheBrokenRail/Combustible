@@ -12,7 +12,6 @@ buildscript {
 
 plugins {
     id 'com.android.application'
-    id 'org.ajoberstar.grgit' version '5.2.0'
     id 'com.mikepenz.aboutlibraries.plugin' version "${aboutLibraries_version}"
 }
 
@@ -26,17 +25,9 @@ android {
         targetSdk 34
 
         // Version Code
-        def birthday = 1687752034L // The exact time the project was created!
-        def gitVersionCode = (int) (grgit.head().dateTime.toEpochSecond() - birthday)
-        versionCode gitVersionCode
-
+        versionCode rootProject.gitVersionCode
         // Version Name
-        def isDirty = !grgit.status().clean
-        def gitVersionName = grgit.describe(tags: true, longDescr: isDirty, always: true)
-        if (isDirty) {
-            gitVersionName += '-dirty'
-        }
-        versionName gitVersionName
+        versionName rootProject.gitVersionName
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 

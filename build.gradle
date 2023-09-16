@@ -2,4 +2,17 @@
 plugins {
     id 'com.android.application' version '8.1.1' apply false
     id 'com.android.library' version '8.1.1' apply false
+    id 'org.ajoberstar.grgit' version '5.2.0'
 }
+
+// Version Code
+def birthday = 1687752034L // The exact time the project was created!
+ext.gitVersionCode = (int) (grgit.head().dateTime.toEpochSecond() - birthday)
+
+// Version Name
+def isDirty = !grgit.status().clean
+def gitVersionName = grgit.describe(tags: true, longDescr: isDirty, always: true)
+if (isDirty) {
+    gitVersionName += '-dirty'
+}
+ext.gitVersionName = gitVersionName

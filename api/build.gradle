@@ -1,6 +1,10 @@
 plugins {
     id 'java-library'
+    id 'maven-publish'
 }
+
+group 'com.thebrokenrail.combustible'
+version rootProject.gitVersionName
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -50,5 +54,23 @@ compileJava.dependsOn generateMethods
 javadoc {
     options {
         addBooleanOption 'Xdoclint:all,-missing', true
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = 'https://maven.pkg.github.com/TheBrokenRail/Combustible'
+            credentials {
+                username = System.getenv('GITHUB_ACTOR')
+                password = System.getenv('GITHUB_TOKEN')
+            }
+        }
     }
 }
