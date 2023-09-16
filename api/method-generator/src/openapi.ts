@@ -149,7 +149,7 @@ for (const className in classes) {
                     }
                 }
             };
-            if (classInfo.fields.length > 0) {
+            if (classInfo.fields.length > 0 || classInfo.usesToken) {
                 // Query Parameters
                 path.get!.parameters!.push({
                     in: 'query',
@@ -181,7 +181,7 @@ for (const className in classes) {
                     }
                 }
             };
-            if (classInfo.fields.length > 0) {
+            if (classInfo.fields.length > 0 || classInfo.usesToken) {
                 // Request Body
                 operation.requestBody = {
                     required: true,
