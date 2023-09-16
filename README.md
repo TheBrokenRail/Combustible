@@ -31,3 +31,4 @@ Download an APK from [GitHub Releases](https://github.com/TheBrokenRail/Combusti
 - [Todo List/Known Issues](TODO.md)
 - [Frequently Asked Questions](FAQ.md)
 - [Changelog](CHANGELOG.md)
+- [API Library](api/README.md)
