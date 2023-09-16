@@ -16,6 +16,9 @@ class EnumInfo implements ClassInfo {
         // Package
         data += `package ${PACKAGE};\n\n`;
 
+        // Suppress Warning If Needed
+        data += '@SuppressWarnings({"unused", "RedundantSuppression"})\n';
+
         // Open Enum
         data += `public enum ${this.name} {\n`;
 

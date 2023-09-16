@@ -10,6 +10,7 @@ import com.thebrokenrail.combustible.api.method.Community;
 import com.thebrokenrail.combustible.api.method.CommunityView;
 import com.thebrokenrail.combustible.api.method.ListingType;
 import com.thebrokenrail.combustible.api.method.Search;
+import com.thebrokenrail.combustible.api.method.SearchType;
 import com.thebrokenrail.combustible.api.method.SortType;
 import com.thebrokenrail.combustible.util.Util;
 
@@ -33,6 +34,7 @@ public class SearchCommunityFeedAdapter extends BaseCommunityFeedAdapter {
         method.sort = sorting.get(SortType.class);
         method.listing_type = sorting.get(ListingType.class);
         method.q = query;
+        method.type_ = SearchType.Communities;
         connection.send(method, searchResponse -> {
             List<Community> communities = new ArrayList<>();
             for (CommunityView communityView : searchResponse.communities) {

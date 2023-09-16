@@ -129,6 +129,7 @@ public class Connection {
                             } else {
                                 value = String.valueOf(obj);
                             }
+                            //noinspection DataFlowIssue
                             urlBuilder = urlBuilder.addQueryParameter(name, value);
                         }
                     }

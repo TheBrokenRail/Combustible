@@ -27,10 +27,45 @@ import com.thebrokenrail.combustible.util.Links;
 import com.thebrokenrail.combustible.util.MenuItemTarget;
 import com.thebrokenrail.combustible.util.Util;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Activity with a hamburger menu.
  */
 class HamburgerActivity extends LemmyActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private static class DrawerBackPressedCallback extends OnBackPressedCallback {
+        private final WeakReference<DrawerLayout> drawerLayout;
+
+        private DrawerBackPressedCallback(DrawerLayout drawerLayout) {
+            super(false);
+            this.drawerLayout = new WeakReference<>(drawerLayout);
+            // Add Event Listener
+            drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    // Enable Callback
+                    setEnabled(true);
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    super.onDrawerClosed(drawerView);
+                    // Disable Callback
+                    setEnabled(false);
+                }
+            });
+        }
+
+        @Override
+        public void handleOnBackPressed() {
+            // Close Drawer
+            if (drawerLayout.get() != null) {
+                drawerLayout.get().closeDrawer(DRAWER_GRAVITY);
+            }
+        }
+    }
+
     // Drawer
     private static final int DRAWER_GRAVITY = GravityCompat.END;
     private DrawerLayout drawerLayout;
@@ -52,7 +87,7 @@ class HamburgerActivity extends LemmyActivity implements NavigationView.OnNaviga
     protected MenuItemTarget viewProfileTarget = null;
 
     // Back Button Handling
-    private OnBackPressedCallback backCallback = null;
+    private DrawerBackPressedCallback backCallback = null;
 
     @Override
     public void setContentView(int layoutResID) {
@@ -71,29 +106,8 @@ class HamburgerActivity extends LemmyActivity implements NavigationView.OnNaviga
         viewProfileTarget = new MenuItemTarget(navigationView.getMenu().findItem(R.id.feed_menu_view_profile));
 
         // Handle Back
-        backCallback = new OnBackPressedCallback(false) {
-            @Override
-            public void handleOnBackPressed() {
-                // Close Drawer
-                drawerLayout.closeDrawer(DRAWER_GRAVITY);
-            }
-        };
+        backCallback = new DrawerBackPressedCallback(drawerLayout);
         getOnBackPressedDispatcher().addCallback(this, backCallback);
-        drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                // Enable Callback
-                backCallback.setEnabled(true);
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                // Disable Callback
-                backCallback.setEnabled(false);
-            }
-        });
         updateBackCallback();
     }
 

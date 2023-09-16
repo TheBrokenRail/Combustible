@@ -5,12 +5,11 @@ import android.view.View;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.thebrokenrail.combustible.activity.feed.comment.BaseCommentFeedAdapter;
-import com.thebrokenrail.combustible.activity.feed.util.dataset.FeedDataset;
-import com.thebrokenrail.combustible.activity.feed.util.dataset.SimpleFeedDataset;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CommentView;
 import com.thebrokenrail.combustible.api.method.ListingType;
 import com.thebrokenrail.combustible.api.method.Search;
+import com.thebrokenrail.combustible.api.method.SearchType;
 import com.thebrokenrail.combustible.api.method.SortType;
 import com.thebrokenrail.combustible.util.Util;
 
@@ -33,6 +32,7 @@ class SearchCommentFeedAdapter extends BaseCommentFeedAdapter {
         method.sort = sorting.get(SortType.class);
         method.listing_type = sorting.get(ListingType.class);
         method.q = query;
+        method.type_ = SearchType.Comments;
         connection.send(method, getCommentsResponse -> successCallback.accept(getCommentsResponse.comments), errorCallback);
     }
 

@@ -10,6 +10,7 @@ import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.ListingType;
 import com.thebrokenrail.combustible.api.method.PostView;
 import com.thebrokenrail.combustible.api.method.Search;
+import com.thebrokenrail.combustible.api.method.SearchType;
 import com.thebrokenrail.combustible.api.method.SortType;
 import com.thebrokenrail.combustible.util.Util;
 
@@ -32,6 +33,7 @@ class SearchPostFeedAdapter extends BasePostFeedAdapter {
         method.sort = sorting.get(SortType.class);
         method.listing_type = sorting.get(ListingType.class);
         method.q = query;
+        method.type_ = SearchType.Posts;
         connection.send(method, getPostsResponse -> successCallback.accept(getPostsResponse.posts), errorCallback);
     }
 

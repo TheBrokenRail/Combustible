@@ -90,14 +90,8 @@ class APIClassInfo implements ClassInfo {
     toString() {
         let data = '';
 
-        // Package
-        data += `package ${PACKAGE};\n\n`;
-
-        // Imports
-        data += this.generateImports();
-
         // Suppress Warning If Needed
-        data += '@SuppressWarnings("NotNullFieldNotInitialized")\n';
+        data += '@SuppressWarnings({"NotNullFieldNotInitialized", "unused", "RedundantSuppression"})\n';
 
         // Open Class
         data += `public class ${this.name} `;
@@ -118,17 +112,27 @@ class APIClassInfo implements ClassInfo {
         // Close Class
         data += '}\n';
 
+        // Imports
+        data = this.generateImports(data) + data;
+
+        // Package
+        data = `package ${PACKAGE};\n\n` + data;
+
         // Return
         return data;
     }
 
-    generateImports() {
-        const imports = [
-            'com.thebrokenrail.combustible.api.util.*',
-            'org.jetbrains.annotations.Nullable',
-            'org.jetbrains.annotations.NotNull',
-            'java.util.List'
-        ];
+    generateImports(existingData: string) {
+        const imports = ['com.thebrokenrail.combustible.api.util.*'];
+        if (existingData.includes('@Nullable')) {
+            imports.push('org.jetbrains.annotations.Nullable');
+        }
+        if (existingData.includes('@NotNull')) {
+            imports.push('org.jetbrains.annotations.NotNull');
+        }
+        if (existingData.includes('List<')) {
+            imports.push('java.util.List');
+        }
         // Return
         let data = '';
         for (const str of imports) {
@@ -179,25 +183,27 @@ class APIClassInfo implements ClassInfo {
             // Verify Lists
             const listPrefix = 'List<';
             if (field.type.startsWith(listPrefix)) {
-                // Field Is A List
-                let forIndent = INDENT + INDENT;
-                // Null Check If Needed
-                if (field.nullable) {
-                    data += INDENT + INDENT + `if (${field.name} != null) {\n`;
-                    forIndent += INDENT;
-                }
                 // Check If List Type Is Verifiable
                 const listType = field.type.substring(listPrefix.length, field.type.length - 1);
                 const listTypeInfo = classes[listType];
                 if (listTypeInfo && listTypeInfo instanceof APIClassInfo) {
+                    // Field Is A List
+                    let forIndent = INDENT + INDENT;
+                    // Null Check If Needed
+                    if (field.nullable) {
+                        data += INDENT + INDENT + `if (${field.name} != null) {\n`;
+                        forIndent += INDENT;
+                    }
+
                     // Iterate Over List
                     data += forIndent + `for (${listType} obj : ${field.name}) {\n`;
                     data += forIndent + INDENT + 'obj.verify();\n';
                     data += forIndent + '}\n';
-                }
-                // End Null Check
-                if (field.nullable) {
-                    data += INDENT + INDENT + '}\n';
+
+                    // End Null Check
+                    if (field.nullable) {
+                        data += INDENT + INDENT + '}\n';
+                    }
                 }
             }
 

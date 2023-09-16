@@ -10,6 +10,7 @@ public abstract class AuthenticatedMethod<T> extends Method<T> {
     /**
      * An authentication token.
      */
+    @SuppressWarnings("unused")
     @Nullable
     public String auth;
 
