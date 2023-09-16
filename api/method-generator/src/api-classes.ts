@@ -46,7 +46,7 @@ class APIClassField {
         return type;
     }
 }
-class APIClassInfo implements ClassInfo {
+export class APIClassInfo implements ClassInfo {
     readonly name: string;
     readonly fields: APIClassField[];
     javadoc: string | null;

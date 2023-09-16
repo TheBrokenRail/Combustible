@@ -1,7 +1,7 @@
 import { PACKAGE, INDENT, ClassInfo, classes, TokenFinder } from './common';
 
 // Enum Information
-class EnumInfo implements ClassInfo {
+export class EnumInfo implements ClassInfo {
     readonly name: string;
     readonly values: string[];
 

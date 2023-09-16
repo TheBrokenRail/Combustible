@@ -31,3 +31,6 @@ for (const className in classes) {
     const result = classInfo.toString();
     fs.writeFileSync(path.join(out, `${className}.java`), result);
 }
+
+// Generate OpenAPI Document
+import './openapi';
