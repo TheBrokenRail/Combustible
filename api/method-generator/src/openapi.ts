@@ -153,7 +153,7 @@ for (const className in classes) {
                 // Query Parameters
                 path.get!.parameters!.push({
                     in: 'query',
-                    name: 'params',
+                    name: classInfo.name,
                     schema: {
                         $ref: `#/components/schemas/${classInfo.name}`
                     },
