@@ -2,7 +2,6 @@ package com.thebrokenrail.combustible.util.markdown.image;
 
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
-import android.text.Spannable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +16,7 @@ class MarkdownImageTarget extends CustomTarget<Drawable> {
     @NonNull
     private final WeakReference<TextView> textView;
     @NonNull
-    private MarkdownImageSpan span;
+    private final MarkdownImageSpan span;
 
     @Nullable
     private Animatable animatable = null;
@@ -32,26 +31,9 @@ class MarkdownImageTarget extends CustomTarget<Drawable> {
         span.getDrawable().setCallback(null);
 
         // Update Span
+        span.setDrawable(drawable);
         if (textView.get() != null) {
-            CharSequence text = textView.get().getText();
-            if (text instanceof Spannable) {
-                // Get Span Location
-                Spannable spannable = (Spannable) text;
-                int start = spannable.getSpanStart(span);
-                if (start == -1) {
-                    // Not Attached
-                    return;
-                }
-                int end = spannable.getSpanEnd(span);
-                int flags = spannable.getSpanFlags(span);
-
-                // Create New Span
-                MarkdownImageSpan newSpan = new MarkdownImageSpan(span, textView.get(), drawable);
-                // Replace Span
-                spannable.removeSpan(span);
-                spannable.setSpan(newSpan, start, end, flags);
-                span = newSpan;
-            }
+            textView.get().setText(textView.get().getText());
         }
 
         // Update Animation

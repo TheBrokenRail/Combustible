@@ -48,7 +48,7 @@ public class CustomImagePlugin extends AbstractMarkwonPlugin {
         builder.setFactory(Image.class, (configuration, props) -> {
             String url = ImageProps.DESTINATION.require(props);
             ImageSize size = ImageProps.IMAGE_SIZE.get(props);
-            return new MarkdownImageSpan(getPlaceholder(context), null, size, url);
+            return new MarkdownImageSpan(getPlaceholder(context), size, url);
         });
 
         // Clickable Images

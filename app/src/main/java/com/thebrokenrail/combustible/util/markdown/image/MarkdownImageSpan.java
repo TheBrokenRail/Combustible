@@ -1,17 +1,22 @@
 package com.thebrokenrail.combustible.util.markdown.image;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
-import android.text.style.ImageSpan;
+import android.text.style.DynamicDrawableSpan;
 import android.widget.TextView;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.lang.reflect.Field;
+
 import io.noties.markwon.image.DrawableUtils;
 import io.noties.markwon.image.ImageSize;
 
-class MarkdownImageSpan extends ImageSpan {
+class MarkdownImageSpan extends DynamicDrawableSpan {
+    private Drawable drawable;
+
     @Nullable
     final ImageSize size;
     @NonNull
@@ -27,23 +32,33 @@ class MarkdownImageSpan extends ImageSpan {
     @Nullable
     private MarkdownImageTarget target = null;
 
-    MarkdownImageSpan(@NonNull Drawable drawable, TextView textView, @Nullable ImageSize size, @NonNull String url) {
-        super(resizeDrawable(drawable));
+    MarkdownImageSpan(@NonNull Drawable drawable, @Nullable ImageSize size, @NonNull String url) {
+        setDrawable(drawable);
         this.size = size;
         this.url = url;
         // Attach Callback
-        attachCallback(textView);
+        attachCallback(null);
     }
 
-    MarkdownImageSpan(MarkdownImageSpan oldSpan, TextView textView, Drawable drawable) {
-        this(drawable, textView, oldSpan.size, oldSpan.url);
-    }
+    void setDrawable(Drawable drawable) {
+        // Clear Cached Drawable
+        try {
+            @SuppressLint("DiscouragedPrivateApi") @SuppressWarnings("JavaReflectionMemberAccess") Field field = DynamicDrawableSpan.class.getDeclaredField("mDrawableRef");
+            field.setAccessible(true);
+            field.set(this, null);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            // Unable To Clear
+            throw new RuntimeException(e);
+        }
 
-    private static Drawable resizeDrawable(Drawable drawable) {
         // Intrinsic Bounds
         DrawableUtils.applyIntrinsicBoundsIfEmpty(drawable);
+        // Set Drawable
+        this.drawable = drawable;
+    }
 
-        // Return
+    @Override
+    public Drawable getDrawable() {
         return drawable;
     }
 
