@@ -33,14 +33,12 @@ class MarkdownImageSpan extends DynamicDrawableSpan {
     private MarkdownImageTarget target = null;
 
     MarkdownImageSpan(@NonNull Drawable drawable, @Nullable ImageSize size, @NonNull String url) {
-        setDrawable(drawable);
+        setDrawable(drawable, null);
         this.size = size;
         this.url = url;
-        // Attach Callback
-        attachCallback(null);
     }
 
-    void setDrawable(Drawable drawable) {
+    void setDrawable(Drawable drawable, TextView textView) {
         // Clear Cached Drawable
         try {
             @SuppressLint("DiscouragedPrivateApi") @SuppressWarnings("JavaReflectionMemberAccess") Field field = DynamicDrawableSpan.class.getDeclaredField("mDrawableRef");
@@ -51,10 +49,18 @@ class MarkdownImageSpan extends DynamicDrawableSpan {
             throw new RuntimeException(e);
         }
 
+        // Disable Old Drawable
+        if (this.drawable != null) {
+            this.drawable.setCallback(null);
+        }
+
         // Intrinsic Bounds
         DrawableUtils.applyIntrinsicBoundsIfEmpty(drawable);
         // Set Drawable
         this.drawable = drawable;
+
+        // Attach Callback
+        attachCallback(textView);
     }
 
     @Override

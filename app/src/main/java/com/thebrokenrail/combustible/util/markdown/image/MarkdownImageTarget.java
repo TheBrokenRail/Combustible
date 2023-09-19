@@ -27,11 +27,8 @@ class MarkdownImageTarget extends CustomTarget<Drawable> {
     }
 
     private void setDrawable(Drawable drawable) {
-        // Disable Old Drawable
-        span.getDrawable().setCallback(null);
-
         // Update Span
-        span.setDrawable(drawable);
+        span.setDrawable(drawable, textView.get());
         if (textView.get() != null) {
             textView.get().setText(textView.get().getText());
         }
