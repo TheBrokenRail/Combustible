@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
 import io.noties.markwon.image.DrawableUtils;
 import io.noties.markwon.image.ImageSize;
 
-class MarkdownImageSpan extends DynamicDrawableSpan {
+class DynamicImageSpan extends DynamicDrawableSpan {
     private Drawable drawable;
 
     @Nullable
@@ -27,12 +27,12 @@ class MarkdownImageSpan extends DynamicDrawableSpan {
      * @noinspection FieldCanBeLocal
      */
     @Keep
-    private MarkdownDrawableCallback callback = null;
+    private DrawableCallback callback = null;
 
     @Nullable
-    private MarkdownImageTarget target = null;
+    private SpanTarget target = null;
 
-    MarkdownImageSpan(@NonNull Drawable drawable, @Nullable ImageSize size, @NonNull String url) {
+    DynamicImageSpan(@NonNull Drawable drawable, @Nullable ImageSize size, @NonNull String url) {
         setDrawable(drawable, null);
         this.size = size;
         this.url = url;
@@ -72,18 +72,18 @@ class MarkdownImageSpan extends DynamicDrawableSpan {
         // Attach Callback
         attachCallback(textView);
         // Create Target
-        target = new MarkdownImageTarget(textView, this);
+        target = new SpanTarget(textView, this);
     }
 
     private void attachCallback(TextView textView) {
         // Create
-        callback = textView != null ? new MarkdownDrawableCallback(textView) : null;
+        callback = textView != null ? new DrawableCallback(textView) : null;
         // Attach
         getDrawable().setCallback(callback);
     }
 
     @Nullable
-    MarkdownImageTarget getTarget() {
+    SpanTarget getTarget() {
         return target;
     }
 }

@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 
 import java.lang.ref.WeakReference;
 
-class MarkdownDrawableCallback implements Drawable.Callback {
+class DrawableCallback implements Drawable.Callback {
     private final WeakReference<View> view;
 
-    public MarkdownDrawableCallback(View view) {
+    public DrawableCallback(View view) {
         this.view = new WeakReference<>(view);
     }
 

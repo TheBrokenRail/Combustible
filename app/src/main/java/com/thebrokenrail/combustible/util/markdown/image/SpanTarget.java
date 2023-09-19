@@ -12,16 +12,16 @@ import com.bumptech.glide.request.transition.Transition;
 
 import java.lang.ref.WeakReference;
 
-class MarkdownImageTarget extends CustomTarget<Drawable> {
+class SpanTarget extends CustomTarget<Drawable> {
     @NonNull
     private final WeakReference<TextView> textView;
     @NonNull
-    private final MarkdownImageSpan span;
+    private final DynamicImageSpan span;
 
     @Nullable
     private Animatable animatable = null;
 
-    MarkdownImageTarget(TextView textView, @NonNull MarkdownImageSpan span) {
+    SpanTarget(TextView textView, @NonNull DynamicImageSpan span) {
         this.textView = new WeakReference<>(textView);
         this.span = span;
     }
@@ -30,6 +30,7 @@ class MarkdownImageTarget extends CustomTarget<Drawable> {
         // Update Span
         span.setDrawable(drawable, textView.get());
         if (textView.get() != null) {
+            // Reload TextView
             textView.get().setText(textView.get().getText());
         }
 
@@ -50,7 +51,7 @@ class MarkdownImageTarget extends CustomTarget<Drawable> {
         }
         // Set Placeholder
         if (textView.get() != null) {
-            setDrawable(CustomImagePlugin.getPlaceholder(textView.get().getContext()));
+            setDrawable(MarkdownImagePlugin.getPlaceholder(textView.get().getContext()));
         }
     }
 

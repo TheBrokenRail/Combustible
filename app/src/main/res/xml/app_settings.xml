@@ -19,6 +19,12 @@
             app:iconSpaceReserved="false"
             app:defaultValue="@bool/app_settings_disable_large_thumbnail_default" />
 
+        <CheckBoxPreference
+            app:key="disable_markdown_images"
+            app:title="@string/app_settings_disable_markdown_images"
+            app:iconSpaceReserved="false"
+            app:defaultValue="@bool/app_settings_disable_markdown_images_default" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

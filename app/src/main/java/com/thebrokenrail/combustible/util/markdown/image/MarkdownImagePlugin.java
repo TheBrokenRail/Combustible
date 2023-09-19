@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.RequestManager;
 import com.thebrokenrail.combustible.R;
@@ -27,12 +28,12 @@ import io.noties.markwon.image.ImageSize;
 /**
  * Custom Markwon image plugin using Glide.
  */
-public class CustomImagePlugin extends AbstractMarkwonPlugin {
+public class MarkdownImagePlugin extends AbstractMarkwonPlugin {
     private final Context context;
     private final RequestManager requestManager;
     private final int cornerRadius;
 
-    public CustomImagePlugin(Context context) {
+    public MarkdownImagePlugin(Context context) {
         this.context = context;
         requestManager = GlideApp.with(context);
         cornerRadius = Images.getCornerRadius(context);
@@ -48,7 +49,7 @@ public class CustomImagePlugin extends AbstractMarkwonPlugin {
         builder.setFactory(Image.class, (configuration, props) -> {
             String url = ImageProps.DESTINATION.require(props);
             ImageSize size = ImageProps.IMAGE_SIZE.get(props);
-            return new MarkdownImageSpan(getPlaceholder(context), size, url);
+            return new DynamicImageSpan(getPlaceholder(context), size, url);
         });
 
         // Clickable Images
@@ -68,8 +69,8 @@ public class CustomImagePlugin extends AbstractMarkwonPlugin {
         // Clear Images
         CharSequence text = textView.getText();
         if (text instanceof Spanned) {
-            MarkdownImageSpan[] spans = ((Spanned) text).getSpans(0, text.length(), MarkdownImageSpan.class);
-            for (MarkdownImageSpan span : spans) {
+            DynamicImageSpan[] spans = ((Spanned) text).getSpans(0, text.length(), DynamicImageSpan.class);
+            for (DynamicImageSpan span : spans) {
                 // Remove Callback
                 span.getDrawable().setCallback(null);
                 // Clear Target
@@ -82,17 +83,23 @@ public class CustomImagePlugin extends AbstractMarkwonPlugin {
 
     @Override
     public void afterSetText(@NonNull TextView textView) {
+        // Check Settings
+        boolean disableMarkdownImages = PreferenceManager.getDefaultSharedPreferences(textView.getContext()).getBoolean("disable_markdown_images", textView.getResources().getBoolean(R.bool.app_settings_disable_markdown_images_default));
+        if (disableMarkdownImages) {
+            return;
+        }
+
         // Load Images
         CharSequence text = textView.getText();
         if (text instanceof Spanned) {
-            MarkdownImageSpan[] spans = ((Spanned) text).getSpans(0, text.length(), MarkdownImageSpan.class);
-            for (MarkdownImageSpan span : spans) {
+            DynamicImageSpan[] spans = ((Spanned) text).getSpans(0, text.length(), DynamicImageSpan.class);
+            for (DynamicImageSpan span : spans) {
                 // Create Target
                 span.attach(textView);
                 // Wait Until Layout
                 textView.post(() -> {
                     // Load Image
-                    GlideUtil.load(requestManager, span.url, new MarkdownImageScaling(span.size, textView), cornerRadius, false, false, null, span.getTarget());
+                    GlideUtil.load(requestManager, span.url, new ImageScaling(span.size, textView), cornerRadius, false, false, null, span.getTarget());
                 });
             }
         }

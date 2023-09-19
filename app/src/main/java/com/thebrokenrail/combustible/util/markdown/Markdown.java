@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import com.thebrokenrail.combustible.util.Links;
 import com.thebrokenrail.combustible.util.NiceLinkMovementMethod;
 import com.thebrokenrail.combustible.util.Util;
-import com.thebrokenrail.combustible.util.markdown.image.CustomImagePlugin;
+import com.thebrokenrail.combustible.util.markdown.image.MarkdownImagePlugin;
 
 import io.noties.markwon.AbstractMarkwonPlugin;
 import io.noties.markwon.Markwon;
@@ -36,7 +36,7 @@ public class Markdown {
         Prism4jTheme prism4jTheme = Util.isDarkMode(context) ? Prism4jThemeDarkula.create() : Prism4jThemeDefault.create();
         this.markwon = Markwon.builder(context)
                 .usePlugin(StrikethroughPlugin.create())
-                .usePlugin(new CustomImagePlugin(context))
+                .usePlugin(new MarkdownImagePlugin(context))
                 .usePlugin(LinkifyPlugin.create(Linkify.WEB_URLS, true)) // email urls interfere with lemmy links
                 .usePlugin(new LemmyLinkPlugin())
                 .usePlugin(TablePlugin.create(context))

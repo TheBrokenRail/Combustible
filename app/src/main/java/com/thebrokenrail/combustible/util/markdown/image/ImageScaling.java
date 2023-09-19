@@ -22,7 +22,7 @@ import java.util.concurrent.locks.Lock;
 import io.noties.markwon.image.ImageSize;
 import io.noties.markwon.image.ImageSizeResolverDef;
 
-class MarkdownImageScaling extends BitmapTransformation {
+class ImageScaling extends BitmapTransformation {
     private static class CustomImageSizeResolver extends ImageSizeResolverDef {
         private final float textSize;
         private final int textViewWidth;
@@ -79,7 +79,7 @@ class MarkdownImageScaling extends BitmapTransformation {
     @NonNull
     private final ImageSize size;
 
-    MarkdownImageScaling(@Nullable ImageSize size, TextView textView) {
+    ImageScaling(@Nullable ImageSize size, TextView textView) {
         float textSize = textView.getPaint().getTextSize();
         int textViewWidth = textView.getWidth() - textView.getPaddingLeft() - textView.getPaddingRight();
         sizeResolver = new CustomImageSizeResolver(textSize, textViewWidth);
@@ -141,7 +141,7 @@ class MarkdownImageScaling extends BitmapTransformation {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        MarkdownImageScaling that = (MarkdownImageScaling) o;
+        ImageScaling that = (ImageScaling) o;
         return sizeResolver.equals(that.sizeResolver) && size.toString().equals(that.size.toString());
     }
 
