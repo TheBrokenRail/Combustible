@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.text.Spanned;
+import android.util.TypedValue;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.RequestManager;
@@ -40,7 +43,18 @@ public class MarkdownImagePlugin extends AbstractMarkwonPlugin {
     }
 
     static Drawable getPlaceholder(Context context) {
-        return ContextCompat.getDrawable(context, R.drawable.baseline_image_24);
+        // Get Drawable
+        Drawable placeholder = ContextCompat.getDrawable(context, R.drawable.baseline_image_24);
+        assert placeholder != null;
+
+        // Tint Drawable
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnSurface, typedValue, true);
+        @ColorInt int color = ContextCompat.getColor(context, typedValue.resourceId);
+        DrawableCompat.setTint(DrawableCompat.wrap(placeholder).mutate(), color);
+
+        // Return
+        return placeholder;
     }
 
     @Override
@@ -49,7 +63,7 @@ public class MarkdownImagePlugin extends AbstractMarkwonPlugin {
         builder.setFactory(Image.class, (configuration, props) -> {
             String url = ImageProps.DESTINATION.require(props);
             ImageSize size = ImageProps.IMAGE_SIZE.get(props);
-            return new DynamicImageSpan(getPlaceholder(context), size, url);
+            return new MarkdownImageSpan(getPlaceholder(context), size, url);
         });
 
         // Clickable Images
@@ -69,10 +83,10 @@ public class MarkdownImagePlugin extends AbstractMarkwonPlugin {
         // Clear Images
         CharSequence text = textView.getText();
         if (text instanceof Spanned) {
-            DynamicImageSpan[] spans = ((Spanned) text).getSpans(0, text.length(), DynamicImageSpan.class);
-            for (DynamicImageSpan span : spans) {
+            MarkdownImageSpan[] spans = ((Spanned) text).getSpans(0, text.length(), MarkdownImageSpan.class);
+            for (MarkdownImageSpan span : spans) {
                 // Remove Callback
-                span.getDrawable().setCallback(null);
+                span.removeCallback();
                 // Clear Target
                 if (span.getTarget() != null) {
                     requestManager.clear(span.getTarget());
@@ -92,8 +106,8 @@ public class MarkdownImagePlugin extends AbstractMarkwonPlugin {
         // Load Images
         CharSequence text = textView.getText();
         if (text instanceof Spanned) {
-            DynamicImageSpan[] spans = ((Spanned) text).getSpans(0, text.length(), DynamicImageSpan.class);
-            for (DynamicImageSpan span : spans) {
+            MarkdownImageSpan[] spans = ((Spanned) text).getSpans(0, text.length(), MarkdownImageSpan.class);
+            for (MarkdownImageSpan span : spans) {
                 // Create Target
                 span.attach(textView);
                 // Wait Until Layout

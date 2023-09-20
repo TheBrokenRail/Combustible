@@ -52,7 +52,7 @@ public class Images {
         return background;
     }
 
-    public static Drawable createThumbnailForeground(Context context) {
+    public static Drawable createRipple(Context context, Drawable content) {
         // Get Color
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(com.google.android.material.R.attr.colorControlHighlight, typedValue, true);
@@ -63,7 +63,12 @@ public class Images {
         ((GradientDrawable) mask).setColor(Color.WHITE);
 
         // Create
-        return new RippleDrawable(ColorStateList.valueOf(color), null, mask);
+        return new RippleDrawable(ColorStateList.valueOf(color), content, mask);
+    }
+
+    public static Drawable createThumbnailForeground(Context context) {
+        // Create
+        return createRipple(context, null);
     }
 
     public static Drawable createPlaceholder(Context context) {

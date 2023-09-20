@@ -1,6 +1,7 @@
 package com.thebrokenrail.combustible.util;
 
 import android.graphics.RectF;
+import android.graphics.drawable.RippleDrawable;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -11,6 +12,8 @@ import android.text.style.URLSpan;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+
+import com.thebrokenrail.combustible.util.markdown.image.MarkdownImageSpan;
 
 import io.noties.markwon.ext.tables.TableRowSpan;
 
@@ -52,29 +55,79 @@ public class NiceLinkMovementMethod extends LinkMovementMethod {
         boolean ret = false;
         int action = event.getAction();
 
+        // Ripple Effects
+        if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
+            MarkdownImageSpan[] images = spannable.getSpans(0, spannable.length(), MarkdownImageSpan.class);
+            MarkdownImageSpan selectedImage = findSpanUnderTouch(widget, spannable, event, MarkdownImageSpan.class);
+            for (MarkdownImageSpan image : images) {
+                // Update Hotspot
+                int hotspotX = (int) event.getX();
+                int hotspotY = (int) event.getY();
+                hotspotX -= widget.getTotalPaddingLeft();
+                hotspotY -= widget.getTotalPaddingTop();
+                image.setHotspot(hotspotX, hotspotY);
+
+                // Enable/Disable Ripple
+                if (image.getDrawable() instanceof RippleDrawable) {
+                    int[] rippleState;
+                    if (image == selectedImage) {
+                        // Selected
+                        if (action == MotionEvent.ACTION_DOWN) {
+                            // Started Pressing On Drawable, Enable Ripple
+                            rippleState = new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled};
+                        } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                            // Stopped Pressing On Drawable, Disable Ripple
+                            rippleState = new int[]{};
+                        } else {
+                            // Currently Pressing On Drawable, Don't Change State
+                            rippleState = null;
+                        }
+                        // Consume Event
+                        ret = true;
+                    } else {
+                        // Not Selected, Disable Ripple
+                        rippleState = new int[]{};
+                    }
+                    // Update Ripple State
+                    if (rippleState != null) {
+                        image.getDrawable().setState(rippleState);
+                    }
+                }
+            }
+        }
+
+        // Handle Event
         if (action == MotionEvent.ACTION_CANCEL) {
+            // De-Select Link
             selectedLink = null;
         } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
             ClickableSpan link = findClickableSpanUnderTouch(widget, spannable, event);
-
             if (action == MotionEvent.ACTION_DOWN) {
+                // Select Link
                 selectedLink = link;
             } else if (link != null && link == selectedLink) {
+                // Click Link
                 link.onClick(widget);
             }
 
-            ret = selectedLink != null;
+            // Consume Event If Link Is Selected
+            if (selectedLink != null) {
+                ret = true;
+            }
 
+            // De-Select Link On ACTION_UP
             if (action == MotionEvent.ACTION_UP) {
                 selectedLink = null;
             }
 
+            // Special Handling For Markdown Tables
             if (action == MotionEvent.ACTION_DOWN && findSpanUnderTouch(widget, spannable, event, TableRowSpan.class) != null) {
-                // Special Handling For Markdown Tables
+                // Consume Event
                 ret = true;
             }
         }
 
+        // Return
         return ret;
     }
 

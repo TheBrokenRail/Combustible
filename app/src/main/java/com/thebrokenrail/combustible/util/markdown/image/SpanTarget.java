@@ -16,19 +16,19 @@ class SpanTarget extends CustomTarget<Drawable> {
     @NonNull
     private final WeakReference<TextView> textView;
     @NonNull
-    private final DynamicImageSpan span;
+    private final MarkdownImageSpan span;
 
     @Nullable
     private Animatable animatable = null;
 
-    SpanTarget(TextView textView, @NonNull DynamicImageSpan span) {
+    SpanTarget(TextView textView, @NonNull MarkdownImageSpan span) {
         this.textView = new WeakReference<>(textView);
         this.span = span;
     }
 
-    private void setDrawable(Drawable drawable) {
+    private void setDrawable(Drawable drawable, boolean ripple) {
         // Update Span
-        span.setDrawable(drawable, textView.get());
+        span.setDrawable(drawable, textView.get(), ripple);
         if (textView.get() != null) {
             // Reload TextView
             textView.get().setText(textView.get().getText());
@@ -40,7 +40,7 @@ class SpanTarget extends CustomTarget<Drawable> {
 
     @Override
     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-        setDrawable(resource);
+        setDrawable(resource, true);
     }
 
     @Override
@@ -51,7 +51,7 @@ class SpanTarget extends CustomTarget<Drawable> {
         }
         // Set Placeholder
         if (textView.get() != null) {
-            setDrawable(MarkdownImagePlugin.getPlaceholder(textView.get().getContext()));
+            setDrawable(MarkdownImagePlugin.getPlaceholder(textView.get().getContext()), false);
         }
     }
 
