@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.feed.FeedActivity;
+import com.thebrokenrail.combustible.activity.feed.comment.dataset.CommentTreeDataset;
 import com.thebrokenrail.combustible.activity.feed.util.adapter.base.FeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;

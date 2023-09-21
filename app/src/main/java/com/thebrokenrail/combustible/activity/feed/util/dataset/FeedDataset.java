@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Dataset for {@link com.thebrokenrail.combustible.activity.feed.util.adapter.base.FeedAdapter}.
+ * @param <T> Type of element
+ */
 public abstract class FeedDataset<T> implements Iterable<T> {
     /**
      * Callback to notify a {@link RecyclerView.Adapter} of dataset changes.

@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-import com.thebrokenrail.combustible.activity.feed.comment.CommentTreeDataset;
+import com.thebrokenrail.combustible.activity.feed.comment.dataset.CommentTreeDataset;
 import com.thebrokenrail.combustible.api.method.CommentView;
 import com.thebrokenrail.combustible.api.method.GetCommentsResponse;
 import com.thebrokenrail.combustible.util.Util;

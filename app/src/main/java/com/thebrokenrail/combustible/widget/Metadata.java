@@ -99,18 +99,19 @@ public class Metadata extends TableLayout {
      * @param isEdited If the time should be marked as edited
      * @param blurNsfw If NSFW content should be blurred
      * @param showAvatars Show avatars
+     * @param clickable If the links should be clickable
      */
-    public void setup(Person creatorView, Community communityView, String timeView, boolean isEdited, boolean blurNsfw, boolean showAvatars) {
+    public void setup(Person creatorView, Community communityView, String timeView, boolean isEdited, boolean blurNsfw, boolean showAvatars, boolean clickable) {
         // Creator
         boolean creatorVisible = creatorView != null;
         setColumnCollapsed(0, !creatorVisible);
         if (creatorVisible) {
-            creator.setup(showAvatars ? creatorView.avatar : null, false, Names.getPersonTitle(creatorView), () -> {
+            creator.setup(showAvatars ? creatorView.avatar : null, false, Names.getPersonTitle(creatorView), clickable ? () -> {
                 Context context = getContext();
                 Intent intent = new Intent(context, UserFeedActivity.class);
                 intent.putExtra(UserFeedActivity.USER_ID_EXTRA, creatorView.id);
                 context.startActivity(intent);
-            });
+            } : null);
         } else {
             creator.setup(null, false, "", null);
         }
@@ -119,12 +120,12 @@ public class Metadata extends TableLayout {
         boolean communityVisible = communityView != null;
         setColumnCollapsed(2, !communityVisible);
         if (communityVisible) {
-            community.setup(showAvatars ? communityView.icon : null, blurNsfw && communityView.nsfw, Names.getCommunityTitle(communityView), () -> {
+            community.setup(showAvatars ? communityView.icon : null, blurNsfw && communityView.nsfw, Names.getCommunityTitle(communityView), clickable ? () -> {
                 Context context = getContext();
                 Intent intent = new Intent(context, PostFeedActivity.class);
                 intent.putExtra(PostFeedActivity.COMMUNITY_ID_EXTRA, communityView.id);
                 context.startActivity(intent);
-            });
+            } : null);
         } else {
             community.setup(null, false, "", null);
         }

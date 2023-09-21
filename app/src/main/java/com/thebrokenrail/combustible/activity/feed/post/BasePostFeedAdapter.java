@@ -272,7 +272,7 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
             showAvatars = site.my_user.local_user_view.local_user.show_avatars;
         }
         boolean isEdited = obj.post.updated != null;
-        postViewHolder.header.metadata.setup(postContext.showCreator() ? obj.creator : null, postContext.showCommunity() ? obj.community : null, isEdited ? obj.post.updated : obj.post.published, isEdited, blurNsfw, showAvatars);
+        postViewHolder.header.metadata.setup(postContext.showCreator() ? obj.creator : null, postContext.showCommunity() ? obj.community : null, isEdited ? obj.post.updated : obj.post.published, isEdited, blurNsfw, showAvatars, true);
 
         // Overflow
         postViewHolder.header.icons.overflow.setOnClickListener(v -> new PostOverflow(v, connection, obj) {

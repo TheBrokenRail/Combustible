@@ -1,4 +1,4 @@
-package com.thebrokenrail.combustible.activity.feed.comment;
+package com.thebrokenrail.combustible.activity.feed.comment.dataset;
 
 import androidx.annotation.Nullable;
 
@@ -14,9 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Dataset for comment trees.
+ */
 public class CommentTreeDataset extends FeedDataset<CommentView> {
-    private static class CommentData {
-        private final CommentView view;
+    protected static class CommentData {
+        protected final CommentView view;
         private final int depth;
         private final Integer parent;
         private final List<Integer> realChildren = new ArrayList<>();
@@ -39,7 +42,7 @@ public class CommentTreeDataset extends FeedDataset<CommentView> {
             }
         }
 
-        private int getTotalRealChildren(CommentTreeDataset dataset) {
+        protected int getTotalRealChildren(CommentTreeDataset dataset) {
             int total = realChildren.size();
             for (int childID : realChildren) {
                 CommentData child = dataset.commentTree.get(childID);
@@ -50,7 +53,7 @@ public class CommentTreeDataset extends FeedDataset<CommentView> {
         }
     }
 
-    private final Map<Integer, CommentData> commentTree = new HashMap<>();
+    protected final Map<Integer, CommentData> commentTree = new HashMap<>();
     private final List<CommentView> queuedComments = new ArrayList<>();
     private final List<CommentView> dataset = new ArrayList<>();
 
@@ -74,7 +77,12 @@ public class CommentTreeDataset extends FeedDataset<CommentView> {
         }
     }
 
-    int getDepth(CommentView comment) {
+    /**
+     * Get depth of comment.
+     * @param comment The comment to check
+     * @return The comment's depth
+     */
+    public int getDepth(CommentView comment) {
         String[] path = comment.comment.path.split("\\.");
         int parentIndex = Arrays.asList(path).indexOf(getParentInPath());
         int depth = (path.length - 1) - parentIndex;

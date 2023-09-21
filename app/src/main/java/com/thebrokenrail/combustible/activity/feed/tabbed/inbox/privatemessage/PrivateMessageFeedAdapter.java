@@ -94,7 +94,7 @@ public class PrivateMessageFeedAdapter extends FeedAdapter<PrivateMessageView> {
         }
         boolean isEdited = obj.private_message.updated != null;
         boolean blurNsfw = Images.shouldBlurNsfw(site);
-        privateMessageViewHolder.header.metadata.setup(obj.creator, null, isEdited ? obj.private_message.updated : obj.private_message.published, isEdited, blurNsfw, showAvatars);
+        privateMessageViewHolder.header.metadata.setup(obj.creator, null, isEdited ? obj.private_message.updated : obj.private_message.published, isEdited, blurNsfw, showAvatars, true);
 
         // Overflow
         privateMessageViewHolder.header.icons.overflow.setOnClickListener(v -> new PrivateMessageOverflow(v, connection, obj));

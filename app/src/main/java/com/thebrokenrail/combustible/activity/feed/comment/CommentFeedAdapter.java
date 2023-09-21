@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.create.CommentCreateActivity;
+import com.thebrokenrail.combustible.activity.feed.comment.dataset.CollapsableCommentTreeDataset;
+import com.thebrokenrail.combustible.activity.feed.comment.dataset.CommentTreeDataset;
 import com.thebrokenrail.combustible.activity.feed.util.dataset.FeedDataset;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisite;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
@@ -23,7 +25,6 @@ import com.thebrokenrail.combustible.api.method.GetComments;
 import com.thebrokenrail.combustible.api.method.ListingType;
 import com.thebrokenrail.combustible.util.RequestCodes;
 import com.thebrokenrail.combustible.util.Util;
-import com.thebrokenrail.combustible.widget.DepthGauge;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -43,7 +44,7 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
 
     @Override
     protected FeedDataset<CommentView> createDataset() {
-        return new CommentTreeDataset();
+        return new CollapsableCommentTreeDataset();
     }
 
     @Override
@@ -97,10 +98,13 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
         CommentView obj = viewModel.dataset.get(position);
         CommentViewHolder commentViewHolder = (CommentViewHolder) holder;
 
+        // Visibility/Collapsed
+        boolean collapsed = isCollapsed(obj);
+
         // Depth
-        CommentTreeDataset dataset = (CommentTreeDataset) viewModel.dataset;
+        CollapsableCommentTreeDataset dataset = (CollapsableCommentTreeDataset) viewModel.dataset;
         int depth = dataset.getDepth(obj);
-        ((DepthGauge) commentViewHolder.itemView).setDepth(depth, () -> {
+        commentViewHolder.depthGauge.setDepth(depth, () -> {
             // Get Current Position
             int newPosition = dataset.indexOf(obj);
             if (newPosition == -1) {
@@ -119,16 +123,15 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
         });
 
         // Show More
-        if (obj.counts.child_count > 0 && depth == (Util.MAX_DEPTH - 1)) {
+        if (obj.counts.child_count > 0 && depth == (Util.MAX_DEPTH - 1) && !collapsed) {
             commentViewHolder.showMore.setVisibility(View.VISIBLE);
             commentViewHolder.showMore.setOnClickListener(v -> commentViewHolder.card.callOnClick());
         } else {
             commentViewHolder.showMore.setVisibility(View.GONE);
         }
 
-        // Card
-        commentViewHolder.card.setClickable(false);
-        commentViewHolder.card.setFocusable(false);
+        // Collapsing
+        commentViewHolder.card.setOnClickListener(v -> dataset.collapse(notifier, obj));
 
         // Reply
         boolean canReply = permissions.canReply(post != null ? post.post_view.post : obj.post);
@@ -224,5 +227,15 @@ public class CommentFeedAdapter extends BaseCommentFeedAdapter {
         }
         // Call Original Method
         super.handleEditAdd(newComment);
+    }
+
+    @Override
+    protected boolean isCollapsed(CommentView comment) {
+        return ((CollapsableCommentTreeDataset) viewModel.dataset).isCollapsed(comment);
+    }
+
+    @Override
+    protected boolean isVisible(CommentView comment) {
+        return ((CollapsableCommentTreeDataset) viewModel.dataset).isVisible(comment);
     }
 }

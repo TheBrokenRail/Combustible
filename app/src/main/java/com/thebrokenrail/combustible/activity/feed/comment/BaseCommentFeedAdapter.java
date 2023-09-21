@@ -27,6 +27,7 @@ import com.thebrokenrail.combustible.api.method.PostView;
 import com.thebrokenrail.combustible.util.Images;
 import com.thebrokenrail.combustible.util.Permissions;
 import com.thebrokenrail.combustible.util.markdown.Markdown;
+import com.thebrokenrail.combustible.widget.DepthGauge;
 import com.thebrokenrail.combustible.widget.Karma;
 import com.thebrokenrail.combustible.widget.PostOrCommentHeader;
 
@@ -40,6 +41,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
         private final PostOrCommentHeader header;
         protected final Button showMore;
         protected final AppCompatImageView reply;
+        protected final DepthGauge depthGauge;
 
         private CommentViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -49,6 +51,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
             header = itemView.findViewById(R.id.comment_header);
             showMore = itemView.findViewById(R.id.comment_show_more);
             reply = itemView.findViewById(R.id.comment_reply);
+            depthGauge = itemView.findViewById(R.id.comment_depth_gauge);
         }
     }
 
@@ -149,7 +152,6 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
     }
 
     protected abstract boolean showCreator();
-
     protected abstract boolean showCommunity();
 
     protected void click(Context context, CommentView obj) {
@@ -167,11 +169,17 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
         CommentView obj = viewModel.dataset.get(position);
         CommentViewHolder commentViewHolder = (CommentViewHolder) holder;
 
+        // Visibility/Collapsed
+        boolean visible = isVisible(obj);
+        commentViewHolder.depthGauge.setVisibility(visible ? View.VISIBLE : View.GONE);
+        boolean collapsed = isCollapsed(obj);
+
         // Card
         commentViewHolder.card.setOnClickListener(v -> click(v.getContext(), obj));
 
         // Text
-        markdown.set(commentViewHolder.text, obj.comment.content.trim());
+        markdown.set(commentViewHolder.text, (!collapsed && visible) ? obj.comment.content.trim() : "");
+        commentViewHolder.text.setVisibility(collapsed ? View.GONE : View.VISIBLE);
 
         // Karma
         int myVote = obj.my_vote != null ? obj.my_vote : 0;
@@ -187,6 +195,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
             method.score = newScore;
             connection.send(method, commentResponse -> viewModel.dataset.replace(notifier, obj, commentResponse.comment_view), errorCallback);
         });
+        ((View) commentViewHolder.karma.getParent()).setVisibility(collapsed ? View.GONE : View.VISIBLE);
 
         // Comment Metadata
         boolean showAvatars = true;
@@ -195,7 +204,7 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
         }
         boolean isEdited = obj.comment.updated != null;
         boolean blurNsfw = Images.shouldBlurNsfw(site);
-        commentViewHolder.header.metadata.setup(showCreator() ? obj.creator : null, showCommunity() ? obj.community : null, isEdited ? obj.comment.updated : obj.comment.published, isEdited, blurNsfw, showAvatars);
+        commentViewHolder.header.metadata.setup(showCreator() ? obj.creator : null, showCommunity() ? obj.community : null, isEdited ? obj.comment.updated : obj.comment.published, isEdited, blurNsfw, showAvatars, !collapsed);
 
         // Overflow
         commentViewHolder.header.icons.overflow.setOnClickListener(v -> new CommentOverflow(v, connection, obj) {
@@ -261,5 +270,12 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
 
     protected void handleEditAdd(CommentView newComment) {
         viewModel.dataset.add(notifier, Collections.singletonList(newComment), true);
+    }
+
+    protected boolean isVisible(CommentView comment) {
+        return true;
+    }
+    protected boolean isCollapsed(CommentView comment) {
+        return false;
     }
 }
