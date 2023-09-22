@@ -2,18 +2,12 @@ package com.thebrokenrail.combustible.util.markdown.image;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.text.Spanned;
-import android.util.TypedValue;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.bumptech.glide.RequestManager;
-import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.ViewImageActivity;
 import com.thebrokenrail.combustible.activity.settings.app.AppSettings;
 import com.thebrokenrail.combustible.util.Images;
@@ -42,28 +36,13 @@ public class MarkdownImagePlugin extends AbstractMarkwonPlugin {
         cornerRadius = Images.getCornerRadius(context);
     }
 
-    static Drawable getPlaceholder(Context context) {
-        // Get Drawable
-        Drawable placeholder = ContextCompat.getDrawable(context, R.drawable.baseline_image_24);
-        assert placeholder != null;
-
-        // Tint Drawable
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnSurface, typedValue, true);
-        @ColorInt int color = ContextCompat.getColor(context, typedValue.resourceId);
-        DrawableCompat.setTint(DrawableCompat.wrap(placeholder).mutate(), color);
-
-        // Return
-        return placeholder;
-    }
-
     @Override
     public void configureSpansFactory(@NonNull MarkwonSpansFactory.Builder builder) {
         // Add ImageSpans
         builder.setFactory(Image.class, (configuration, props) -> {
             String url = ImageProps.DESTINATION.require(props);
             ImageSize size = ImageProps.IMAGE_SIZE.get(props);
-            return new MarkdownImageSpan(getPlaceholder(context), size, url);
+            return new MarkdownImageSpan(Images.createThemedPlaceholder(context), size, url);
         });
 
         // Clickable Images

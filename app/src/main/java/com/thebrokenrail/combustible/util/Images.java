@@ -14,6 +14,7 @@ import android.view.Gravity;
 import androidx.annotation.ColorInt;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
@@ -97,5 +98,20 @@ public class Images {
             blurNsfw = site.my_user.local_user_view.local_user.blur_nsfw;
         }*/
         return true;
+    }
+
+    public static Drawable createThemedPlaceholder(Context context) {
+        // Get Drawable
+        Drawable placeholder = ContextCompat.getDrawable(context, R.drawable.baseline_image_24);
+        assert placeholder != null;
+
+        // Tint Drawable
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(com.google.android.material.R.attr.colorOnSurface, typedValue, true);
+        @ColorInt int color = ContextCompat.getColor(context, typedValue.resourceId);
+        DrawableCompat.setTint(DrawableCompat.wrap(placeholder).mutate(), color);
+
+        // Return
+        return placeholder;
     }
 }

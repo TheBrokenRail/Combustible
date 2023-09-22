@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.thebrokenrail.combustible.R;
+import com.thebrokenrail.combustible.util.Images;
 import com.thebrokenrail.combustible.util.Util;
 import com.thebrokenrail.combustible.util.glide.GlideApp;
 import com.thebrokenrail.combustible.util.glide.GlideUtil;
@@ -91,7 +91,7 @@ public class LinkWithIcon extends LinearLayout {
 
             // Load Image
             String thumbnailUrl = Util.getThumbnailUrl(iconUrl);
-            GlideUtil.load(getContext(), requestManager, thumbnailUrl, new CircleCrop(), 0, blur, true, ContextCompat.getDrawable(getContext(), R.drawable.baseline_image_24), icon);
+            GlideUtil.load(getContext(), requestManager, thumbnailUrl, new CircleCrop(), 0, blur, true, Images.createThemedPlaceholder(getContext()), icon);
         } else {
             icon.setVisibility(GONE);
             requestManager.clear(icon);

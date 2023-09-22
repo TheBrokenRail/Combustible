@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.thebrokenrail.combustible.util.Images;
 
 import java.lang.ref.WeakReference;
 
@@ -51,7 +52,7 @@ class SpanTarget extends CustomTarget<Drawable> {
         }
         // Set Placeholder
         if (textView.get() != null) {
-            setDrawable(MarkdownImagePlugin.getPlaceholder(textView.get().getContext()), false);
+            setDrawable(Images.createThemedPlaceholder(textView.get().getContext()), false);
         }
     }
 
