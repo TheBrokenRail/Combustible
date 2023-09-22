@@ -202,6 +202,9 @@ public abstract class BaseCommentFeedAdapter extends SortableFeedAdapter<Comment
         if (site.my_user != null) {
             showAvatars = site.my_user.local_user_view.local_user.show_avatars;
         }
+        if (!visible) {
+            showAvatars = false;
+        }
         boolean isEdited = obj.comment.updated != null;
         boolean blurNsfw = Images.shouldBlurNsfw(site);
         commentViewHolder.header.metadata.setup(showCreator() ? obj.creator : null, showCommunity() ? obj.community : null, isEdited ? obj.comment.updated : obj.comment.published, isEdited, blurNsfw, showAvatars, !collapsed);
