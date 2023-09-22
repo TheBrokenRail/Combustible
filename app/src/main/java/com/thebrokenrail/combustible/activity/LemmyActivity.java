@@ -14,11 +14,12 @@ import com.squareup.moshi.Moshi;
 import com.thebrokenrail.combustible.activity.create.BaseCreateActivity;
 import com.thebrokenrail.combustible.activity.feed.comment.CommentFeedActivity;
 import com.thebrokenrail.combustible.activity.fullscreen.welcome.WelcomeActivity;
+import com.thebrokenrail.combustible.activity.settings.app.AppSettings;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CommentView;
 import com.thebrokenrail.combustible.api.method.PostView;
-import com.thebrokenrail.combustible.util.config.Config;
 import com.thebrokenrail.combustible.util.RequestCodes;
+import com.thebrokenrail.combustible.util.config.Config;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -35,6 +36,7 @@ public class LemmyActivity extends AppCompatActivity {
     protected Connection connection = null;
 
     private long lastConfigVersion = 0;
+    private long lastSettingsVersion = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,6 +45,8 @@ public class LemmyActivity extends AppCompatActivity {
         // Load Configuration
         Config config = Config.create(this);
         acknowledgeConfigChange();
+        // Settings Version
+        lastSettingsVersion = AppSettings.SETTINGS_VERSION.getLong(this);
 
         // Check If Setup Has Been Completed
         if (!config.isSetup() && !(this instanceof WelcomeActivity)) {
@@ -84,10 +88,21 @@ public class LemmyActivity extends AppCompatActivity {
         super.onResume();
 
         // Check Configuration Version
+        boolean doDullRecreate = false;
         Config config = Config.create(this);
         if (config.getVersion() != lastConfigVersion) {
             // Restart
+            doDullRecreate = true;
+        }
+
+        // Check Settings Version
+        boolean doRecreate = AppSettings.SETTINGS_VERSION.getLong(this) != lastSettingsVersion;
+
+        // Recreate
+        if (doDullRecreate) {
             fullRecreate();
+        } else if (doRecreate) {
+            recreate();
         }
     }
 
@@ -99,6 +114,9 @@ public class LemmyActivity extends AppCompatActivity {
         recreate();
     }
 
+    /**
+     * Protect activity from {@link Config}-related recreation.
+     */
     protected void acknowledgeConfigChange() {
         Config config = Config.create(this);
         lastConfigVersion = config.getVersion();
@@ -155,5 +173,14 @@ public class LemmyActivity extends AppCompatActivity {
         // https://stackoverflow.com/a/42253596/16198887
         ((MenuBuilder) menu).setOptionalIconsVisible(true);
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    /**
+     * Trigger recreation of all other {@link LemmyActivity}s. (This does not use {@link #fullRecreate()}.)
+     */
+    public void recreateOtherActivities() {
+        long newVersion = System.currentTimeMillis();
+        AppSettings.SETTINGS_VERSION.setLong(this, newVersion);
+        lastSettingsVersion = newVersion;
     }
 }

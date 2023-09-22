@@ -78,7 +78,7 @@ public class AppSettingsFragment extends SettingsFragment implements SharedPrefe
         if (key.equals(AppSettings.DARK_MODE.key)) {
             SubApplication.setDarkMode(getContext());
         } else if (key.equals(AppSettings.DISABLE_LARGE_THUMBNAIL.key) || key.equals(AppSettings.DISABLE_IMAGES.key) || key.equals(AppSettings.DISABLE_MARKDOWN_IMAGES.key)) {
-            ((AppSettingsActivity) requireActivity()).triggerRefresh();
+            ((AppSettingsActivity) requireActivity()).recreateOtherActivities();
             if (key.equals(AppSettings.DISABLE_IMAGES.key)) {
                 updateMediaSettings();
             }

@@ -10,6 +10,7 @@ import com.thebrokenrail.combustible.activity.settings.SettingsActivity;
 import com.thebrokenrail.combustible.activity.settings.SettingsFragment;
 import com.thebrokenrail.combustible.util.RequestCodes;
 import com.thebrokenrail.combustible.util.Uploader;
+import com.thebrokenrail.combustible.util.config.Config;
 
 import java.util.Objects;
 
@@ -53,5 +54,11 @@ public class UserSettingsActivity extends SettingsActivity {
             // Banner
             Uploader.onActivityResult(this, connection, resultCode, data, s -> getDataStore().putString("banner", s));
         }
+    }
+
+    public void triggerRefresh() {
+        Config config = Config.create(this);
+        config.triggerRefresh();
+        acknowledgeConfigChange();
     }
 }
