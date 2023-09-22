@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 
 import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
 
 import com.thebrokenrail.combustible.BuildConfig;
 import com.thebrokenrail.combustible.R;
@@ -56,6 +57,20 @@ public class AppSettingsFragment extends SettingsFragment implements SharedPrefe
             context.startActivity(intent);
             return true;
         });
+
+        // Update Media Settings
+        updateMediaSettings();
+    }
+
+    private void updateMediaSettings() {
+        Preference disableLargeThumbnail = findPreference("disable_large_thumbnail");
+        assert disableLargeThumbnail != null;
+        Preference disableMarkdownImages = findPreference("disable_markdown_images");
+        assert disableMarkdownImages != null;
+        // Update
+        boolean disableImages = PreferenceManager.getDefaultSharedPreferences(requireContext()).getBoolean("disable_images", getResources().getBoolean(R.bool.app_settings_disable_images_default));
+        disableLargeThumbnail.setEnabled(!disableImages);
+        disableMarkdownImages.setEnabled(!disableImages);
     }
 
     @Override
@@ -63,8 +78,11 @@ public class AppSettingsFragment extends SettingsFragment implements SharedPrefe
         assert key != null;
         if (key.equals("dark_mode")) {
             SubApplication.setDarkMode(getContext());
-        } else if (key.equals("disable_large_thumbnail")) {
+        } else if (key.equals("disable_large_thumbnail") || key.equals("disable_images") || key.equals("disable_markdown_images")) {
             ((AppSettingsActivity) requireActivity()).triggerRefresh();
+            if (key.equals("disable_images")) {
+                updateMediaSettings();
+            }
         }
     }
 

@@ -79,7 +79,7 @@ public class UserAboutFeedAdapter extends FeedAdapter<PersonView> {
         ImageView banner = userAboutViewHolder.banner;
         RequestManager requestManager = GlideApp.with(userAboutViewHolder.itemView.getContext());
         if (bannerUrl != null) {
-            GlideUtil.load(requestManager, bannerUrl, new FitCenter(), 0, false, false, null, banner);
+            GlideUtil.load(userAboutViewHolder.itemView.getContext(), requestManager, bannerUrl, new FitCenter(), 0, false, false, null, banner);
             banner.setVisibility(View.VISIBLE);
         } else {
             banner.setVisibility(View.GONE);

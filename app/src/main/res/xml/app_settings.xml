@@ -13,17 +13,29 @@
             app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false" />
 
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        app:title="@string/settings_media">
+
         <CheckBoxPreference
-            app:key="disable_large_thumbnail"
-            app:title="@string/app_settings_disable_large_thumbnail"
+            app:key="disable_images"
+            app:title="@string/app_settings_disable_images"
             app:iconSpaceReserved="false"
-            app:defaultValue="@bool/app_settings_disable_large_thumbnail_default" />
+            app:defaultValue="@bool/app_settings_disable_images_default" />
 
         <CheckBoxPreference
             app:key="disable_markdown_images"
             app:title="@string/app_settings_disable_markdown_images"
             app:iconSpaceReserved="false"
             app:defaultValue="@bool/app_settings_disable_markdown_images_default" />
+
+        <CheckBoxPreference
+            app:key="disable_large_thumbnail"
+            app:title="@string/app_settings_disable_large_thumbnail"
+            app:iconSpaceReserved="false"
+            app:defaultValue="@bool/app_settings_disable_large_thumbnail_default" />
 
     </PreferenceCategory>
 

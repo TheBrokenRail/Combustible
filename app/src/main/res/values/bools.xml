@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Settings -->
-    <bool name="app_settings_disable_large_thumbnail_default">false</bool>
+    <bool name="app_settings_disable_images_default">false</bool>
     <bool name="app_settings_disable_markdown_images_default">false</bool>
+    <bool name="app_settings_disable_large_thumbnail_default">false</bool>
     <bool name="app_settings_use_custom_tabs_default">true</bool>
     <bool name="app_settings_use_incognito_mode_default">false</bool>
 </resources>

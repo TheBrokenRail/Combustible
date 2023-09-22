@@ -1,8 +1,11 @@
 package com.thebrokenrail.combustible.util.glide;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
+
+import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
@@ -12,6 +15,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
+import com.thebrokenrail.combustible.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +25,14 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 public class GlideUtil {
     private static final int NSFW_BLUR = 36;
 
-    public static void load(RequestManager requestManager, String url, Transformation<Bitmap> scalingTransformation, int cornerRadius, boolean blur, boolean crossFade, Drawable placeholder, Target<Drawable> target) {
+    public static void load(Context context, RequestManager requestManager, String url, Transformation<Bitmap> scalingTransformation, int cornerRadius, boolean blur, boolean crossFade, Drawable placeholder, Target<Drawable> target) {
+        // Check Settings
+        boolean disableImages = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("disable_images", context.getResources().getBoolean(R.bool.app_settings_disable_images_default));
+        if (disableImages) {
+            target.onLoadCleared(placeholder);
+            return;
+        }
+
         // Load
         RequestBuilder<Drawable> requestBuilder = requestManager.load(url);
 
@@ -66,7 +77,7 @@ public class GlideUtil {
         requestBuilder.into(target);
     }
 
-    public static void load(RequestManager requestManager, String url, Transformation<Bitmap> scalingTransformation, int cornerRadius, boolean blur, boolean crossFade, Drawable placeholder, ImageView target) {
-        load(requestManager, url, scalingTransformation, cornerRadius, blur, crossFade, placeholder, new DrawableImageViewTarget(target));
+    public static void load(Context context, RequestManager requestManager, String url, Transformation<Bitmap> scalingTransformation, int cornerRadius, boolean blur, boolean crossFade, Drawable placeholder, ImageView target) {
+        load(context, requestManager, url, scalingTransformation, cornerRadius, blur, crossFade, placeholder, new DrawableImageViewTarget(target));
     }
 }

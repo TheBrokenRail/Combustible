@@ -59,7 +59,7 @@ public class ViewImageActivity extends AppCompatActivity {
         imageView.setSuperZoomEnabled(false);
         imageView.setMaxZoom(4);
         RequestManager requestManager = GlideApp.with(this);
-        GlideUtil.load(requestManager, url, new FitCenter(), 0, false, true, new ColorDrawable(Color.TRANSPARENT), new DrawableImageViewTarget(imageView));
+        GlideUtil.load(this, requestManager, url, new FitCenter(), 0, false, true, new ColorDrawable(Color.TRANSPARENT), new DrawableImageViewTarget(imageView));
 
         // Hide/Show UI
         windowInsetsController = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());

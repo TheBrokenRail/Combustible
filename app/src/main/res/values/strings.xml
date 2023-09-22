@@ -84,6 +84,7 @@
 
     <!-- App Settings -->
     <string name="app_settings_dark_mode">Dark Mode</string>
+    <string name="app_settings_disable_images">Disable Images</string>
     <string name="app_settings_disable_large_thumbnail">Disable Large Thumbnails</string>
     <string name="app_settings_disable_markdown_images">Disable Markdown Images</string>
     <string name="app_settings_use_custom_tabs">Use Custom Tabs</string>

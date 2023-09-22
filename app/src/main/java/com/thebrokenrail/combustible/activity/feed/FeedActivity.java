@@ -195,7 +195,7 @@ public abstract class FeedActivity extends HamburgerActivity {
                         RequestManager requestManager = GlideApp.with(FeedActivity.this);
                         String thumbnailUrl = Util.getThumbnailUrl(avatar);
                         Drawable placeholder = viewProfileTarget.placeholder.newDrawable();
-                        GlideUtil.load(requestManager, thumbnailUrl, new CircleCrop(), 0, false, false, placeholder, viewProfileTarget);
+                        GlideUtil.load(FeedActivity.this, requestManager, thumbnailUrl, new CircleCrop(), 0, false, false, placeholder, viewProfileTarget);
                     }
                 }
 

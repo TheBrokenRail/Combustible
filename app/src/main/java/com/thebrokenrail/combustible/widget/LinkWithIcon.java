@@ -91,7 +91,7 @@ public class LinkWithIcon extends LinearLayout {
 
             // Load Image
             String thumbnailUrl = Util.getThumbnailUrl(iconUrl);
-            GlideUtil.load(requestManager, thumbnailUrl, new CircleCrop(), 0, blur, true, ContextCompat.getDrawable(getContext(), R.drawable.baseline_image_24), icon);
+            GlideUtil.load(getContext(), requestManager, thumbnailUrl, new CircleCrop(), 0, blur, true, ContextCompat.getDrawable(getContext(), R.drawable.baseline_image_24), icon);
         } else {
             icon.setVisibility(GONE);
             requestManager.clear(icon);

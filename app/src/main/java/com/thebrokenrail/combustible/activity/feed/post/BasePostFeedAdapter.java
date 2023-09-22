@@ -117,7 +117,7 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         ImageView banner = root.findViewById(R.id.posts_banner);
         RequestManager requestManager = GlideApp.with(root.getContext());
         if (bannerUrl != null) {
-            GlideUtil.load(requestManager, bannerUrl, new FitCenter(), 0, blurBanner, false, null, banner);
+            GlideUtil.load(root.getContext(), requestManager, bannerUrl, new FitCenter(), 0, blurBanner, false, null, banner);
             banner.setVisibility(View.VISIBLE);
         } else {
             banner.setVisibility(View.GONE);
@@ -213,6 +213,10 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         boolean showThumbnail = obj.post.url != null;
         boolean useBigThumbnail = false;
         boolean disableLargeThumbnail = PreferenceManager.getDefaultSharedPreferences(postViewHolder.itemView.getContext()).getBoolean("disable_large_thumbnail", postViewHolder.itemView.getResources().getBoolean(R.bool.app_settings_disable_large_thumbnail_default));
+        boolean disableImages = PreferenceManager.getDefaultSharedPreferences(postViewHolder.itemView.getContext()).getBoolean("disable_images", postViewHolder.itemView.getResources().getBoolean(R.bool.app_settings_disable_images_default));
+        if (disableImages) {
+            disableLargeThumbnail = true;
+        }
         if (Images.isImage(obj.post.url) && !disableLargeThumbnail) {
             thumbnailUrl = obj.post.url;
             useBigThumbnail = true;
@@ -233,7 +237,7 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         if (showThumbnail) {
             thumbnailParent.setVisibility(View.VISIBLE);
             thumbnail.setAdjustViewBounds(false);
-            GlideUtil.load(requestManager, thumbnailUrl, new CenterCrop(), postViewHolder.cornerRadius, blurThumbnail, true, postViewHolder.placeholder, thumbnail);
+            GlideUtil.load(postViewHolder.itemView.getContext(), requestManager, thumbnailUrl, new CenterCrop(), postViewHolder.cornerRadius, blurThumbnail, true, postViewHolder.placeholder, thumbnail);
         } else {
             thumbnailParent.setVisibility(View.GONE);
             requestManager.clear(thumbnail);
