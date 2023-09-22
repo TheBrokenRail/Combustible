@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
@@ -23,6 +22,7 @@ import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.ViewImageActivity;
 import com.thebrokenrail.combustible.activity.feed.comment.CommentFeedActivity;
 import com.thebrokenrail.combustible.activity.feed.util.adapter.SortableFeedAdapter;
+import com.thebrokenrail.combustible.activity.settings.app.AppSettings;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.CreatePostLike;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
@@ -212,8 +212,8 @@ public abstract class BasePostFeedAdapter extends SortableFeedAdapter<PostView> 
         String thumbnailUrl = obj.post.thumbnail_url;
         boolean showThumbnail = obj.post.url != null;
         boolean useBigThumbnail = false;
-        boolean disableLargeThumbnail = PreferenceManager.getDefaultSharedPreferences(postViewHolder.itemView.getContext()).getBoolean("disable_large_thumbnail", postViewHolder.itemView.getResources().getBoolean(R.bool.app_settings_disable_large_thumbnail_default));
-        boolean disableImages = PreferenceManager.getDefaultSharedPreferences(postViewHolder.itemView.getContext()).getBoolean("disable_images", postViewHolder.itemView.getResources().getBoolean(R.bool.app_settings_disable_images_default));
+        boolean disableLargeThumbnail = AppSettings.DISABLE_LARGE_THUMBNAIL.getBool(postViewHolder.itemView.getContext());
+        boolean disableImages = AppSettings.DISABLE_IMAGES.getBool(postViewHolder.itemView.getContext());
         if (disableImages) {
             disableLargeThumbnail = true;
         }

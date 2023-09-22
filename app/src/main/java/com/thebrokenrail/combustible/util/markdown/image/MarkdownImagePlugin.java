@@ -11,11 +11,11 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.RequestManager;
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.ViewImageActivity;
+import com.thebrokenrail.combustible.activity.settings.app.AppSettings;
 import com.thebrokenrail.combustible.util.Images;
 import com.thebrokenrail.combustible.util.glide.GlideApp;
 import com.thebrokenrail.combustible.util.glide.GlideUtil;
@@ -98,8 +98,9 @@ public class MarkdownImagePlugin extends AbstractMarkwonPlugin {
     @Override
     public void afterSetText(@NonNull TextView textView) {
         // Check Settings
-        boolean disableMarkdownImages = PreferenceManager.getDefaultSharedPreferences(textView.getContext()).getBoolean("disable_markdown_images", textView.getResources().getBoolean(R.bool.app_settings_disable_markdown_images_default));
-        if (disableMarkdownImages) {
+        boolean disableImages = AppSettings.DISABLE_IMAGES.getBool(textView.getContext());
+        boolean disableMarkdownImages = AppSettings.DISABLE_MARKDOWN_IMAGES.getBool(textView.getContext());
+        if (disableMarkdownImages || disableImages) {
             return;
         }
 

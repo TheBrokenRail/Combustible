@@ -5,8 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
-import androidx.preference.PreferenceManager;
-
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.Transformation;
@@ -15,7 +13,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
-import com.thebrokenrail.combustible.R;
+import com.thebrokenrail.combustible.activity.settings.app.AppSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,7 @@ public class GlideUtil {
 
     public static void load(Context context, RequestManager requestManager, String url, Transformation<Bitmap> scalingTransformation, int cornerRadius, boolean blur, boolean crossFade, Drawable placeholder, Target<Drawable> target) {
         // Check Settings
-        boolean disableImages = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("disable_images", context.getResources().getBoolean(R.bool.app_settings_disable_images_default));
+        boolean disableImages = AppSettings.DISABLE_IMAGES.getBool(context);
         if (disableImages) {
             target.onLoadCleared(placeholder);
             return;

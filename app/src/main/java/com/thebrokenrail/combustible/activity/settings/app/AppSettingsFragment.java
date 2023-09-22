@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 
 import androidx.preference.Preference;
-import androidx.preference.PreferenceManager;
 
 import com.thebrokenrail.combustible.BuildConfig;
 import com.thebrokenrail.combustible.R;
@@ -63,12 +62,12 @@ public class AppSettingsFragment extends SettingsFragment implements SharedPrefe
     }
 
     private void updateMediaSettings() {
-        Preference disableLargeThumbnail = findPreference("disable_large_thumbnail");
+        Preference disableLargeThumbnail = findPreference(AppSettings.DISABLE_LARGE_THUMBNAIL.key);
         assert disableLargeThumbnail != null;
-        Preference disableMarkdownImages = findPreference("disable_markdown_images");
+        Preference disableMarkdownImages = findPreference(AppSettings.DISABLE_MARKDOWN_IMAGES.key);
         assert disableMarkdownImages != null;
         // Update
-        boolean disableImages = PreferenceManager.getDefaultSharedPreferences(requireContext()).getBoolean("disable_images", getResources().getBoolean(R.bool.app_settings_disable_images_default));
+        boolean disableImages = AppSettings.DISABLE_IMAGES.getBool(requireContext());
         disableLargeThumbnail.setEnabled(!disableImages);
         disableMarkdownImages.setEnabled(!disableImages);
     }
@@ -76,11 +75,11 @@ public class AppSettingsFragment extends SettingsFragment implements SharedPrefe
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         assert key != null;
-        if (key.equals("dark_mode")) {
+        if (key.equals(AppSettings.DARK_MODE.key)) {
             SubApplication.setDarkMode(getContext());
-        } else if (key.equals("disable_large_thumbnail") || key.equals("disable_images") || key.equals("disable_markdown_images")) {
+        } else if (key.equals(AppSettings.DISABLE_LARGE_THUMBNAIL.key) || key.equals(AppSettings.DISABLE_IMAGES.key) || key.equals(AppSettings.DISABLE_MARKDOWN_IMAGES.key)) {
             ((AppSettingsActivity) requireActivity()).triggerRefresh();
-            if (key.equals("disable_images")) {
+            if (key.equals(AppSettings.DISABLE_IMAGES.key)) {
                 updateMediaSettings();
             }
         }

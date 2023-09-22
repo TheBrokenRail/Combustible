@@ -10,13 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.browser.customtabs.CustomTabColorSchemeParams;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.core.content.ContextCompat;
-import androidx.preference.PreferenceManager;
 
 import com.thebrokenrail.combustible.R;
 import com.thebrokenrail.combustible.activity.LemmyActivity;
 import com.thebrokenrail.combustible.activity.feed.comment.CommentFeedActivity;
 import com.thebrokenrail.combustible.activity.feed.post.PostFeedActivity;
 import com.thebrokenrail.combustible.activity.feed.tabbed.user.UserFeedActivity;
+import com.thebrokenrail.combustible.activity.settings.app.AppSettings;
 import com.thebrokenrail.combustible.api.Connection;
 import com.thebrokenrail.combustible.api.method.GetCommunity;
 import com.thebrokenrail.combustible.api.method.GetPersonDetails;
@@ -135,14 +135,14 @@ public class Links {
 
         // Incognito Mode
         Intent extras = new Intent();
-        boolean useIncognitoMode = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("use_incognito_mode", context.getResources().getBoolean(R.bool.app_settings_use_incognito_mode_default));
+        boolean useIncognitoMode = AppSettings.USE_INCOGNITO_MODE.getBool(context);
         if (useIncognitoMode) {
             extras.putExtra("com.google.android.apps.chrome.EXTRA_OPEN_NEW_INCOGNITO_TAB", true);
             extras.putExtra("private_browsing_mode", true);
         }
 
         // Select Mode
-        boolean useCustomTabs = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("use_custom_tabs", context.getResources().getBoolean(R.bool.app_settings_use_custom_tabs_default));
+        boolean useCustomTabs = AppSettings.USE_CUSTOM_TABS.getBool(context);
         if (useCustomTabs) {
             // Chrome Custom Tab
             @ColorInt int colorPrimaryLight = ContextCompat.getColor(context, R.color.md_theme_light_primary);
