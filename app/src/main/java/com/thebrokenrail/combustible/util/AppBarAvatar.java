@@ -109,7 +109,8 @@ public class AppBarAvatar extends CustomTarget<Drawable> {
         if (canLoad) {
             // Load
             boolean blur = isNsfw && shouldBlurNsfw;
-            GlideUtil.load(context, requestManager, url, new CircleCrop(), 0, blur, true, null, this);
+            String thumbnailUrl = Util.getThumbnailUrl(url);
+            GlideUtil.load(context, requestManager, thumbnailUrl, new CircleCrop(), 0, blur, true, null, this);
         } else {
             requestManager.clear(this);
         }

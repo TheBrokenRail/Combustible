@@ -24,6 +24,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.internal.ToolbarUtils;
 import com.thebrokenrail.combustible.R;
 
+import okhttp3.HttpUrl;
+
 public class Util {
     public static final int ELEMENTS_PER_PAGE = 40;
     public static final int MAX_DEPTH = 8;
@@ -87,7 +89,15 @@ public class Util {
     }
 
     public static String getThumbnailUrl(String iconUrl) {
-        return iconUrl + "?thumbnail=128" + (iconUrl.endsWith(".jpeg") ? "&format=jpg" : "");
+        // Parse URL
+        HttpUrl parsedUrl = HttpUrl.parse(iconUrl);
+        if (parsedUrl != null && parsedUrl.pathSegments().get(0).equals("pictrs")) {
+            // Lemmy Image, Use Lower Resolution Image
+            return iconUrl + "?thumbnail=128" + (iconUrl.endsWith(".jpeg") ? "&format=jpg" : "");
+        } else {
+            // Normal Image, Don't Modify The URL
+            return iconUrl;
+        }
     }
 
     public static AppCompatActivity getActivityFromContext(@NonNull Context context){
