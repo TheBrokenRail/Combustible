@@ -111,7 +111,7 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
     }
 
     /**
-     * Update toasts that display when toolbar is clicked. Call this if important information is placed in the toolbar.
+     * @see FeedActivity#setupToolbarToasts()
      */
     protected void setupToolbarToasts() {
         Util.setupToolbarToasts(toolbar);

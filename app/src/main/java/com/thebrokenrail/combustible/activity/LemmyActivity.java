@@ -27,7 +27,7 @@ import java.util.Objects;
 import okhttp3.HttpUrl;
 
 /**
- * Class that provides a correctly configured {@link Connection{ for sub-classes.
+ * Class that provides a correctly configured {@link Connection} for sub-classes.
  */
 public class LemmyActivity extends AppCompatActivity {
     /**
