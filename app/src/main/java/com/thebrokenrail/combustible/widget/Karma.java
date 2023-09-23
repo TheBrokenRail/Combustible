@@ -2,6 +2,7 @@ package com.thebrokenrail.combustible.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -195,6 +196,10 @@ public class Karma extends LinearLayout {
             textColor = downvoteColor.getColorForState(checkedState, textColor);
         }
         scoreText.setTextColor(textColor);
+
+        // Text Style
+        boolean bold = vote != Vote.NEUTRAL;
+        scoreText.setTypeface(null, bold ? Typeface.BOLD : Typeface.NORMAL);
     }
 
     private void sendVote() {
