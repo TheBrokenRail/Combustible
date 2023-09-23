@@ -1,5 +1,6 @@
 package com.thebrokenrail.combustible.util;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -8,6 +9,7 @@ import android.content.ContextWrapper;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,9 +17,11 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.internal.ToolbarUtils;
 import com.thebrokenrail.combustible.R;
 
 public class Util {
@@ -102,5 +106,25 @@ public class Util {
         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText(context.getString(R.string.app_name), text);
         clipboard.setPrimaryClip(clip);
+    }
+
+    @SuppressLint("RestrictedApi")
+    public static void setupToolbarToasts(Toolbar toolbar) {
+        // Title
+        TextView title = ToolbarUtils.getTitleTextView(toolbar);
+        assert title != null;
+        title.setOnClickListener(v -> {
+            // Display Toast
+            Toast.makeText(v.getContext().getApplicationContext(), toolbar.getTitle(), Toast.LENGTH_SHORT).show();
+        });
+
+        // Title
+        TextView subtitle = ToolbarUtils.getSubtitleTextView(toolbar);
+        if (subtitle != null) {
+            subtitle.setOnClickListener(v -> {
+                // Display Toast
+                Toast.makeText(v.getContext().getApplicationContext(), toolbar.getSubtitle(), Toast.LENGTH_SHORT).show();
+            });
+        }
     }
 }

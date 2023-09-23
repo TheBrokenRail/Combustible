@@ -19,6 +19,7 @@ import com.thebrokenrail.combustible.api.method.BlockCommunity;
 import com.thebrokenrail.combustible.api.method.CommunityView;
 import com.thebrokenrail.combustible.api.method.GetCommunityResponse;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
+import com.thebrokenrail.combustible.util.AppBarAvatar;
 import com.thebrokenrail.combustible.util.Names;
 import com.thebrokenrail.combustible.util.Sharing;
 
@@ -81,6 +82,8 @@ public class PostFeedActivity extends FeedActivity {
                 actionBar.setTitle(getCommunityResponse.community_view.community.title);
                 // Subtitle
                 actionBar.setSubtitle('!' + Names.getCommunityName(getCommunityResponse.community_view.community));
+                // Toolbar Toasts
+                setupToolbarToasts();
                 // Info
                 infoCommunity.set(getCommunityResponse.community_view, subscribedType -> getCommunityResponse.community_view.subscribed = subscribedType);
                 // Share/Blocking
@@ -98,6 +101,10 @@ public class PostFeedActivity extends FeedActivity {
                 updateNavigation();
             }
         });
+
+        // Avatar
+        AppBarAvatar appBarAvatar = new AppBarAvatar(this, communityId != null ? FeedPrerequisite.Community.class : FeedPrerequisite.Site.class);
+        appBarAvatar.handlePrerequisites(prerequisites);
     }
 
     @Override

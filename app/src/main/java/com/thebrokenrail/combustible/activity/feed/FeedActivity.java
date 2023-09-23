@@ -87,6 +87,13 @@ public abstract class FeedActivity extends HamburgerActivity {
     }
 
     /**
+     * Update toasts that display when toolbar is clicked. Call this if important information is placed in the toolbar.
+     */
+    protected void setupToolbarToasts() {
+        Util.setupToolbarToasts(toolbar);
+    }
+
+    /**
      * Sub-classes can execute code before {@link #createAdapter(RecyclerView)} by overriding this method
      */
     protected void onCreateBeforeAdapter() {}

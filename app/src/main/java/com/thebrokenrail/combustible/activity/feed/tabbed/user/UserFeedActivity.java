@@ -17,6 +17,7 @@ import com.thebrokenrail.combustible.api.method.GetPersonDetailsResponse;
 import com.thebrokenrail.combustible.api.method.GetSiteResponse;
 import com.thebrokenrail.combustible.api.method.PersonBlockView;
 import com.thebrokenrail.combustible.api.method.PersonView;
+import com.thebrokenrail.combustible.util.AppBarAvatar;
 import com.thebrokenrail.combustible.util.Names;
 import com.thebrokenrail.combustible.util.Sharing;
 import com.thebrokenrail.combustible.util.Util;
@@ -68,6 +69,8 @@ public class UserFeedActivity extends TabbedFeedActivity {
                     title = '@' + Names.getPersonName(getPersonDetailsResponse.person_view.person);
                     actionBar.setSubtitle(title);
                 }
+                // Toolbar Toasts
+                setupToolbarToasts();
 
                 // Enable Share Button
                 infoPerson = getPersonDetailsResponse.person_view;
@@ -108,6 +111,10 @@ public class UserFeedActivity extends TabbedFeedActivity {
                 }
             }
         });
+
+        // User Avatar
+        AppBarAvatar appBarAvatar = new AppBarAvatar(this, FeedPrerequisite.User.class);
+        appBarAvatar.handlePrerequisites(prerequisites);
     }
 
     @Override

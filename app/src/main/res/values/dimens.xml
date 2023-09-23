@@ -24,4 +24,8 @@
 
     <!-- Swipe-To-Refresh -->
     <dimen name="swipe_to_refresh_elevation">4dp</dimen>
+
+    <!-- App Bar Avatar -->
+    <dimen name="app_bar_avatar_size">24dp</dimen>
+    <dimen name="app_bar_avatar_margin">12dp</dimen>
 </resources>

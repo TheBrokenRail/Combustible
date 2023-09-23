@@ -38,6 +38,8 @@ import java.util.Objects;
  * Activity with multiple infinitely-scrolling feeds.
  */
 public abstract class TabbedFeedActivity extends LemmyActivity {
+    private MaterialToolbar toolbar;
+
     private final List<Map.Entry<Integer, FeedAdapter<?>>> tabs = new ArrayList<>();
     private final List<Map.Entry<Integer, FeedAdapter<?>>> visibleTabs = new ArrayList<>();
 
@@ -51,7 +53,7 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
         setContentView(R.layout.activity_tabbed_feed);
 
         // Setup Toolbar
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = Objects.requireNonNull(getSupportActionBar());
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -106,6 +108,13 @@ public abstract class TabbedFeedActivity extends LemmyActivity {
         // Edge-To-Edge
         CoordinatorLayout root = findViewById(R.id.tabbed_feed_root);
         EdgeToEdge.setupRoot(root);
+    }
+
+    /**
+     * Update toasts that display when toolbar is clicked. Call this if important information is placed in the toolbar.
+     */
+    protected void setupToolbarToasts() {
+        Util.setupToolbarToasts(toolbar);
     }
 
     @Override
