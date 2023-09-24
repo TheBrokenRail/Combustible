@@ -38,6 +38,7 @@ public class InfoDialog {
         Resources resources = context.getResources();
         set(community.community.description, new CommunityOrSiteCounts.Community(resources, community), resources);
         this.community = community;
+        assert isSetup();
     }
 
     /**
@@ -49,6 +50,7 @@ public class InfoDialog {
         Resources resources = context.getResources();
         set(site.site_view.site.sidebar, new CommunityOrSiteCounts.Site(resources, site), resources);
         this.community = null;
+        assert isSetup();
     }
 
     private void set(String description, CommunityOrSiteCounts counts, Resources resources) {
