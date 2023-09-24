@@ -213,4 +213,18 @@
     <string name="user_about_account">## Account</string>
     <string name="user_about_account_matrix_user">**Matrix User:** [%1$s](https://matrix.to/#/%1$s)</string>
     <string name="user_about_account_cake_day">**Cake Day:** %s</string>
+
+    <!-- Counts -->
+    <string name="counts_users">**Users:** %,d</string>
+    <string name="counts_subscribers">**Subscribers:** %,d</string>
+    <string name="counts_users_per_day">**Users Per Day:** %,d</string>
+    <string name="counts_users_per_week">**Users Per Week:** %,d</string>
+    <string name="counts_users_per_month">**Users Per Month:** %,d</string>
+    <string name="counts_users_per_six_months">**Users Per Six Months:** %,d</string>
+    <string name="counts_posts">**Posts:** %,d</string>
+    <string name="counts_comments">**Comments:** %,d</string>
+
+    <!-- Info Dialog -->
+    <string name="info_header_counts">## Information</string>
+    <string name="info_header_description">## Description</string>
 </resources>

@@ -211,7 +211,6 @@ public abstract class FeedActivity extends HamburgerActivity {
             } else if (prerequisite == FeedPrerequisites.COMPLETED) {
                 // Sanity Check
                 assert infoCommunity.isSetup();
-                assert infoLegal.isSetup();
                 assert !canBlockCommunity || isCommunityBlocked != null;
             }
         });

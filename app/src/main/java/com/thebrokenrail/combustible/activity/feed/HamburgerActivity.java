@@ -22,10 +22,11 @@ import com.thebrokenrail.combustible.activity.settings.app.AppSettingsActivity;
 import com.thebrokenrail.combustible.activity.settings.user.UserSettingsActivity;
 import com.thebrokenrail.combustible.api.method.BlockCommunity;
 import com.thebrokenrail.combustible.util.config.Config;
-import com.thebrokenrail.combustible.util.InfoDialog;
+import com.thebrokenrail.combustible.util.info.InfoDialog;
 import com.thebrokenrail.combustible.util.Links;
 import com.thebrokenrail.combustible.util.MenuItemTarget;
 import com.thebrokenrail.combustible.util.Util;
+import com.thebrokenrail.combustible.util.info.InfoDialogManager;
 
 import java.lang.ref.WeakReference;
 
@@ -72,7 +73,7 @@ class HamburgerActivity extends LemmyActivity implements NavigationView.OnNaviga
     private NavigationView navigationView;
 
     // Community/Legal Info
-    public InfoDialog.Manager infoManager;
+    public InfoDialogManager infoManager;
     protected InfoDialog infoLegal;
     protected InfoDialog infoCommunity;
 
@@ -94,7 +95,7 @@ class HamburgerActivity extends LemmyActivity implements NavigationView.OnNaviga
         super.setContentView(layoutResID);
 
         // Dialogs
-        infoManager = new InfoDialog.Manager(this, connection);
+        infoManager = new InfoDialogManager(this, connection);
         infoLegal = infoManager.create("legal");
         infoCommunity = infoManager.create("community");
 

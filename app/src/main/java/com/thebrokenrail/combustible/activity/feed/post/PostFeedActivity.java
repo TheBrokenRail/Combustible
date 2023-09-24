@@ -85,7 +85,7 @@ public class PostFeedActivity extends FeedActivity {
                 // Toolbar Toasts
                 setupToolbarToasts();
                 // Info
-                infoCommunity.set(getCommunityResponse.community_view, subscribedType -> getCommunityResponse.community_view.subscribed = subscribedType);
+                infoCommunity.set(PostFeedActivity.this, getCommunityResponse.community_view);
                 // Share/Blocking
                 community = getCommunityResponse.community_view;
                 isCommunityBlocked = community.blocked;
@@ -97,7 +97,7 @@ public class PostFeedActivity extends FeedActivity {
                 GetSiteResponse getSiteResponse = ((FeedPrerequisite.Site) prerequisite).get();
 
                 // Info
-                infoCommunity.set(getSiteResponse.site_view.site.sidebar);
+                infoCommunity.set(PostFeedActivity.this, getSiteResponse);
                 updateNavigation();
             }
         });

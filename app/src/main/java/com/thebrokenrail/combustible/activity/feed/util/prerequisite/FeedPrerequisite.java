@@ -56,17 +56,22 @@ public abstract class FeedPrerequisite<T> {
      * Retrieve post information.
      */
     public final static class Post extends FeedPrerequisite<GetPostResponse> {
-        private final int id;
+        private final Integer id;
+        private final Integer comment_id;
 
-        public Post(int id) {
+        public Post(Integer id, Integer comment_id) {
             super();
             this.id = id;
+            this.comment_id = comment_id;
+            // Ensure only one ID is defined
+            assert (id != null) ^ (comment_id != null);
         }
 
         @Override
         protected Method<GetPostResponse> prepare() {
             GetPost method = new GetPost();
             method.id = id;
+            method.comment_id = comment_id;
             return method;
         }
     }
