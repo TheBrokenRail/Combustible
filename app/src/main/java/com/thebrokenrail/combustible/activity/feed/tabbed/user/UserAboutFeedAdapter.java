@@ -86,41 +86,48 @@ public class UserAboutFeedAdapter extends FeedAdapter<PersonView> {
             requestManager.clear(banner);
         }
 
-        // Build Biography
+        // Build Text
         Resources resources = userAboutViewHolder.itemView.getResources();
+        String text = "";
+
+        // Add Account Information
+        text += resources.getString(R.string.user_about_account) + '\n';
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withZone(ZoneId.systemDefault());
+        Instant timeInstant = Instant.parse(user.person.published + 'Z');
+        text += resources.getString(R.string.user_about_account_cake_day, formatter.format(timeInstant)) + '\n';
+        if (user.person.matrix_user_id != null) {
+            // Matrix User
+            String matrixUser = user.person.matrix_user_id;
+            text += resources.getString(R.string.user_about_account_matrix_user, matrixUser) + '\n';
+        }
+        // Posts/Comments
+        text += resources.getString(R.string.counts_posts, user.counts.post_count) + '\n';
+        text += resources.getString(R.string.counts_comments, user.counts.comment_count) + '\n';
+
+        // Add Karma
+        text += '\n' + resources.getString(R.string.user_about_karma) + '\n';
+        int postKarma = user.counts.post_score;
+        int commentKarma = user.counts.comment_score;
+        int totalKarma = postKarma + commentKarma;
+        text += resources.getString(R.string.user_about_karma_post, postKarma) + '\n';
+        text += resources.getString(R.string.user_about_karma_comment, commentKarma) + '\n';
+        text += resources.getString(R.string.user_about_karma_total, totalKarma) + '\n';
+
+        // Add Biography
         String biographyStr = user.person.bio;
         if (biographyStr == null) {
             biographyStr = "";
         }
         biographyStr = biographyStr.trim();
         if (biographyStr.length() > 0) {
-            biographyStr = resources.getString(R.string.user_about_biography) + "\n\n" + biographyStr;
+            text += '\n' + resources.getString(R.string.user_about_biography) + '\n';
+            text += biographyStr;
         }
-
-        // Add Karma
-        int postKarma = user.counts.post_score;
-        int commentKarma = user.counts.comment_score;
-        int totalKarma = postKarma + commentKarma;
-        biographyStr = resources.getString(R.string.user_about_karma_total, totalKarma) + "\n\n" + biographyStr;
-        biographyStr = resources.getString(R.string.user_about_karma_comment, commentKarma) + "\n\n" + biographyStr;
-        biographyStr = resources.getString(R.string.user_about_karma_post, postKarma) + "\n\n" + biographyStr;
-        biographyStr = resources.getString(R.string.user_about_karma) + "\n\n" + biographyStr;
-
-        // Add Account Information
-        if (user.person.matrix_user_id != null) {
-            // Matrix User
-            String matrixUser = user.person.matrix_user_id;
-            biographyStr = resources.getString(R.string.user_about_account_matrix_user, matrixUser) + "\n\n" + biographyStr;
-        }
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG).withZone(ZoneId.systemDefault());
-        Instant timeInstant = Instant.parse(user.person.published + 'Z');
-        biographyStr = resources.getString(R.string.user_about_account_cake_day, formatter.format(timeInstant)) + "\n\n" + biographyStr;
-        biographyStr = resources.getString(R.string.user_about_account) + "\n\n" + biographyStr;
 
         // Display Biography
         TextView biography = userAboutViewHolder.biography;
         Markdown markdown = new Markdown(biography.getContext());
-        markdown.set(biography, biographyStr);
+        markdown.set(biography, text);
     }
 
     @Override

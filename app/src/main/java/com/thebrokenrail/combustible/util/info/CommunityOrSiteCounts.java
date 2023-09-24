@@ -46,7 +46,7 @@ abstract class CommunityOrSiteCounts {
             if (value != null) {
                 // Add To Output
                 out.append(resources.getString(type.resource, value));
-                out.append("\n\n");
+                out.append('\n');
             }
         }
         // Trim And Return

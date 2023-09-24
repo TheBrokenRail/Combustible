@@ -54,10 +54,10 @@ public class InfoDialog {
     }
 
     private void set(String description, CommunityOrSiteCounts counts, Resources resources) {
-        // Add Counts
-        String text = counts.toString();
         // Add Counts Header
-        text = resources.getString(R.string.info_header_counts) + "\n\n" + text;
+        String text = resources.getString(R.string.info_header_counts) + '\n';
+        // Add Counts
+        text += counts.toString();
         // Trim
         text = text.trim();
 
@@ -66,7 +66,7 @@ public class InfoDialog {
             description = description.trim();
             if (description.length() > 0) {
                 // Add Header
-                text += "\n\n" + resources.getString(R.string.info_header_description) + "\n\n";
+                text += "\n\n" + resources.getString(R.string.info_header_description) + '\n';
                 // Add Text
                 text += description;
                 // Trim
