@@ -13,6 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bumptech.glide.RequestManager;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.thebrokenrail.combustible.R;
+import com.thebrokenrail.combustible.activity.feed.tabbed.inbox.privatemessage.PrivateMessageFeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.util.adapter.base.FeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.comment.BaseCommentFeedAdapter;
 import com.thebrokenrail.combustible.activity.feed.util.prerequisite.FeedPrerequisites;
@@ -72,7 +73,7 @@ public class FeedUtil {
                 }
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     RecyclerView.Adapter<?> adapter = recyclerView.getAdapter();
-                    if (adapter instanceof BaseCommentFeedAdapter) {
+                    if (adapter instanceof BaseCommentFeedAdapter || adapter instanceof PrivateMessageFeedAdapter) {
                         requestManager.pauseRequests();
                     }
                 }
