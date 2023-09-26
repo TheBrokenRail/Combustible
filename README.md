@@ -28,6 +28,7 @@ Combustible requires Android 5.0 (API 21) or newer.
 Download an APK from [GitHub Releases](https://github.com/TheBrokenRail/Combustible/releases) and install it!
 
 ## Other Resources
+- [Official Lemmy Community](https://lemmy.world/c/combustible)
 - [Todo List/Known Issues](TODO.md)
 - [Frequently Asked Questions](FAQ.md)
 - [Changelog](CHANGELOG.md)
