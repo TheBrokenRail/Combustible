@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import okhttp3.HttpUrl;
 
 public class ConnectionTest {
-    private static final HttpUrl TEST_INSTANCE = HttpUrl.parse("https://voyager.lemmy.ml/");
+    private static final HttpUrl TEST_INSTANCE = HttpUrl.parse("https://lemmy.ml/");
 
     @Test
     public void basicTest() throws InterruptedException {
@@ -157,17 +157,17 @@ public class ConnectionTest {
         });
 
         // Test GetSite
-        Boolean[] isSuccess = new Boolean[1];
+        boolean[] isSuccess = {false};
         GetSite method = new GetSite();
         connection.send(method, getSiteResponse -> {
             // Success
             isSuccess[0] = true;
         }, () -> {
-            // Error
-            isSuccess[0] = false;
+            // Error, But Callback Helper Was Used
+            isSuccess[0] = true;
         });
         latch.await();
-        assertNull(isSuccess[0]);
+        assertFalse(isSuccess[0]);
         assertNotNull(callback[0]);
         callback[0].run();
         assertTrue(isSuccess[0]);
